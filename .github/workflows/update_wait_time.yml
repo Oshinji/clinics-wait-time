@@ -1,0 +1,55 @@
+name: 待ち時間を更新
+
+on:
+  schedule:
+    # 平日 8:00〜18:00（JST = UTC+9）を5分ごと
+    # UTC の 23:00〜09:00 = JST 8:00〜18:00
+    - cron: '*/5 23-23 * * 0-5'   # JST 8:00台
+    - cron: '*/5 0-8  * * 1-6'   # JST 9:00〜17:00台
+  workflow_dispatch:               # 手動実行ボタン
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: Python をセットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 依存パッケージをインストール
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium --with-deps
+
+      - name: スクレイパーを実行
+        env:
+          CLINICS_EMAIL:    ${{ secrets.CLINICS_EMAIL }}
+          CLINICS_PASSWORD: ${{ secrets.CLINICS_PASSWORD }}
+          MINUTES_PER_PATIENT: ${{ vars.MINUTES_PER_PATIENT || '15' }}
+          OPEN_HOUR:  '8'
+          CLOSE_HOUR: '18'
+        run: python scraper.py
+
+      - name: デバッグスクショをアップロード（エラー時）
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-screenshot
+          path: debug_screenshot.png
+          retention-days: 3
+
+      - name: data/status.json をコミット＆プッシュ
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/status.json
+          git diff --staged --quiet || git commit -m "chore: 待ち時間を更新 [skip ci]"
+          git push
