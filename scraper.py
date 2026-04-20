@@ -27,11 +27,28 @@ OPEN_HOUR    = int(os.getenv("OPEN_HOUR",  "8"))
 CLOSE_HOUR   = int(os.getenv("CLOSE_HOUR", "18"))
 JST          = timezone(timedelta(hours=9))
 # ────────────────────────────────────────────────────────────────
+# 受付時間
+#   月火水金・土　午前  8:30〜11:30
+#              　午後 14:30〜17:30（土曜は〜16:30）
+#   木・日　休診
+
+AM_START = dt_time(8,  30)
+AM_END   = dt_time(11, 30)
+PM_START = dt_time(14, 30)
+PM_END   = dt_time(17, 30)   # 平日
+PM_END_SAT = dt_time(16, 30) # 土曜
 
 
 def is_open() -> bool:
-    now = datetime.now(JST).time()   # 日本時間で判定
-    return dt_time(OPEN_HOUR, 0) <= now < dt_time(CLOSE_HOUR, 0)
+    now = datetime.now(JST)
+    wd  = now.weekday()   # 0=月,1=火,2=水,3=木,4=金,5=土,6=日
+    t   = now.time()
+
+    if wd in (3, 6):      # 木・日は休診
+        return False
+
+    pm_end = PM_END_SAT if wd == 5 else PM_END
+    return (AM_START <= t < AM_END) or (PM_START <= t < pm_end)
 
 
 async def save_debug_screenshot(page, name="debug_screenshot.png"):

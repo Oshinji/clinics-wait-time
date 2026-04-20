@@ -21,7 +21,7 @@
     '#migawa-wait-widget .mw-title{font-size:17px;font-weight:700;color:#1a3a6e;margin-bottom:20px;line-height:1.6}',
     '#migawa-wait-widget .mw-icon{font-size:40px;margin-bottom:10px}',
     '#migawa-wait-widget .mw-closed .mw-msg{font-size:17px;font-weight:700;color:#555}',
-    '#migawa-wait-widget .mw-closed .mw-sub{font-size:13px;color:#888;margin-top:8px;line-height:1.7}',
+    '#migawa-wait-widget .mw-closed .mw-sub{font-size:13px;color:#888;margin-top:8px;line-height:1.8}',
     '#migawa-wait-widget .mw-none .mw-msg{font-size:18px;font-weight:700;color:#1565c0}',
     '#migawa-wait-widget .mw-none .mw-sub{font-size:12px;color:#aaa;margin-top:6px}',
     '#migawa-wait-widget .mw-waiting .mw-timelabel{font-size:13px;color:#555;margin-bottom:4px}',
@@ -38,29 +38,48 @@
   document.head.appendChild(s);
 
   /* ── 設定 ── */
-  var DATA_URL  = "https://raw.githubusercontent.com/Oshinji/clinics-wait-time/main/data/status.json";
-  var INTERVAL  = 15 * 60 * 1000; // 15分
+  var DATA_URL = "https://raw.githubusercontent.com/Oshinji/clinics-wait-time/main/data/status.json";
+  var INTERVAL = 15 * 60 * 1000; // 15分
 
-  // ▼ 診療時間・昼休憩をここで設定（昼休憩がない場合は LUNCH_START/END を null に）
-  var AM_START   = "08:30";
-  var LUNCH_START= "12:30";
-  var LUNCH_END  = "14:30";
-  var PM_END     = "18:00";
-
-  /* ── 時刻ヘルパー ── */
+  /* ── 診療セッション判定（ブラウザのローカル時刻を使用） ──
+     月火水金・土　午前 8:30〜11:30 / 午後 14:30〜17:30
+     土曜午後のみ 〜16:30
+     木・日　休診
+  ─────────────────────────────────────── */
   function toMin(hhmm){ var p=hhmm.split(':'); return +p[0]*60+ +p[1]; }
-  function nowMin(){
-    var d=new Date();
-    return d.getHours()*60 + d.getMinutes();
-  }
+
   function getSession(){
-    var n=nowMin();
-    var amS=toMin(AM_START), lS=toMin(LUNCH_START), lE=toMin(LUNCH_END), pmE=toMin(PM_END);
-    if(n < amS)  return {type:'before',  next: AM_START};
-    if(n < lS)   return {type:'open'};
-    if(n < lE)   return {type:'lunch',   next: LUNCH_END};
-    if(n < pmE)  return {type:'open'};
-    return       {type:'after'};
+    var d   = new Date();
+    var wd  = d.getDay();   // 0=日,1=月…4=木…6=土
+    var now = d.getHours()*60 + d.getMinutes();
+
+    var AM_S  = toMin("08:30"), AM_E  = toMin("11:30");
+    var PM_S  = toMin("14:30");
+    var PM_E  = (wd === 6) ? toMin("16:30") : toMin("17:30"); // 土のみ16:30
+    var HOURS = "8:30〜11:30 / 14:30〜" + ((wd===6)?"16:30":"17:30");
+
+    // 休診日（木=4, 日=0）
+    if(wd === 0 || wd === 4){
+      return { type:"holiday" };
+    }
+    // 受付時間前
+    if(now < AM_S){
+      return { type:"before", next:"8:30", hours:HOURS };
+    }
+    // 午前受付中
+    if(now < AM_E){
+      return { type:"open" };
+    }
+    // 昼休憩
+    if(now < PM_S){
+      return { type:"lunch", next:"14:30", hours:HOURS };
+    }
+    // 午後受付中
+    if(now < PM_E){
+      return { type:"open" };
+    }
+    // 受付終了
+    return { type:"after", hours:HOURS };
   }
 
   function fmt(iso){
@@ -70,43 +89,47 @@
   }
 
   function render(data){
-    var el=document.getElementById('mw-body');
+    var el = document.getElementById('mw-body');
     if(!el) return;
 
-    if(data.error){
+    if(data && data.error){
       el.innerHTML='<div class="mw-error"><div class="mw-icon">⚠️</div><div class="mw-msg">情報を取得できませんでした</div></div>';
       return;
     }
 
-    // ブラウザ側の時刻でセッションを判定（サーバーより正確）
     var session = getSession();
 
-    if(session.type === 'before'){
+    if(session.type === 'holiday'){
       el.innerHTML='<div class="mw-closed"><div class="mw-icon">🏥</div>'
-        +'<div class="mw-msg">現在の受付時間前です</div>'
-        +'<div class="mw-sub">本日の受付開始：<strong>'+session.next+'</strong></div></div>';
+        +'<div class="mw-msg">本日は休診日です</div>'
+        +'<div class="mw-sub">診療は月・火・水・金・土曜日に行っております</div></div>';
+      return;
+    }
+    if(session.type === 'before'){
+      el.innerHTML='<div class="mw-closed"><div class="mw-icon">🕗</div>'
+        +'<div class="mw-msg">本日の受付はまだ始まっていません</div>'
+        +'<div class="mw-sub">午前の受付開始：<strong>'+session.next+'</strong><br>受付時間：'+session.hours+'</div></div>';
       return;
     }
     if(session.type === 'lunch'){
       el.innerHTML='<div class="mw-closed"><div class="mw-icon">🍽️</div>'
-        +'<div class="mw-msg">只今、昼休憩中です</div>'
-        +'<div class="mw-sub">午後の受付開始：<strong>'+session.next+'</strong></div></div>';
+        +'<div class="mw-msg">只今、お昼休みです</div>'
+        +'<div class="mw-sub">午後の受付開始：<strong>'+session.next+'</strong><br>受付時間：'+session.hours+'</div></div>';
       return;
     }
     if(session.type === 'after'){
       el.innerHTML='<div class="mw-closed"><div class="mw-icon">🏥</div>'
-        +'<div class="mw-msg">本日の診療は終了しました</div>'
-        +'<div class="mw-sub">診療時間：'+AM_START+'〜'+LUNCH_START+' / '+LUNCH_END+'〜'+PM_END+'</div></div>';
+        +'<div class="mw-msg">本日の受付は終了しました</div>'
+        +'<div class="mw-sub">受付時間：'+session.hours+'</div></div>';
       return;
     }
 
     // 診療時間中
-    if(!data.is_open){
-      el.innerHTML='<div class="mw-closed"><div class="mw-icon">🏥</div>'
-        +'<div class="mw-msg">現在受付時間外です</div></div>';
+    if(!data || !data.is_open){
+      el.innerHTML='<div class="mw-closed"><div class="mw-icon">🏥</div><div class="mw-msg">現在受付時間外です</div></div>';
       return;
     }
-    if(data.count===0){
+    if(data.count === 0){
       el.innerHTML='<div class="mw-none"><div class="mw-icon">✅</div>'
         +'<div class="mw-msg">現在 お待ちの方はいません</div>'
         +'<div class="mw-sub">比較的スムーズにご案内できます</div></div>';
