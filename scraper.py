@@ -167,7 +167,13 @@ async def scrape() -> dict:
 
         try:
             print(f"アクセス中: {CLINICS_URL}")
-            await page.goto(CLINICS_URL, wait_until="networkidle", timeout=30000)
+            await page.goto(CLINICS_URL, wait_until="domcontentloaded", timeout=30000)
+
+            # SPAのレンダリングを待つ
+            await page.wait_for_timeout(5000)
+            await save_debug_screenshot(page, "debug_initial.png")
+            print(f"初期URL: {page.url}")
+            print(f"ページタイトル: {await page.title()}")
 
             # ログイン処理（必要な場合）
             await wait_for_page(page, context)
