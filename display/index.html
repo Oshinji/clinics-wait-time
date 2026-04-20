@@ -3,225 +3,155 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>直来の方の待ち時間 | みがわ町整形外科クリニック</title>
+  <title>待ち時間 | みがわ町整形外科クリニック</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
-      background: #f5f7fa;
-      min-height: 100vh;
+      background: #fff;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 24px 16px;
+      min-height: 100vh;
+      padding: 16px;
     }
-
     .card {
       background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-      padding: 40px 48px;
+      border: 2px solid #b3d4f0;
+      border-radius: 12px;
+      padding: 24px 28px;
       text-align: center;
-      max-width: 480px;
+      max-width: 520px;
       width: 100%;
+      box-shadow: 0 2px 12px rgba(21,101,192,.08);
     }
-
-    .clinic-name {
-      font-size: 14px;
-      color: #888;
-      margin-bottom: 8px;
-      letter-spacing: 0.05em;
-    }
-
-    h1 {
-      font-size: 20px;
-      color: #333;
-      margin-bottom: 32px;
+    .label {
+      display: inline-block;
+      background: #1565c0;
+      color: #fff;
+      font-size: 12px;
       font-weight: 700;
-    }
-
-    /* ─── 診療時間外 ─── */
-    .state-closed .icon { font-size: 56px; margin-bottom: 16px; }
-    .state-closed .message {
-      font-size: 20px;
-      font-weight: 700;
-      color: #555;
-    }
-    .state-closed .sub {
-      font-size: 13px;
-      color: #999;
-      margin-top: 8px;
-    }
-
-    /* ─── 待ちなし ─── */
-    .state-none .icon { font-size: 56px; margin-bottom: 16px; }
-    .state-none .message {
-      font-size: 20px;
-      font-weight: 700;
-      color: #27ae60;
-    }
-    .state-none .sub {
-      font-size: 13px;
-      color: #999;
-      margin-top: 8px;
-    }
-
-    /* ─── 待ちあり ─── */
-    .state-waiting .icon { font-size: 56px; margin-bottom: 16px; }
-    .state-waiting .time-label {
-      font-size: 15px;
-      color: #555;
-      margin-bottom: 6px;
-    }
-    .state-waiting .time-value {
-      font-size: 64px;
-      font-weight: 800;
-      color: #e74c3c;
-      line-height: 1;
-    }
-    .state-waiting .time-unit {
-      font-size: 22px;
-      font-weight: 700;
-      color: #e74c3c;
+      letter-spacing: .1em;
+      padding: 3px 14px;
+      border-radius: 20px;
       margin-bottom: 12px;
     }
-    .state-waiting .count-note {
-      font-size: 13px;
-      color: #888;
-      margin-top: 4px;
-    }
-
-    /* ─── エラー ─── */
-    .state-error .icon { font-size: 48px; margin-bottom: 12px; }
-    .state-error .message {
+    .title {
       font-size: 16px;
-      color: #e67e22;
       font-weight: 700;
-    }
-    .state-error .sub {
-      font-size: 12px;
-      color: #bbb;
-      margin-top: 8px;
-    }
-
-    /* ─── 更新情報 ─── */
-    .footer {
-      margin-top: 28px;
-      padding-top: 20px;
-      border-top: 1px solid #f0f0f0;
-    }
-    .updated-at {
-      font-size: 12px;
-      color: #bbb;
-    }
-    .notice {
-      font-size: 12px;
-      color: #aaa;
-      margin-top: 6px;
+      color: #1a3a6e;
+      margin-bottom: 18px;
       line-height: 1.6;
     }
-
-    /* ─── ローディング ─── */
-    .loading {
-      font-size: 15px;
-      color: #aaa;
-      padding: 24px 0;
+    .icon { font-size: 38px; margin-bottom: 8px; }
+    .msg-gray { font-size: 16px; font-weight: 700; color: #555; }
+    .msg-blue { font-size: 17px; font-weight: 700; color: #1565c0; }
+    .sub { font-size: 12px; color: #888; margin-top: 8px; line-height: 1.8; }
+    .time-label { font-size: 12px; color: #555; margin-bottom: 4px; }
+    .time-val { font-size: 56px; font-weight: 800; color: #c0392b; line-height: 1; }
+    .time-unit { font-size: 18px; font-weight: 700; color: #c0392b; margin-bottom: 6px; }
+    .time-count { font-size: 12px; color: #888; }
+    .footer {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #e8f0fb;
+      font-size: 11px;
+      color: #bbb;
+      line-height: 1.7;
     }
+    .updated { font-size: 11px; color: #b0bec5; margin-bottom: 3px; }
+    .loading { font-size: 14px; color: #b0bec5; padding: 16px 0; }
   </style>
 </head>
 <body>
   <div class="card">
-    <div class="clinic-name">みがわ町整形外科クリニック</div>
-    <h1>直来の方の待ち時間目安</h1>
-
-    <div id="content">
-      <div class="loading">読み込み中...</div>
-    </div>
-
+    <div class="label">WALK-IN</div>
+    <div class="title">予約なしでご来院の方の<br>現在の待ち時間目安</div>
+    <div id="body"><div class="loading">読み込み中…</div></div>
     <div class="footer">
-      <div class="updated-at" id="updated-at"></div>
-      <div class="notice">
-        ※ 目安であり、診察内容により前後します。<br>
-        ※ 約5分ごとに自動更新されます。
-      </div>
+      <div class="updated" id="updated"></div>
+      ※ 目安であり、診察内容により前後します。約15分ごとに自動更新されます。
     </div>
   </div>
 
   <script>
-    // ▼▼▼ ここだけ自分のGitHubリポジトリに合わせて変更してください ▼▼▼
-    const DATA_URL = "https://raw.githubusercontent.com/oshinji/clinics-wait-time/main/data/status.json";
-    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+  (function(){
+    var URL = "https://raw.githubusercontent.com/Oshinji/clinics-wait-time/main/data/status.json";
+    var INTERVAL = 15 * 60 * 1000;
 
-    const REFRESH_INTERVAL_MS = 5 * 60 * 1000; // 5分
-
-    function formatUpdatedAt(isoStr) {
-      if (!isoStr) return "";
-      const d = new Date(isoStr);
-      const hh = String(d.getHours()).padStart(2, "0");
-      const mm = String(d.getMinutes()).padStart(2, "0");
-      return `最終更新: ${hh}:${mm}`;
+    // 診療時間: 月火水金土 8:30-11:30 / 14:30-17:30 (土のみ〜16:30)、木日休診
+    function toMin(s){ var p=s.split(':'); return +p[0]*60+ +p[1]; }
+    function getSession(){
+      var d=new Date(), w=d.getDay(), n=d.getHours()*60+d.getMinutes();
+      var pmE = (w===6) ? toMin('16:30') : toMin('17:30');
+      var hrs = '8:30〜11:30 / 14:30〜'+((w===6)?'16:30':'17:30');
+      if(w===0||w===4) return {t:'hol'};
+      if(n<toMin('08:30')) return {t:'pre', hrs:hrs};
+      if(n<toMin('11:30')) return {t:'open'};
+      if(n<toMin('14:30')) return {t:'lun', hrs:hrs};
+      if(n<pmE)            return {t:'open'};
+      return {t:'aft', hrs:hrs};
     }
 
-    function render(data) {
-      const el = document.getElementById("content");
-
-      if (data.error) {
-        el.innerHTML = `
-          <div class="state-error">
-            <div class="icon">⚠️</div>
-            <div class="message">情報を取得できませんでした</div>
-            <div class="sub">しばらく後にもう一度ご確認ください</div>
-          </div>`;
-        return;
-      }
-
-      if (!data.is_open) {
-        el.innerHTML = `
-          <div class="state-closed">
-            <div class="icon">🏥</div>
-            <div class="message">現在診療時間外です</div>
-            <div class="sub">診療時間内にご確認ください</div>
-          </div>`;
-        return;
-      }
-
-      if (data.count === 0) {
-        el.innerHTML = `
-          <div class="state-none">
-            <div class="icon">✅</div>
-            <div class="message">現在 お待ちの方はいません</div>
-            <div class="sub">比較的スムーズにご案内できます</div>
-          </div>`;
-        return;
-      }
-
-      el.innerHTML = `
-        <div class="state-waiting">
-          <div class="icon">🕐</div>
-          <div class="time-label">現在の目安待ち時間</div>
-          <div class="time-value">${data.estimated_minutes}</div>
-          <div class="time-unit">分 程度</div>
-          <div class="count-note">（直来の方 ${data.count}名 が診察をお待ちです）</div>
-        </div>`;
+    function fmt(iso){
+      if(!iso) return '';
+      var d=new Date(iso);
+      return '最終更新: '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);
     }
 
-    async function fetchAndRender() {
-      try {
-        const res = await fetch(DATA_URL + "?t=" + Date.now());
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        render(data);
-        document.getElementById("updated-at").textContent = formatUpdatedAt(data.updated_at);
-      } catch (e) {
-        render({ error: e.message, is_open: true, count: 0, estimated_minutes: 0 });
-        document.getElementById("updated-at").textContent = "";
+    function render(data){
+      var el=document.getElementById('body');
+      if(!el) return;
+      var s=getSession();
+
+      if(data && data.error){
+        el.innerHTML='<div class="icon">⚠️</div><div class="msg-gray">情報を取得できませんでした</div>';
+        return;
       }
+      if(s.t==='hol'){
+        el.innerHTML='<div class="icon">🏥</div><div class="msg-gray">本日は休診日です</div><div class="sub">診療は月・火・水・金・土曜日に行っております</div>';
+        return;
+      }
+      if(s.t==='pre'){
+        el.innerHTML='<div class="icon">🕗</div><div class="msg-gray">本日の受付はまだ始まっていません</div><div class="sub">午前の受付開始：<strong>8:30</strong><br>受付時間：'+s.hrs+'</div>';
+        return;
+      }
+      if(s.t==='lun'){
+        el.innerHTML='<div class="icon">🍽️</div><div class="msg-gray">只今、お昼休みです</div><div class="sub">午後の受付開始：<strong>14:30</strong><br>受付時間：'+s.hrs+'</div>';
+        return;
+      }
+      if(s.t==='aft'){
+        el.innerHTML='<div class="icon">🏥</div><div class="msg-gray">本日の受付は終了しました</div><div class="sub">受付時間：'+s.hrs+'</div>';
+        return;
+      }
+      if(!data||!data.is_open){
+        el.innerHTML='<div class="icon">🏥</div><div class="msg-gray">現在受付時間外です</div>';
+        return;
+      }
+      if(data.count===0){
+        el.innerHTML='<div class="icon">✅</div><div class="msg-blue">現在 お待ちの方はいません</div><div class="sub">比較的スムーズにご案内できます</div>';
+        return;
+      }
+      el.innerHTML='<div class="time-label">現在の目安待ち時間</div>'
+        +'<div class="time-val">'+data.estimated_minutes+'</div>'
+        +'<div class="time-unit">分 程度</div>'
+        +'<div class="time-count">（予約なし来院の方 '+data.count+'名 が診察をお待ちです）</div>';
     }
 
-    fetchAndRender();
-    setInterval(fetchAndRender, REFRESH_INTERVAL_MS);
+    function load(){
+      fetch(URL+'?t='+Date.now())
+        .then(function(r){return r.json();})
+        .then(function(d){
+          render(d);
+          var u=document.getElementById('updated');
+          if(u) u.textContent=fmt(d.updated_at);
+        })
+        .catch(function(){render({error:true});});
+    }
+
+    load();
+    setInterval(load, INTERVAL);
+  })();
   </script>
 </body>
 </html>
