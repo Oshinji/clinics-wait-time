@@ -1,7 +1,7 @@
 {
   "count": 0,
   "estimated_minutes": 0,
-  "updated_at": "2026-04-20T00:00:32.982491",
-  "is_open": false,
-  "error": null
+  "updated_at": "2026-04-20T11:32:33.117905",
+  "is_open": true,
+  "error": "テーブルが表示されませんでした（セッション切れの可能性）"
 }
