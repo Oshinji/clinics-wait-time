@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 クリニクス 直来待ち時間スクレイパー
-直来患者の診察待ち人数を取得し、待ち時間を推定します
+直来患者の診察待ち人数を取得し、待ち時間を推定します。
+完了患者の履歴から物療比率(PT比率)を学習し、推定精度を向上させます。
 """
 
 import asyncio
@@ -23,33 +24,85 @@ PASSWORD     = os.getenv("CLINICS_PASSWORD", "")
 MINUTES_PER  = int(os.getenv("MINUTES_PER_PATIENT", "15"))
 SESSION_FILE = Path("session.json")
 OUTPUT_FILE  = Path("data/status.json")
+HISTORY_FILE = Path("data/history.json")
 OPEN_HOUR    = int(os.getenv("OPEN_HOUR",  "8"))
 CLOSE_HOUR   = int(os.getenv("CLOSE_HOUR", "18"))
 JST          = timezone(timedelta(hours=9))
+
+MIN_DURATION = int(os.getenv("MIN_DURATION_MINUTES", "20"))  # 物療のみ患者の判定閾値（分）
+MAX_DURATION = 180    # エラーデータ除外閾値（分）
+HISTORY_DAYS = 90     # 履歴保持日数
+MIN_SAMPLES  = 5      # フォールバック閾値（件未満は固定値を使用）
 # ────────────────────────────────────────────────────────────────
 # 受付時間
 #   月火水金・土　午前  8:30〜11:30
 #              　午後 14:30〜17:30（土曜は〜16:30）
 #   木・日　休診
 
-AM_START = dt_time(8,  30)
-AM_END   = dt_time(11, 30)
-PM_START = dt_time(14, 30)
-PM_END   = dt_time(17, 30)   # 平日
-PM_END_SAT = dt_time(16, 30) # 土曜
+AM_START   = dt_time(8,  30)
+AM_END     = dt_time(11, 30)
+PM_START   = dt_time(14, 30)
+PM_END     = dt_time(17, 30)
+PM_END_SAT = dt_time(16, 30)
 
 
 def is_open() -> bool:
     now = datetime.now(JST)
-    wd  = now.weekday()   # 0=月,1=火,2=水,3=木,4=金,5=土,6=日
+    wd  = now.weekday()   # 0=月 … 3=木(休) … 5=土 … 6=日(休)
     t   = now.time()
-
-    if wd in (3, 6):      # 木・日は休診
+    if wd in (3, 6):
         return False
-
     pm_end = PM_END_SAT if wd == 5 else PM_END
     return (AM_START <= t < AM_END) or (PM_START <= t < pm_end)
 
+
+# ─── 時刻パーサー ─────────────────────────────────────────────────
+
+def parse_hhmm(s: str):
+    """
+    'HH:MM' / 'HH:MM:SS' / 改行混じり などを受け取り、
+    その時刻を「午前0時からの分数」で返す。パース失敗は None。
+    """
+    # 改行・スペースをすべて除去してから処理
+    s = "".join(s.split()).strip()
+    if not s:
+        return None
+    # strptime で試す
+    for fmt in ("%H:%M:%S", "%H:%M"):
+        try:
+            t = datetime.strptime(s[:8], fmt)
+            return t.hour * 60 + t.minute
+        except ValueError:
+            pass
+    # "8:26" など先頭ゼロなしの場合
+    if ":" in s:
+        parts = s.split(":")
+        try:
+            h = int(parts[0])
+            m = int(parts[1][:2])
+            if 0 <= h <= 23 and 0 <= m <= 59:
+                return h * 60 + m
+        except (ValueError, IndexError):
+            pass
+    return None
+
+
+def calc_duration(checkin: str, checkout: str):
+    """
+    受付時刻・終了時刻の文字列から経過時間（分）を返す。
+    計算できない場合や異常値は None。
+    """
+    t1 = parse_hhmm(checkin)
+    t2 = parse_hhmm(checkout)
+    if t1 is None or t2 is None:
+        return None
+    diff = t2 - t1
+    if diff < 0 or diff > MAX_DURATION:
+        return None
+    return diff
+
+
+# ─── ブラウザ操作 ──────────────────────────────────────────────────
 
 async def save_debug_screenshot(page, name="debug_screenshot.png"):
     try:
@@ -61,11 +114,7 @@ async def save_debug_screenshot(page, name="debug_screenshot.png"):
 
 async def do_login(page):
     print(f"ログイン中... (現在URL: {page.url})")
-
-    # パスワードフィールドが現れるまで待つ
     await page.wait_for_selector('input[type="password"]', timeout=15000)
-
-    # メールアドレス入力（複数セレクタを試す）
     for sel in ['input[type="email"]', 'input[name="email"]', 'input[id*="email"]',
                 'input[placeholder*="メール"]', 'input[placeholder*="mail"]']:
         el = await page.query_selector(sel)
@@ -73,12 +122,8 @@ async def do_login(page):
             await el.fill(EMAIL)
             print(f"メール入力完了 ({sel})")
             break
-
-    # パスワード入力
     await page.fill('input[type="password"]', PASSWORD)
     print("パスワード入力完了")
-
-    # ログインボタンをクリック
     for sel in ['button[type="submit"]', 'input[type="submit"]',
                 'button:has-text("ログイン")', 'button:has-text("サインイン")',
                 'button:has-text("Sign in")', 'button:has-text("Login")']:
@@ -87,43 +132,32 @@ async def do_login(page):
             await el.click()
             print(f"ログインボタンクリック ({sel})")
             break
-
     await page.wait_for_load_state("networkidle", timeout=30000)
     print(f"ログイン後URL: {page.url}")
 
 
 async def wait_for_page(page, context):
-    """
-    テーブルまたはログインフォームが表示されるまで待ち、
-    必要ならログインを行う
-    """
+    """テーブルまたはログインフォームが表示されるまで待ち、必要ならログインする"""
     print(f"ページ待機中... URL: {page.url}")
-
-    # 「ログアウトしました」画面の「ログインへ戻る」ボタンを検出してクリック
-    logout_btn = await page.query_selector('button:has-text("ログインへ戻る"), a:has-text("ログインへ戻る")')
+    logout_btn = await page.query_selector(
+        'button:has-text("ログインへ戻る"), a:has-text("ログインへ戻る")'
+    )
     if logout_btn:
         print("「ログアウトしました」画面を検出 → ログインへ戻るをクリック")
         await save_debug_screenshot(page, "debug_logout_screen.png")
         await logout_btn.click()
         await page.wait_for_load_state("networkidle", timeout=15000)
-
-    # テーブルまたはパスワードフォームが出るまで待つ
     try:
         await page.wait_for_selector(
-            'tbody tr, input[type="password"]',
-            timeout=30000
+            'tbody tr, input[type="password"]', timeout=30000
         )
     except PlaywrightTimeout:
         await save_debug_screenshot(page, "debug_no_element.png")
         raise RuntimeError(f"ページ読み込みタイムアウト (URL: {page.url})")
-
-    # ログインフォームが表示されていたらログイン
     if await page.query_selector('input[type="password"]'):
         await save_debug_screenshot(page, "debug_login_page.png")
         await do_login(page)
         await context.storage_state(path=str(SESSION_FILE))
-
-        # ログイン後にテーブルを待つ
         try:
             await page.wait_for_selector('tbody tr', timeout=30000)
         except PlaywrightTimeout:
@@ -131,22 +165,32 @@ async def wait_for_page(page, context):
             raise RuntimeError("ログイン後もテーブルが表示されません")
 
 
-async def count_walk_in_waiting(page) -> int:
+async def scan_all_pages(page) -> tuple:
     """
-    受付一覧の全ページを走査して「診察待ち」かつ「直来」の患者数を返す。
-    午後の患者がページ2・3にいるケースに対応するため全ページを集計する。
+    受付一覧の全ページを1回走査して以下を同時に収集する：
+      - 診察待ち + 直来 の人数（待ち時間表示用）
+      - 会計完了 + 直来 の (date, checkin_str, duration_min) リスト（履歴学習用）
+
+    ページネーションは tbody 外の数字ボタンを JavaScript でクリックして進む。
     """
     await page.wait_for_selector('tbody tr', timeout=30000)
 
-    # ヘッダーからカラム位置を特定（1回だけ取得）
-    header_cells = await page.query_selector_all("thead th, thead td")
-    header_texts = [await c.inner_text() for c in header_cells]
+    # ヘッダーからカラム位置を特定
+    header_cells  = await page.query_selector_all("thead th, thead td")
+    header_texts  = [await c.inner_text() for c in header_cells]
     print(f"ヘッダー: {header_texts}")
 
-    status_idx = next((i for i, t in enumerate(header_texts) if "ステータス" in t), None)
-    label_idx  = next((i for i, t in enumerate(header_texts) if "ラベル"    in t), None)
+    status_idx   = next((i for i, t in enumerate(header_texts) if "ステータス" in t), None)
+    label_idx    = next((i for i, t in enumerate(header_texts) if "ラベル"    in t), None)
+    checkin_idx  = next((i for i, t in enumerate(header_texts) if "受付"      in t), None)
+    checkout_idx = next((i for i, t in enumerate(header_texts) if "終了"      in t), None)
 
-    total = 0
+    print(f"カラム: ステータス={status_idx}, ラベル={label_idx}, "
+          f"受付={checkin_idx}, 終了={checkout_idx}")
+
+    today         = datetime.now(JST).strftime("%Y-%m-%d")
+    waiting_count = 0
+    completed_rec = []
 
     for page_num in range(1, 21):   # 最大20ページ（安全ガード）
         rows = await page.query_selector_all("tbody tr")
@@ -155,20 +199,43 @@ async def count_walk_in_waiting(page) -> int:
         for row in rows:
             if status_idx is not None and label_idx is not None:
                 cells = await row.query_selector_all("td")
-                if len(cells) <= max(status_idx, label_idx):
+                max_idx = max(
+                    status_idx, label_idx,
+                    checkin_idx  if checkin_idx  is not None else 0,
+                    checkout_idx if checkout_idx is not None else 0,
+                )
+                if len(cells) <= max_idx:
                     continue
-                s = await cells[status_idx].inner_text()
-                l = await cells[label_idx].inner_text()
-                if "診察待ち" in s and "直来" in l:
-                    total += 1
+
+                status_text = await cells[status_idx].inner_text()
+                label_text  = await cells[label_idx].inner_text()
+
+                if "直来" not in label_text:
+                    continue   # 直来以外はスキップ
+
+                if "診察待ち" in status_text:
+                    waiting_count += 1
                     print(f"  → 直来 診察待ち 発見 (p{page_num})")
+
+                elif "会計完了" in status_text:
+                    # 受付〜終了の時間を記録（物療比率の学習に使用）
+                    if checkin_idx is not None and checkout_idx is not None:
+                        ci  = await cells[checkin_idx].inner_text()
+                        co  = await cells[checkout_idx].inner_text()
+                        dur = calc_duration(ci, co)
+                        if dur is not None:
+                            checkin_clean = "".join(ci.split())[:5]  # "HH:MM"
+                            completed_rec.append((today, checkin_clean, dur))
+
             else:
+                # フォールバック: 行テキスト全体で判断（時刻情報は取得不可）
                 text = await row.inner_text()
-                if "診察待ち" in text and "直来" in text:
-                    total += 1
+                if "直来" in text and "診察待ち" in text:
+                    waiting_count += 1
                     print(f"  → 直来 診察待ち 発見（フォールバック, p{page_num}）")
 
-        # 次ページボタンを探す（tbody の外側にある数字ボタンを JS で操作）
+        # ── 次ページへ ──
+        # tbody 外にある「次のページ番号」ボタンを JavaScript でクリック
         next_page = page_num + 1
         clicked = await page.evaluate("""(np) => {
             for (const el of document.querySelectorAll('button, a')) {
@@ -190,9 +257,99 @@ async def count_walk_in_waiting(page) -> int:
         await page.wait_for_timeout(1500)
         await page.wait_for_selector('tbody tr', timeout=10000)
 
-    print(f"合計 直来 診察待ち: {total}人")
-    return total
+    print(f"集計完了: 診察待ち直来={waiting_count}人, "
+          f"完了直来（履歴用）={len(completed_rec)}件")
+    return waiting_count, completed_rec
 
+
+# ─── 履歴管理 ──────────────────────────────────────────────────────
+
+def update_history(new_records: list) -> None:
+    """
+    data/history.json を更新する。
+      - 重複 (date, checkin) は追加しない
+      - HISTORY_DAYS 日より古いレコードは削除
+      - 物療比率(pt_ratio)を再計算して保存
+    """
+    if HISTORY_FILE.exists():
+        with open(HISTORY_FILE, encoding="utf-8") as f:
+            data = json.load(f)
+    else:
+        data = {
+            "records":      [],
+            "pt_ratio":     None,
+            "record_count": 0,
+            "updated_at":   None,
+        }
+
+    existing_keys = {(r["date"], r["checkin"]) for r in data["records"]}
+    added = 0
+
+    for date, checkin, duration in new_records:
+        key = (date, checkin)
+        if key in existing_keys:
+            continue
+        data["records"].append({
+            "date":         date,
+            "checkin":      checkin,
+            "duration_min": duration,
+        })
+        existing_keys.add(key)
+        added += 1
+
+    # 古いレコードを削除
+    cutoff = (datetime.now(JST) - timedelta(days=HISTORY_DAYS)).strftime("%Y-%m-%d")
+    data["records"] = [r for r in data["records"] if r["date"] >= cutoff]
+
+    # 物療比率を計算
+    all_d    = [r["duration_min"] for r in data["records"]]
+    pt_count = sum(1 for d in all_d if d < MIN_DURATION)
+    total    = len(all_d)
+
+    data["record_count"] = total
+    data["pt_ratio"]     = round(pt_count / total, 4) if total > 0 else None
+    data["updated_at"]   = datetime.now(JST).isoformat()
+
+    print(f"履歴更新: +{added}件, 合計{total}件, "
+          f"PT比率={data['pt_ratio']} "
+          f"（物療のみ{pt_count}件 / 全直来{total}件）")
+
+    HISTORY_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def compute_estimated(count: int) -> int:
+    """
+    現在の待ち人数から推定待ち時間（分）を計算する。
+
+    物療比率(pt_ratio)が学習済みの場合:
+        estimated = count × (1 − pt_ratio) × MINUTES_PER
+    データ不足の場合:
+        estimated = count × MINUTES_PER  （固定値でフォールバック）
+    """
+    if not HISTORY_FILE.exists():
+        print(f"履歴なし: フォールバック {MINUTES_PER}分/人")
+        return count * MINUTES_PER
+
+    with open(HISTORY_FILE, encoding="utf-8") as f:
+        data = json.load(f)
+
+    record_count = data.get("record_count", 0)
+    pt_ratio     = data.get("pt_ratio")
+
+    if record_count < MIN_SAMPLES or pt_ratio is None:
+        print(f"データ不足({record_count}件 < {MIN_SAMPLES}件): "
+              f"フォールバック {MINUTES_PER}分/人")
+        return count * MINUTES_PER
+
+    effective = count * (1.0 - pt_ratio)
+    estimated = max(0, round(effective * MINUTES_PER))
+    print(f"推定: {count}人 × (1 - {pt_ratio:.2f}) × {MINUTES_PER}分 = {estimated}分")
+    return estimated
+
+
+# ─── スクレイピング本体 ────────────────────────────────────────────
 
 async def scrape() -> dict:
     async with async_playwright() as p:
@@ -201,7 +358,6 @@ async def scrape() -> dict:
             args=["--no-sandbox", "--disable-dev-shm-usage"]
         )
 
-        # 保存済みセッションがあれば復元
         storage = str(SESSION_FILE) if SESSION_FILE.exists() else None
         context = await browser.new_context(
             storage_state=storage,
@@ -217,23 +373,23 @@ async def scrape() -> dict:
         try:
             print(f"アクセス中: {CLINICS_URL}")
             await page.goto(CLINICS_URL, wait_until="domcontentloaded", timeout=30000)
-
-            # SPAのレンダリングを待つ
             await page.wait_for_timeout(5000)
             await save_debug_screenshot(page, "debug_initial.png")
             print(f"初期URL: {page.url}")
             print(f"ページタイトル: {await page.title()}")
 
-            # ログイン処理（必要な場合）
             await wait_for_page(page, context)
 
-            # 受付一覧の取得
-            count    = await count_walk_in_waiting(page)
-            estimated = count * MINUTES_PER
+            # 全ページ走査（待ち人数カウント + 完了患者データ収集）
+            count, completed_records = await scan_all_pages(page)
+
+            # 完了患者データで履歴を更新 → pt_ratio を学習
+            update_history(completed_records)
+
+            # pt_ratio を使って推定待ち時間を計算
+            estimated = compute_estimated(count)
 
             print(f"直来 診察待ち: {count}人 → 推定 約{estimated}分")
-
-            # 成功時もスクリーンショットを残す（デバッグ用）
             await save_debug_screenshot(page, "debug_success.png")
 
             return {
