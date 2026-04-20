@@ -41,13 +41,14 @@ jobs:
           TZ: Asia/Tokyo
         run: python scraper.py
 
-      - name: デバッグスクショをアップロード（エラー時）
-        if: failure()
+      - name: デバッグスクショをアップロード（常時）
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: debug-screenshot
-          path: debug_screenshot.png
+          path: "debug_*.png"
           retention-days: 3
+          if-no-files-found: ignore
 
       - name: data/status.json をコミット＆プッシュ
         run: |
