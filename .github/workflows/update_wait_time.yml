@@ -1,8 +1,6 @@
 name: 待ち時間を更新
 
 on:
-  push:
-    branches: [main]
   schedule:
     # 平日 8:00〜18:00（JST = UTC+9）を5分ごと
     # UTC の 23:00〜09:00 = JST 8:00〜18:00
