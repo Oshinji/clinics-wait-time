@@ -1,28 +1,29 @@
-<!-- 直来待ち時間ウィジェット（WordPressカスタムHTMLブロックに貼り付け） -->
+<!-- 待ち時間ウィジェット（WordPressカスタムHTMLブロックに貼り付け） -->
 <div id="migawa-wait-widget">
   <div class="mw-card">
     <div class="mw-label">WALK-IN</div>
-    <div class="mw-title">直来の方の現在の待ち時間目安</div>
+    <div class="mw-title">予約なしでご来院の方の<br>現在の待ち時間目安</div>
     <div id="mw-body"><div class="mw-loading">読み込み中…</div></div>
     <div class="mw-footer">
       <div id="mw-updated"></div>
-      ※ 目安であり、診察内容により前後します。約5分ごとに自動更新されます。
+      ※ 目安であり、診察内容により前後します。約15分ごとに自動更新されます。
     </div>
   </div>
 </div>
 
 <script>
 (function(){
-  /* ── CSSをJavaScriptで注入（WordPressのstyleタグ除去対策） ── */
+  /* ── CSSをJavaScriptで注入 ── */
   var css = [
     '#migawa-wait-widget{font-family:"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;max-width:560px;margin:8px auto 24px}',
     '#migawa-wait-widget .mw-card{background:#fff;border:2px solid #b3d4f0;border-radius:12px;padding:28px 32px;text-align:center;box-shadow:0 2px 12px rgba(21,101,192,.08)}',
     '#migawa-wait-widget .mw-label{display:inline-block;background:#1565c0;color:#fff;font-size:12px;font-weight:700;letter-spacing:.1em;padding:3px 14px;border-radius:20px;margin-bottom:14px}',
-    '#migawa-wait-widget .mw-title{font-size:17px;font-weight:700;color:#1a3a6e;margin-bottom:20px}',
-    '#migawa-wait-widget .mw-closed .mw-icon,#migawa-wait-widget .mw-none .mw-icon,#migawa-wait-widget .mw-waiting .mw-icon{font-size:40px;margin-bottom:10px}',
-    '#migawa-wait-widget .mw-closed .mw-msg{font-size:17px;font-weight:700;color:#666}',
-    '#migawa-wait-widget .mw-closed .mw-sub,#migawa-wait-widget .mw-none .mw-sub{font-size:12px;color:#aaa;margin-top:6px}',
+    '#migawa-wait-widget .mw-title{font-size:17px;font-weight:700;color:#1a3a6e;margin-bottom:20px;line-height:1.6}',
+    '#migawa-wait-widget .mw-icon{font-size:40px;margin-bottom:10px}',
+    '#migawa-wait-widget .mw-closed .mw-msg{font-size:17px;font-weight:700;color:#555}',
+    '#migawa-wait-widget .mw-closed .mw-sub{font-size:13px;color:#888;margin-top:8px;line-height:1.7}',
     '#migawa-wait-widget .mw-none .mw-msg{font-size:18px;font-weight:700;color:#1565c0}',
+    '#migawa-wait-widget .mw-none .mw-sub{font-size:12px;color:#aaa;margin-top:6px}',
     '#migawa-wait-widget .mw-waiting .mw-timelabel{font-size:13px;color:#555;margin-bottom:4px}',
     '#migawa-wait-widget .mw-waiting .mw-timeval{font-size:60px;font-weight:800;color:#c0392b;line-height:1}',
     '#migawa-wait-widget .mw-waiting .mw-timeunit{font-size:20px;font-weight:700;color:#c0392b;margin-bottom:8px}',
@@ -32,46 +33,99 @@
     '#migawa-wait-widget #mw-updated{font-size:11px;color:#b0bec5;margin-bottom:4px}',
     '#migawa-wait-widget .mw-loading{font-size:14px;color:#b0bec5;padding:16px 0}'
   ].join('');
+  var s = document.createElement('style');
+  s.textContent = css;
+  document.head.appendChild(s);
 
-  var style = document.createElement('style');
-  style.textContent = css;
-  document.head.appendChild(style);
+  /* ── 設定 ── */
+  var DATA_URL  = "https://raw.githubusercontent.com/Oshinji/clinics-wait-time/main/data/status.json";
+  var INTERVAL  = 15 * 60 * 1000; // 15分
 
-  /* ── データ取得・表示 ── */
-  var DATA_URL = "https://raw.githubusercontent.com/Oshinji/clinics-wait-time/main/data/status.json";
-  var INTERVAL  = 5 * 60 * 1000;
+  // ▼ 診療時間・昼休憩をここで設定（昼休憩がない場合は LUNCH_START/END を null に）
+  var AM_START   = "08:30";
+  var LUNCH_START= "12:30";
+  var LUNCH_END  = "14:30";
+  var PM_END     = "18:00";
+
+  /* ── 時刻ヘルパー ── */
+  function toMin(hhmm){ var p=hhmm.split(':'); return +p[0]*60+ +p[1]; }
+  function nowMin(){
+    var d=new Date();
+    return d.getHours()*60 + d.getMinutes();
+  }
+  function getSession(){
+    var n=nowMin();
+    var amS=toMin(AM_START), lS=toMin(LUNCH_START), lE=toMin(LUNCH_END), pmE=toMin(PM_END);
+    if(n < amS)  return {type:'before',  next: AM_START};
+    if(n < lS)   return {type:'open'};
+    if(n < lE)   return {type:'lunch',   next: LUNCH_END};
+    if(n < pmE)  return {type:'open'};
+    return       {type:'after'};
+  }
 
   function fmt(iso){
-    if(!iso) return "";
-    var d = new Date(iso);
-    return "最終更新: " + ("0"+d.getHours()).slice(-2) + ":" + ("0"+d.getMinutes()).slice(-2);
+    if(!iso) return '';
+    var d=new Date(iso);
+    return '最終更新: '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);
   }
 
   function render(data){
-    var el = document.getElementById("mw-body");
+    var el=document.getElementById('mw-body');
     if(!el) return;
+
     if(data.error){
-      el.innerHTML = '<div class="mw-error"><div class="mw-msg">情報を取得できませんでした</div></div>';
+      el.innerHTML='<div class="mw-error"><div class="mw-icon">⚠️</div><div class="mw-msg">情報を取得できませんでした</div></div>';
       return;
     }
+
+    // ブラウザ側の時刻でセッションを判定（サーバーより正確）
+    var session = getSession();
+
+    if(session.type === 'before'){
+      el.innerHTML='<div class="mw-closed"><div class="mw-icon">🏥</div>'
+        +'<div class="mw-msg">現在の受付時間前です</div>'
+        +'<div class="mw-sub">本日の受付開始：<strong>'+session.next+'</strong></div></div>';
+      return;
+    }
+    if(session.type === 'lunch'){
+      el.innerHTML='<div class="mw-closed"><div class="mw-icon">🍽️</div>'
+        +'<div class="mw-msg">只今、昼休憩中です</div>'
+        +'<div class="mw-sub">午後の受付開始：<strong>'+session.next+'</strong></div></div>';
+      return;
+    }
+    if(session.type === 'after'){
+      el.innerHTML='<div class="mw-closed"><div class="mw-icon">🏥</div>'
+        +'<div class="mw-msg">本日の診療は終了しました</div>'
+        +'<div class="mw-sub">診療時間：'+AM_START+'〜'+LUNCH_START+' / '+LUNCH_END+'〜'+PM_END+'</div></div>';
+      return;
+    }
+
+    // 診療時間中
     if(!data.is_open){
-      el.innerHTML = '<div class="mw-closed"><div class="mw-icon">🏥</div><div class="mw-msg">現在診療時間外です</div><div class="mw-sub">診療時間内にご確認ください</div></div>';
+      el.innerHTML='<div class="mw-closed"><div class="mw-icon">🏥</div>'
+        +'<div class="mw-msg">現在受付時間外です</div></div>';
       return;
     }
-    if(data.count === 0){
-      el.innerHTML = '<div class="mw-none"><div class="mw-icon">✅</div><div class="mw-msg">現在 お待ちの方はいません</div><div class="mw-sub">比較的スムーズにご案内できます</div></div>';
+    if(data.count===0){
+      el.innerHTML='<div class="mw-none"><div class="mw-icon">✅</div>'
+        +'<div class="mw-msg">現在 お待ちの方はいません</div>'
+        +'<div class="mw-sub">比較的スムーズにご案内できます</div></div>';
       return;
     }
-    el.innerHTML = '<div class="mw-waiting"><div class="mw-icon">🕐</div><div class="mw-timelabel">現在の目安待ち時間</div><div class="mw-timeval">'+data.estimated_minutes+'</div><div class="mw-timeunit">分 程度</div><div class="mw-count">（直来の方 '+data.count+'名 が診察をお待ちです）</div></div>';
+    el.innerHTML='<div class="mw-waiting"><div class="mw-icon">🕐</div>'
+      +'<div class="mw-timelabel">現在の目安待ち時間</div>'
+      +'<div class="mw-timeval">'+data.estimated_minutes+'</div>'
+      +'<div class="mw-timeunit">分 程度</div>'
+      +'<div class="mw-count">（予約なし来院の方 '+data.count+'名 が診察をお待ちです）</div></div>';
   }
 
   function load(){
-    fetch(DATA_URL + "?t=" + Date.now())
+    fetch(DATA_URL+'?t='+Date.now())
       .then(function(r){ return r.json(); })
       .then(function(data){
         render(data);
-        var u = document.getElementById("mw-updated");
-        if(u) u.textContent = fmt(data.updated_at);
+        var u=document.getElementById('mw-updated');
+        if(u) u.textContent=fmt(data.updated_at);
       })
       .catch(function(){ render({error:true}); });
   }
