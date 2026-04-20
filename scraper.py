@@ -131,84 +131,67 @@ async def wait_for_page(page, context):
             raise RuntimeError("ログイン後もテーブルが表示されません")
 
 
-async def click_status_filter(page, label: str) -> bool:
-    """
-    画面上部のステータスフィルタボタンをクリックする。
-    クリックできたら True を返す。
-    """
-    selectors = [
-        f'button:has-text("{label}")',
-        f'label:has-text("{label}")',
-        f'span:has-text("{label}")',
-        f'div:has-text("{label}")',
-        f'a:has-text("{label}")',
-    ]
-    for sel in selectors:
-        els = await page.query_selector_all(sel)
-        for el in els:
-            text = (await el.inner_text()).strip()
-            if text == label or label in text:
-                await el.click()
-                print(f"フィルタクリック: 「{label}」({sel})")
-                await page.wait_for_timeout(2000)
-                return True
-    print(f"警告: フィルタ「{label}」が見つかりませんでした")
-    return False
-
-
 async def count_walk_in_waiting(page) -> int:
     """
-    「診察待ち」フィルタを適用し、直来患者の待ち人数を返す。
-
-    ページネーションで午後の患者が別ページにいる問題を回避するため、
-    先にステータスフィルタを「診察待ち」に絞ってから集計する。
+    受付一覧の全ページを走査して「診察待ち」かつ「直来」の患者数を返す。
+    午後の患者がページ2・3にいるケースに対応するため全ページを集計する。
     """
     await page.wait_for_selector('tbody tr', timeout=30000)
 
-    # 「診察待ち」フィルタをクリック（ページ送り不要になる）
-    filtered = await click_status_filter(page, "診察待ち")
-    await page.wait_for_selector('tbody tr, .no-result, [class*="empty"]', timeout=15000)
+    # ヘッダーからカラム位置を特定（1回だけ取得）
+    header_cells = await page.query_selector_all("thead th, thead td")
+    header_texts = [await c.inner_text() for c in header_cells]
+    print(f"ヘッダー: {header_texts}")
 
-    rows = await page.query_selector_all("tbody tr")
-    print(f"診察待ちフィルタ後の行数: {len(rows)}")
+    status_idx = next((i for i, t in enumerate(header_texts) if "ステータス" in t), None)
+    label_idx  = next((i for i, t in enumerate(header_texts) if "ラベル"    in t), None)
 
-    if not rows:
-        return 0
+    total = 0
 
-    count = 0
-
-    if filtered:
-        # フィルタ成功 → 全行が「診察待ち」なので直来ラベルだけ確認
-        for row in rows:
-            text = await row.inner_text()
-            if "直来" in text:
-                count += 1
-                print(f"  直来 診察待ち: {text[:80].strip()}")
-    else:
-        # フィルタ失敗 → 全行からステータスとラベルを両方チェック
-        header_cells = await page.query_selector_all("thead th, thead td")
-        header_texts = [await c.inner_text() for c in header_cells]
-        print(f"ヘッダー: {header_texts}")
-
-        status_idx = next((i for i, t in enumerate(header_texts) if "ステータス" in t), None)
-        label_idx  = next((i for i, t in enumerate(header_texts) if "ラベル"    in t), None)
+    for page_num in range(1, 21):   # 最大20ページ（安全ガード）
+        rows = await page.query_selector_all("tbody tr")
+        print(f"ページ {page_num}: {len(rows)} 行")
 
         for row in rows:
             if status_idx is not None and label_idx is not None:
                 cells = await row.query_selector_all("td")
                 if len(cells) <= max(status_idx, label_idx):
                     continue
-                status_text = await cells[status_idx].inner_text()
-                label_text  = await cells[label_idx].inner_text()
-                if "診察待ち" in status_text and "直来" in label_text:
-                    count += 1
+                s = await cells[status_idx].inner_text()
+                l = await cells[label_idx].inner_text()
+                if "診察待ち" in s and "直来" in l:
+                    total += 1
+                    print(f"  → 直来 診察待ち 発見 (p{page_num})")
             else:
                 text = await row.inner_text()
                 if "診察待ち" in text and "直来" in text:
-                    count += 1
+                    total += 1
+                    print(f"  → 直来 診察待ち 発見（フォールバック, p{page_num}）")
 
-    print(f"直来 診察待ち: {count}人")
-    return count
+        # 次ページボタンを探す（tbody の外側にある数字ボタンを JS で操作）
+        next_page = page_num + 1
+        clicked = await page.evaluate("""(np) => {
+            for (const el of document.querySelectorAll('button, a')) {
+                if (el.closest('tbody')) continue;          // 患者行は除外
+                if (el.disabled) continue;
+                if (el.getAttribute('aria-disabled') === 'true') continue;
+                if (el.textContent.trim() === String(np)) {
+                    el.click();
+                    return true;
+                }
+            }
+            return false;
+        }""", next_page)
+
+        if not clicked:
+            print(f"ページ {next_page} のボタンが見つからないため終了")
+            break
+
+        await page.wait_for_timeout(1500)
+        await page.wait_for_selector('tbody tr', timeout=10000)
+
+    print(f"合計 直来 診察待ち: {total}人")
+    return total
 
 
 async def scrape() -> dict:
