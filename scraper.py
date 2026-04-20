@@ -82,6 +82,14 @@ async def wait_for_page(page, context):
     """
     print(f"ページ待機中... URL: {page.url}")
 
+    # 「ログアウトしました」画面の「ログインへ戻る」ボタンを検出してクリック
+    logout_btn = await page.query_selector('button:has-text("ログインへ戻る"), a:has-text("ログインへ戻る")')
+    if logout_btn:
+        print("「ログアウトしました」画面を検出 → ログインへ戻るをクリック")
+        await save_debug_screenshot(page, "debug_logout_screen.png")
+        await logout_btn.click()
+        await page.wait_for_load_state("networkidle", timeout=15000)
+
     # テーブルまたはパスワードフォームが出るまで待つ
     try:
         await page.wait_for_selector(
