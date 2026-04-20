@@ -1,7 +1,7 @@
 {
   "count": 0,
   "estimated_minutes": 0,
-  "updated_at": "2026-04-20T11:32:33.117905",
+  "updated_at": "2026-04-20T12:18:43.706880+09:00",
   "is_open": true,
-  "error": "テーブルが表示されませんでした（セッション切れの可能性）"
+  "error": "ページ読み込みタイムアウト (URL: https://karte.medley.life/d)"
 }
