@@ -8,7 +8,7 @@ import asyncio
 import json
 import os
 import sys
-from datetime import datetime, time as dt_time
+from datetime import datetime, time as dt_time, timezone, timedelta
 from pathlib import Path
 
 from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeout
@@ -28,8 +28,10 @@ CLOSE_HOUR     = int(os.getenv("CLOSE_HOUR", "18"))
 # ────────────────────────────────────────────────────────────────
 
 
+JST = timezone(timedelta(hours=9))
+
 def is_open() -> bool:
-    now = datetime.now().time()
+    now = datetime.now(JST).time()  # 日本時間で判定
     return dt_time(OPEN_HOUR, 0) <= now < dt_time(CLOSE_HOUR, 0)
 
 

@@ -36,6 +36,7 @@ jobs:
           MINUTES_PER_PATIENT: ${{ vars.MINUTES_PER_PATIENT || '15' }}
           OPEN_HOUR:  '8'
           CLOSE_HOUR: '18'
+          TZ: Asia/Tokyo
         run: python scraper.py
 
       - name: デバッグスクショをアップロード（エラー時）

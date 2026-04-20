@@ -1,0 +1,82 @@
+<!-- 直来待ち時間ウィジェット（WordPressカスタムHTMLブロックに貼り付け） -->
+<div id="migawa-wait-widget">
+  <div class="mw-card">
+    <div class="mw-label">WALK-IN</div>
+    <div class="mw-title">直来の方の現在の待ち時間目安</div>
+    <div id="mw-body"><div class="mw-loading">読み込み中…</div></div>
+    <div class="mw-footer">
+      <div id="mw-updated"></div>
+      ※ 目安であり、診察内容により前後します。約5分ごとに自動更新されます。
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* ── CSSをJavaScriptで注入（WordPressのstyleタグ除去対策） ── */
+  var css = [
+    '#migawa-wait-widget{font-family:"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;max-width:560px;margin:8px auto 24px}',
+    '#migawa-wait-widget .mw-card{background:#fff;border:2px solid #b3d4f0;border-radius:12px;padding:28px 32px;text-align:center;box-shadow:0 2px 12px rgba(21,101,192,.08)}',
+    '#migawa-wait-widget .mw-label{display:inline-block;background:#1565c0;color:#fff;font-size:12px;font-weight:700;letter-spacing:.1em;padding:3px 14px;border-radius:20px;margin-bottom:14px}',
+    '#migawa-wait-widget .mw-title{font-size:17px;font-weight:700;color:#1a3a6e;margin-bottom:20px}',
+    '#migawa-wait-widget .mw-closed .mw-icon,#migawa-wait-widget .mw-none .mw-icon,#migawa-wait-widget .mw-waiting .mw-icon{font-size:40px;margin-bottom:10px}',
+    '#migawa-wait-widget .mw-closed .mw-msg{font-size:17px;font-weight:700;color:#666}',
+    '#migawa-wait-widget .mw-closed .mw-sub,#migawa-wait-widget .mw-none .mw-sub{font-size:12px;color:#aaa;margin-top:6px}',
+    '#migawa-wait-widget .mw-none .mw-msg{font-size:18px;font-weight:700;color:#1565c0}',
+    '#migawa-wait-widget .mw-waiting .mw-timelabel{font-size:13px;color:#555;margin-bottom:4px}',
+    '#migawa-wait-widget .mw-waiting .mw-timeval{font-size:60px;font-weight:800;color:#c0392b;line-height:1}',
+    '#migawa-wait-widget .mw-waiting .mw-timeunit{font-size:20px;font-weight:700;color:#c0392b;margin-bottom:8px}',
+    '#migawa-wait-widget .mw-waiting .mw-count{font-size:12px;color:#888}',
+    '#migawa-wait-widget .mw-error .mw-msg{font-size:14px;color:#e67e22;font-weight:700}',
+    '#migawa-wait-widget .mw-footer{margin-top:18px;padding-top:14px;border-top:1px solid #e8f0fb;font-size:11px;color:#bbb;line-height:1.7}',
+    '#migawa-wait-widget #mw-updated{font-size:11px;color:#b0bec5;margin-bottom:4px}',
+    '#migawa-wait-widget .mw-loading{font-size:14px;color:#b0bec5;padding:16px 0}'
+  ].join('');
+
+  var style = document.createElement('style');
+  style.textContent = css;
+  document.head.appendChild(style);
+
+  /* ── データ取得・表示 ── */
+  var DATA_URL = "https://raw.githubusercontent.com/Oshinji/clinics-wait-time/main/data/status.json";
+  var INTERVAL  = 5 * 60 * 1000;
+
+  function fmt(iso){
+    if(!iso) return "";
+    var d = new Date(iso);
+    return "最終更新: " + ("0"+d.getHours()).slice(-2) + ":" + ("0"+d.getMinutes()).slice(-2);
+  }
+
+  function render(data){
+    var el = document.getElementById("mw-body");
+    if(!el) return;
+    if(data.error){
+      el.innerHTML = '<div class="mw-error"><div class="mw-msg">情報を取得できませんでした</div></div>';
+      return;
+    }
+    if(!data.is_open){
+      el.innerHTML = '<div class="mw-closed"><div class="mw-icon">🏥</div><div class="mw-msg">現在診療時間外です</div><div class="mw-sub">診療時間内にご確認ください</div></div>';
+      return;
+    }
+    if(data.count === 0){
+      el.innerHTML = '<div class="mw-none"><div class="mw-icon">✅</div><div class="mw-msg">現在 お待ちの方はいません</div><div class="mw-sub">比較的スムーズにご案内できます</div></div>';
+      return;
+    }
+    el.innerHTML = '<div class="mw-waiting"><div class="mw-icon">🕐</div><div class="mw-timelabel">現在の目安待ち時間</div><div class="mw-timeval">'+data.estimated_minutes+'</div><div class="mw-timeunit">分 程度</div><div class="mw-count">（直来の方 '+data.count+'名 が診察をお待ちです）</div></div>';
+  }
+
+  function load(){
+    fetch(DATA_URL + "?t=" + Date.now())
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        render(data);
+        var u = document.getElementById("mw-updated");
+        if(u) u.textContent = fmt(data.updated_at);
+      })
+      .catch(function(){ render({error:true}); });
+  }
+
+  load();
+  setInterval(load, INTERVAL);
+})();
+</script>
