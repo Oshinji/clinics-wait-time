@@ -113,7 +113,7 @@
   <script>
   (function(){
     var URL = "https://raw.githubusercontent.com/Oshinji/clinics-wait-time/main/data/status.json";
-    var INTERVAL = 15 * 60 * 1000;
+    var INTERVAL = 10 * 60 * 1000;
 
     // 診療時間: 月火水金土 8:30-11:30 / 14:30-17:30 (土のみ〜16:30)、木日休診
     function toMin(s){ var p=s.split(':'); return +p[0]*60+ +p[1]; }

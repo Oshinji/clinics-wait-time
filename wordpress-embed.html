@@ -53,6 +53,6 @@ function load(){
     if(u&&d.updated_at){var dt=new Date(d.updated_at);u.textContent="最終更新: "+("0"+dt.getHours()).slice(-2)+":"+("0"+dt.getMinutes()).slice(-2);}
   }).catch(function(){show({error:true});});
 }
-load();setInterval(load,900000);
+load();setInterval(load,600000);
 }();
 </script>
