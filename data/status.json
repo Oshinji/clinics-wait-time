@@ -3,7 +3,8 @@
   "appt_count": 0,
   "appt_minutes": 0,
   "estimated_minutes": 0,
-  "updated_at": "2026-04-21T23:46:16.288923+09:00",
+  "current_slot": null,
+  "updated_at": "2026-04-22T00:01:31.281498+09:00",
   "is_open": false,
   "error": null
 }
