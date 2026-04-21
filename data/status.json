@@ -1,9 +1,9 @@
 {
   "count": 0,
-  "appt_count": 3,
-  "appt_minutes": 40,
-  "estimated_minutes": 40,
-  "updated_at": "2026-04-21T15:29:47.179712+09:00",
+  "appt_count": 0,
+  "appt_minutes": 0,
+  "estimated_minutes": 0,
+  "updated_at": "2026-04-21T16:36:13.384487+09:00",
   "is_open": true,
   "error": null
 }
