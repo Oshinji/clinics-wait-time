@@ -26,7 +26,8 @@
   // 受付時間: 月火水金土 8:30-11:30 / 14:30-17:30（土のみ〜16:30） 木日休診
   function toMin(s){ var p=s.split(':'); return +p[0]*60+ +p[1]; }
   function session(){
-    var d=new Date(), wd=d.getDay(), n=d.getHours()*60+d.getMinutes();
+    var _d=new Date(), d=new Date(_d.toLocaleString("en-US",{timeZone:"Asia/Tokyo"}));
+    var wd=d.getDay(), n=d.getHours()*60+d.getMinutes();
     var amS=toMin('08:30'), amE=toMin('11:30'), pmS=toMin('14:30');
     var pmE=(wd===6)?toMin('16:30'):toMin('17:30');
     var hrs='8:30\u301611:30 / 14:30\u3016'+((wd===6)?'16:30':'17:30');

@@ -70,7 +70,7 @@
     <div id="body"><div class="loading">読み込み中…</div></div>
     <div class="footer">
       <div class="updated" id="updated"></div>
-      ※ 目安であり、診察内容により前後します。約15分ごとに自動更新されます。
+      ※ 目安であり、診察内容により前後します。診療時間中のみ約15分ごとに自動更新されます。
     </div>
   </div>
 
@@ -82,7 +82,8 @@
     // 診療時間: 月火水金土 8:30-11:30 / 14:30-17:30 (土のみ〜16:30)、木日休診
     function toMin(s){ var p=s.split(':'); return +p[0]*60+ +p[1]; }
     function getSession(){
-      var d=new Date(), w=d.getDay(), n=d.getHours()*60+d.getMinutes();
+      var _d=new Date(), d=new Date(_d.toLocaleString("en-US",{timeZone:"Asia/Tokyo"}));
+      var w=d.getDay(), n=d.getHours()*60+d.getMinutes();
       var pmE = (w===6) ? toMin('16:30') : toMin('17:30');
       var hrs = '8:30〜11:30 / 14:30〜'+((w===6)?'16:30':'17:30');
       if(w===0||w===4) return {t:'hol'};

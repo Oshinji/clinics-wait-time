@@ -7,7 +7,8 @@ s.textContent="#mw-widget{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-
 document.head.appendChild(s);
 function m(t){var p=t.split(":");return +p[0]*60+ +p[1];}
 function sess(){
-  var d=new Date(),w=d.getDay(),n=d.getHours()*60+d.getMinutes();
+  var _d=new Date(),d=new Date(_d.toLocaleString("en-US",{timeZone:"Asia/Tokyo"}));
+  var w=d.getDay(),n=d.getHours()*60+d.getMinutes();
   var h="8:30～11:30 / 14:30～"+((w===6)?"16:30":"17:30");
   if(w===0||w===4)return{t:"hol"};
   if(n<m("08:30"))return{t:"pre",h:h};
