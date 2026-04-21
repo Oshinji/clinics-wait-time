@@ -168,7 +168,8 @@ async def wait_for_page(page, context):
 async def scan_all_pages(page) -> tuple:
     """
     受付一覧の全ページを1回走査して以下を同時に収集する：
-      - 診察待ち + 直来 の人数（待ち時間表示用）
+      - 診察待ち + 直来 の人数（walkin_count）
+      - 診察待ち + 予約 の人数（appt_count）  ← 予約優先のため待ち時間計算に使用
       - 会計完了 + 直来 の (date, checkin_str, duration_min) リスト（履歴学習用）
 
     ページネーションは tbody 外の数字ボタンを JavaScript でクリックして進む。
@@ -189,7 +190,8 @@ async def scan_all_pages(page) -> tuple:
           f"受付={checkin_idx}, 終了={checkout_idx}")
 
     today         = datetime.now(JST).strftime("%Y-%m-%d")
-    waiting_count = 0
+    walkin_count  = 0   # 直来 診察待ち
+    appt_count    = 0   # 予約 診察待ち（予約優先のため待ち時間に加算）
     completed_rec = []
 
     for page_num in range(1, 21):   # 最大20ページ（安全ガード）
@@ -209,16 +211,18 @@ async def scan_all_pages(page) -> tuple:
 
                 status_text = await cells[status_idx].inner_text()
                 label_text  = await cells[label_idx].inner_text()
-
-                if "直来" not in label_text:
-                    continue   # 直来以外はスキップ
+                is_walkin   = "直来" in label_text
 
                 if "診察待ち" in status_text:
-                    waiting_count += 1
-                    print(f"  → 直来 診察待ち 発見 (p{page_num})")
+                    if is_walkin:
+                        walkin_count += 1
+                        print(f"  → 直来 診察待ち 発見 (p{page_num})")
+                    else:
+                        appt_count += 1
+                        print(f"  → 予約 診察待ち 発見 (p{page_num})")
 
-                elif "会計完了" in status_text:
-                    # 受付〜終了の時間を記録（物療比率の学習に使用）
+                elif "会計完了" in status_text and is_walkin:
+                    # 直来の受付〜終了の時間を記録（物療比率の学習に使用）
                     if checkin_idx is not None and checkout_idx is not None:
                         ci  = await cells[checkin_idx].inner_text()
                         co  = await cells[checkout_idx].inner_text()
@@ -231,8 +235,11 @@ async def scan_all_pages(page) -> tuple:
                 # フォールバック: 行テキスト全体で判断（時刻情報は取得不可）
                 text = await row.inner_text()
                 if "直来" in text and "診察待ち" in text:
-                    waiting_count += 1
+                    walkin_count += 1
                     print(f"  → 直来 診察待ち 発見（フォールバック, p{page_num}）")
+                elif "直来" not in text and "診察待ち" in text:
+                    appt_count += 1
+                    print(f"  → 予約 診察待ち 発見（フォールバック, p{page_num}）")
 
         # ── 次ページへ ──
         # tbody 外にある「次のページ番号」ボタンを JavaScript でクリック
@@ -257,9 +264,9 @@ async def scan_all_pages(page) -> tuple:
         await page.wait_for_timeout(1500)
         await page.wait_for_selector('tbody tr', timeout=10000)
 
-    print(f"集計完了: 診察待ち直来={waiting_count}人, "
+    print(f"集計完了: 直来 診察待ち={walkin_count}人, 予約 診察待ち={appt_count}人, "
           f"完了直来（履歴用）={len(completed_rec)}件")
-    return waiting_count, completed_rec
+    return walkin_count, appt_count, completed_rec
 
 
 # ─── 履歴管理 ──────────────────────────────────────────────────────
@@ -319,18 +326,25 @@ def update_history(new_records: list) -> None:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
-def compute_estimated(count: int) -> int:
+def compute_estimated(walkin_count: int, appt_count: int) -> int:
     """
     現在の待ち人数から推定待ち時間（分）を計算する。
 
+    当院は予約優先のため、予約患者の診察待ち人数も加味する。
+
     物療比率(pt_ratio)が学習済みの場合:
-        estimated = count × (1 − pt_ratio) × MINUTES_PER
+        estimated = (appt_count + walkin_count × (1 − pt_ratio)) × MINUTES_PER
     データ不足の場合:
-        estimated = count × MINUTES_PER  （固定値でフォールバック）
+        estimated = (appt_count + walkin_count) × MINUTES_PER  （固定値でフォールバック）
+
+    ※ pt_ratio は直来患者の履歴から算出（物療のみ患者の割合）。
+      予約患者には pt_ratio を適用せず保守的に全員 MINUTES_PER を使用する。
     """
     if not HISTORY_FILE.exists():
         print(f"履歴なし: フォールバック {MINUTES_PER}分/人")
-        return count * MINUTES_PER
+        estimated = (appt_count + walkin_count) * MINUTES_PER
+        print(f"推定: (予約{appt_count}人 + 直来{walkin_count}人) × {MINUTES_PER}分 = {estimated}分")
+        return estimated
 
     with open(HISTORY_FILE, encoding="utf-8") as f:
         data = json.load(f)
@@ -341,11 +355,14 @@ def compute_estimated(count: int) -> int:
     if record_count < MIN_SAMPLES or pt_ratio is None:
         print(f"データ不足({record_count}件 < {MIN_SAMPLES}件): "
               f"フォールバック {MINUTES_PER}分/人")
-        return count * MINUTES_PER
+        estimated = (appt_count + walkin_count) * MINUTES_PER
+        print(f"推定: (予約{appt_count}人 + 直来{walkin_count}人) × {MINUTES_PER}分 = {estimated}分")
+        return estimated
 
-    effective = count * (1.0 - pt_ratio)
+    effective = appt_count + walkin_count * (1.0 - pt_ratio)
     estimated = max(0, round(effective * MINUTES_PER))
-    print(f"推定: {count}人 × (1 - {pt_ratio:.2f}) × {MINUTES_PER}分 = {estimated}分")
+    print(f"推定: (予約{appt_count}人 + 直来{walkin_count}人 × (1 - {pt_ratio:.2f})) "
+          f"× {MINUTES_PER}分 = {estimated}分")
     return estimated
 
 
@@ -381,19 +398,21 @@ async def scrape() -> dict:
             await wait_for_page(page, context)
 
             # 全ページ走査（待ち人数カウント + 完了患者データ収集）
-            count, completed_records = await scan_all_pages(page)
+            walkin_count, appt_count, completed_records = await scan_all_pages(page)
 
             # 完了患者データで履歴を更新 → pt_ratio を学習
             update_history(completed_records)
 
-            # pt_ratio を使って推定待ち時間を計算
-            estimated = compute_estimated(count)
+            # pt_ratio と予約待ち人数を使って推定待ち時間を計算
+            estimated = compute_estimated(walkin_count, appt_count)
 
-            print(f"直来 診察待ち: {count}人 → 推定 約{estimated}分")
+            print(f"直来 診察待ち: {walkin_count}人, 予約 診察待ち: {appt_count}人 "
+                  f"→ 推定 約{estimated}分")
             await save_debug_screenshot(page, "debug_success.png")
 
             return {
-                "count":             count,
+                "count":             walkin_count,
+                "appt_count":        appt_count,
                 "estimated_minutes": estimated,
                 "updated_at":        datetime.now(JST).isoformat(),
                 "is_open":           True,
@@ -405,6 +424,7 @@ async def scrape() -> dict:
             await save_debug_screenshot(page, "debug_screenshot.png")
             return {
                 "count":             0,
+                "appt_count":        0,
                 "estimated_minutes": 0,
                 "updated_at":        datetime.now(JST).isoformat(),
                 "is_open":           True,
@@ -426,6 +446,7 @@ def main():
     if not is_open():
         data = {
             "count":             0,
+            "appt_count":        0,
             "estimated_minutes": 0,
             "updated_at":        datetime.now(JST).isoformat(),
             "is_open":           False,
