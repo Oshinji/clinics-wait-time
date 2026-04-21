@@ -8,6 +8,7 @@
 import asyncio
 import json
 import os
+import re
 import sys
 from datetime import datetime, time as dt_time, timezone, timedelta
 from pathlib import Path
@@ -87,6 +88,22 @@ def parse_hhmm(s: str):
                 return h * 60 + m
         except (ValueError, IndexError):
             pass
+    return None
+
+
+def extract_slot_start(text: str):
+    """
+    診察予定カラムの文字列から先頭の HH:MM を抽出し、午前0時からの分数で返す。
+    例: '17:30〜17:45' → 17*60+30, '17:30' → 17*60+30, 空/不正 → None
+    """
+    if not text:
+        return None
+    m = re.search(r'(\d{1,2}):(\d{2})', text)
+    if not m:
+        return None
+    h, mm = int(m.group(1)), int(m.group(2))
+    if 0 <= h <= 23 and 0 <= mm <= 59:
+        return h * 60 + mm
     return None
 
 
@@ -189,15 +206,17 @@ async def scan_all_pages(page) -> tuple:
     checkin_idx  = next((i for i, t in enumerate(header_texts) if "受付"      in t), None)
     checkout_idx = next((i for i, t in enumerate(header_texts) if "終了"      in t), None)
     menu_idx     = next((i for i, t in enumerate(header_texts) if "メニュー"  in t), None)
+    appt_idx     = next((i for i, t in enumerate(header_texts) if "診察予定" in t), None)
 
     print(f"カラム: ステータス={status_idx}, ラベル={label_idx}, メニュー={menu_idx}, "
-          f"受付={checkin_idx}, 終了={checkout_idx}")
+          f"受付={checkin_idx}, 終了={checkout_idx}, 診察予定={appt_idx}")
 
     today         = datetime.now(JST).strftime("%Y-%m-%d")
     walkin_count  = 0   # 直来 診察待ち
     appt_count    = 0   # 予約 診察待ち（件数）
     appt_minutes  = 0   # 予約 診察待ちの合計枠時間（分）
     completed_rec = []
+    current_min   = None   # 診察中の最早開始時刻（分）
 
     for page_num in range(1, 21):   # 最大20ページ（安全ガード）
         rows = await page.query_selector_all("tbody tr")
@@ -236,6 +255,15 @@ async def scan_all_pages(page) -> tuple:
                         appt_minutes += slot
                         print(f"  → 予約 診察待ち 発見 [{menu_text.strip()[:10]}] "
                               f"{slot}分枠 (p{page_num})")
+
+                elif "診察中" in status_text:
+                    if appt_idx is not None and len(cells) > appt_idx:
+                        appt_text = await cells[appt_idx].inner_text()
+                        start_min = extract_slot_start(appt_text)
+                        if start_min is not None and (current_min is None or start_min < current_min):
+                            current_min = start_min
+                            print(f"  → 診察中 発見 [{appt_text.strip()[:15]}] "
+                                  f"開始={start_min // 60:02d}:{start_min % 60:02d} (p{page_num})")
 
                 elif "会計完了" in status_text and is_walkin:
                     # 直来の受付〜終了の時間を記録（物療比率の学習に使用）
@@ -280,9 +308,14 @@ async def scan_all_pages(page) -> tuple:
         await page.wait_for_timeout(1500)
         await page.wait_for_selector('tbody tr', timeout=10000)
 
+    current_slot = (
+        f"{current_min // 60:02d}:{current_min % 60:02d}"
+        if current_min is not None else None
+    )
     print(f"集計完了: 直来 診察待ち={walkin_count}人, 予約 診察待ち={appt_count}人"
-          f"（合計{appt_minutes}分枠）, 完了直来（履歴用）={len(completed_rec)}件")
-    return walkin_count, appt_count, appt_minutes, completed_rec
+          f"（合計{appt_minutes}分枠）, 完了直来（履歴用）={len(completed_rec)}件, "
+          f"診察中={current_slot or 'なし'}")
+    return walkin_count, appt_count, appt_minutes, completed_rec, current_slot
 
 
 # ─── 履歴管理 ──────────────────────────────────────────────────────
@@ -415,8 +448,8 @@ async def scrape() -> dict:
 
             await wait_for_page(page, context)
 
-            # 全ページ走査（待ち人数カウント + 完了患者データ収集）
-            walkin_count, appt_count, appt_minutes, completed_records = \
+            # 全ページ走査（待ち人数カウント + 完了患者データ収集 + 診察中の予約枠）
+            walkin_count, appt_count, appt_minutes, completed_records, current_slot = \
                 await scan_all_pages(page)
 
             # 完了患者データで履歴を更新 → pt_ratio を学習
@@ -434,6 +467,7 @@ async def scrape() -> dict:
                 "appt_count":        appt_count,
                 "appt_minutes":      appt_minutes,
                 "estimated_minutes": estimated,
+                "current_slot":      current_slot,
                 "updated_at":        datetime.now(JST).isoformat(),
                 "is_open":           True,
                 "error":             None,
@@ -447,6 +481,7 @@ async def scrape() -> dict:
                 "appt_count":        0,
                 "appt_minutes":      0,
                 "estimated_minutes": 0,
+                "current_slot":      None,
                 "updated_at":        datetime.now(JST).isoformat(),
                 "is_open":           True,
                 "error":             str(e),
@@ -470,6 +505,7 @@ def main():
             "appt_count":        0,
             "appt_minutes":      0,
             "estimated_minutes": 0,
+            "current_slot":      None,
             "updated_at":        datetime.now(JST).isoformat(),
             "is_open":           False,
             "error":             None,

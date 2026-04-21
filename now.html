@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>みがわ町整形外科クリニック - 現在診察中</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-900: #0f3d28;
+    --green-800: #1b5e3f;
+    --green-700: #2e7d4f;
+    --green-600: #4caf7a;
+    --green-500: #6ec58f;
+    --green-100: #e8f3ec;
+    --cream:     #f3ead1;
+    --status-open: #2d8a5a;
+    --status-break: #c77a2d;
+    --status-closed: #8a8a8a;
+    --status-alert: #b83a3a;
+    --ink: #1a3326;
+    --ink-soft: #4d6658;
+    --ink-muted: #8a9b92;
+    --bg-page: #f2f7f3;
+    --bg-card: #ffffff;
+    --border-soft: #d9e6de;
+    --border-hair: #e9f0eb;
+    --shadow-card: 0 1px 2px rgba(15, 61, 40, 0.04),
+                   0 8px 24px -8px rgba(15, 61, 40, 0.08),
+                   0 24px 48px -16px rgba(15, 61, 40, 0.06);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Noto Sans JP', 'Inter', -apple-system, sans-serif;
+    background: var(--bg-page);
+    background-image:
+      radial-gradient(ellipse at top, rgba(46, 125, 79, 0.07), transparent 60%),
+      radial-gradient(ellipse at bottom, rgba(243, 234, 209, 0.25), transparent 55%);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 520px;
+    background: var(--bg-card);
+    border-radius: 20px;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Header */
+  .header {
+    position: relative;
+    padding: 28px 32px 24px;
+    background: linear-gradient(180deg, #ffffff 0%, #f6fbf7 100%);
+    border-bottom: 1px solid var(--border-hair);
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg,
+      var(--green-900) 0%,
+      var(--green-700) 50%,
+      var(--green-500) 100%);
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand-mark {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--green-800), var(--green-600));
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px -2px rgba(27, 94, 63, 0.3);
+  }
+  .brand-mark svg { width: 22px; height: 22px; color: #fff; }
+  .brand-text { display: flex; flex-direction: column; gap: 2px; }
+  .brand-name {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--green-900);
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+  }
+
+  /* Section label */
+  .section-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px 0;
+    gap: 12px;
+  }
+  .section-label-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: linear-gradient(135deg, rgba(46, 125, 79, 0.1), rgba(46, 125, 79, 0.04));
+    border: 1.5px solid rgba(46, 125, 79, 0.2);
+    border-radius: 10px;
+    position: relative;
+  }
+  .section-label-left::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 10%; bottom: 10%;
+    width: 3px;
+    background: var(--green-700);
+    border-radius: 0 2px 2px 0;
+  }
+  .label-tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #fff;
+    background: var(--green-700);
+    padding: 5px 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px -1px rgba(46, 125, 79, 0.3);
+  }
+  .label-text { font-size: 13px; color: var(--green-900); font-weight: 600; }
+  .update-time {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; color: var(--ink-muted);
+    display: flex; align-items: center; gap: 5px;
+  }
+  .update-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--green-600);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  /* Status block */
+  .status-block {
+    padding: 24px 32px 18px;
+    text-align: center;
+    position: relative;
+  }
+  .status-icon-wrap {
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    margin-bottom: 18px;
+    position: relative;
+    background: linear-gradient(135deg, var(--green-100) 0%, #d3ecdb 100%);
+  }
+  .status-icon-wrap.is-prep    { background: linear-gradient(135deg, #fef5e7 0%, #fcead0 100%); }
+  .status-icon-wrap.is-closed  { background: linear-gradient(135deg, #f0f2f5 0%, #e3e6ec 100%); }
+  .status-icon-wrap.is-alert   { background: linear-gradient(135deg, #fbe9e9 0%, #f5d3d3 100%); }
+  .status-icon-wrap::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1.5px dashed rgba(46, 125, 79, 0.25);
+  }
+  .status-icon-wrap.is-prep::after    { border-color: rgba(199, 122, 45, 0.25); }
+  .status-icon-wrap.is-closed::after  { border-color: rgba(138, 138, 138, 0.25); }
+  .status-icon-wrap.is-alert::after   { border-color: rgba(184, 58, 58, 0.25); }
+  .status-icon-wrap svg { width: 32px; height: 32px; color: var(--green-700); }
+  .status-icon-wrap.is-prep svg    { color: var(--status-break); }
+  .status-icon-wrap.is-closed svg  { color: var(--status-closed); }
+  .status-icon-wrap.is-alert svg   { color: var(--status-alert); }
+  .status-heading {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 24px; font-weight: 700;
+    color: var(--green-900);
+    letter-spacing: 0.03em;
+    margin-bottom: 6px;
+    line-height: 1.35;
+  }
+  .status-subtext {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+
+  /* Resume / highlight panel */
+  .resume-panel {
+    margin: 4px 32px 22px;
+    padding: 22px 24px;
+    background: linear-gradient(135deg, var(--green-900) 0%, var(--green-700) 100%);
+    border-radius: 14px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .resume-panel::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    background: radial-gradient(circle, rgba(243, 234, 209, 0.15), transparent 70%);
+    pointer-events: none;
+  }
+  .resume-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.78);
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .resume-label::before {
+    content: '';
+    width: 14px; height: 1px;
+    background: var(--green-500);
+  }
+  .resume-time-row {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+  .resume-time {
+    font-family: 'Inter', sans-serif;
+    font-size: 44px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: #fff;
+  }
+  .resume-time-note {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  /* Hours */
+  .hours { padding: 0 32px 20px; }
+  .hours-title {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .hours-rows { display: flex; gap: 8px; font-size: 12px; }
+  .hours-row {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #f8fbf9;
+    border: 1px solid var(--border-hair);
+    border-radius: 8px;
+    color: var(--ink-soft);
+  }
+  .hours-row.is-current {
+    background: rgba(46, 125, 79, 0.06);
+    border-color: rgba(46, 125, 79, 0.18);
+    color: var(--green-800);
+  }
+  .hours-period {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 11px; font-weight: 500;
+    color: inherit; flex-shrink: 0;
+  }
+  .hours-time {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; font-weight: 500;
+    color: inherit;
+    letter-spacing: 0.01em;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 16px 32px 22px;
+    border-top: 1px solid var(--border-hair);
+    background: #f8fbf9;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .footer-icon {
+    flex-shrink: 0;
+    width: 14px; height: 14px;
+    color: var(--ink-muted);
+    margin-top: 1px;
+  }
+  .footer-text {
+    font-size: 11px;
+    color: var(--ink-muted);
+    line-height: 1.6;
+  }
+
+  /* Loading */
+  .loading {
+    padding: 60px 32px;
+    text-align: center;
+    color: var(--ink-muted);
+    font-size: 13px;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    body { padding: 16px 12px; }
+    .card { border-radius: 16px; }
+    .header { padding: 22px 22px 20px; }
+    .section-label {
+      padding: 16px 22px 0;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+    .section-label-left { justify-content: flex-start; }
+    .update-time { justify-content: flex-end; }
+    .status-block { padding: 20px 22px 16px; }
+    .resume-panel { margin: 4px 22px 20px; padding: 20px 20px; }
+    .resume-time { font-size: 38px; }
+    .hours { padding: 0 22px 20px; }
+    .footer { padding: 14px 22px 20px; }
+    .brand-name { font-size: 16px; }
+    .status-heading { font-size: 21px; }
+  }
+</style>
+</head>
+<body>
+
+<main class="card">
+  <header class="header">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3v18M3 12h18"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <div class="brand-name">みがわ町整形外科クリニック</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="section-label">
+    <div class="section-label-left">
+      <span class="label-tag">NOW SEEING</span>
+      <span class="label-text">ご予約の方の進行状況</span>
+    </div>
+    <div class="update-time">
+      <span class="update-dot"></span>
+      <span id="updated">更新 --:--</span>
+    </div>
+  </div>
+
+  <div id="content"><div class="loading">読み込み中…</div></div>
+
+  <footer class="footer">
+    <svg class="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M12 16v-4M12 8h.01"/>
+    </svg>
+    <p class="footer-text">表示は目安です。診察の進行状況により前後する場合があります。</p>
+  </footer>
+</main>
+
+<script>
+(function(){
+  var URL = "https://raw.githubusercontent.com/Oshinji/clinics-wait-time/main/data/status.json";
+  var INTERVAL = 10 * 60 * 1000;
+
+  // --- SVG icons ---
+  var ICONS = {
+    stethoscope: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v7a5 5 0 0 0 10 0V3"/><path d="M6 3h2M14 3h2"/><path d="M11 15a5 5 0 0 0 5 5 4 4 0 0 0 4-4v-3"/><circle cx="20" cy="10" r="2"/></svg>',
+    clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+    cup:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h12v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8z"/><path d="M16 9h2a3 3 0 0 1 0 6h-2"/><path d="M7 3v2M10 3v2M13 3v2"/></svg>',
+    moon:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.5 6.5 0 0 0 9.8 9.8Z"/></svg>',
+    calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>',
+    alert: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4M12 17h.01"/></svg>',
+    hourglass: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12M6 22h12M6 2v5a6 6 0 0 0 12 0V2M18 22v-5a6 6 0 0 0-12 0v5"/></svg>'
+  };
+
+  // --- Session logic (JST) ---
+  function toMin(s){ var p=s.split(':'); return +p[0]*60+ +p[1]; }
+  function getSession(){
+    var _d=new Date(), d=new Date(_d.toLocaleString("en-US",{timeZone:"Asia/Tokyo"}));
+    var w=d.getDay(), n=d.getHours()*60+d.getMinutes();
+    var amEnd = toMin('11:30');
+    var pmStart = toMin('14:30');
+    var pmEnd = (w===6) ? toMin('16:30') : toMin('17:30');
+    var pmEndStr = (w===6) ? '16:30' : '17:30';
+    var ctx = { w:w, amEndStr:'11:30', pmStartStr:'14:30', pmEndStr:pmEndStr };
+    if(w===0||w===4) return {t:'hol', ctx:ctx};
+    if(n<toMin('08:30')) return {t:'pre', ctx:ctx};
+    if(n<amEnd)          return {t:'open', half:'am', ctx:ctx};
+    if(n<pmStart)        return {t:'lun', ctx:ctx};
+    if(n<pmEnd)          return {t:'open', half:'pm', ctx:ctx};
+    return {t:'aft', ctx:ctx};
+  }
+
+  function fmtUpdated(iso){
+    if(!iso) return '更新 --:--';
+    var d = new Date(iso);
+    return '更新 '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);
+  }
+
+  // --- Hours block helper ---
+  function hoursHtml(session){
+    var amClass = (session.t==='open' && session.half==='am') ? ' is-current' : '';
+    var pmClass = (session.t==='open' && session.half==='pm') ? ' is-current' : '';
+    return ''
+      + '<section class="hours">'
+      +   '<div class="hours-title">受付時間</div>'
+      +   '<div class="hours-rows">'
+      +     '<div class="hours-row'+amClass+'">'
+      +       '<span class="hours-period">午前</span>'
+      +       '<span class="hours-time">8:30–11:30</span>'
+      +     '</div>'
+      +     '<div class="hours-row'+pmClass+'">'
+      +       '<span class="hours-period">午後</span>'
+      +       '<span class="hours-time">14:30–'+session.ctx.pmEndStr+'</span>'
+      +     '</div>'
+      +   '</div>'
+      + '</section>';
+  }
+
+  // --- State renderers ---
+  function blockHtml(iconKey, iconClass, heading, subtext){
+    return ''
+      + '<section class="status-block">'
+      +   '<div class="status-icon-wrap '+iconClass+'" aria-hidden="true">'+ICONS[iconKey]+'</div>'
+      +   '<h1 class="status-heading">'+heading+'</h1>'
+      +   (subtext ? '<p class="status-subtext">'+subtext+'</p>' : '')
+      + '</section>';
+  }
+
+  function resumeHtml(label, big, note){
+    return ''
+      + '<section class="resume-panel">'
+      +   '<div class="resume-label">'+label+'</div>'
+      +   '<div class="resume-time-row">'
+      +     '<span class="resume-time">'+big+'</span>'
+      +     (note ? '<span class="resume-time-note">'+note+'</span>' : '')
+      +   '</div>'
+      + '</section>';
+  }
+
+  function render(data){
+    var s = getSession();
+    var el = document.getElementById('content');
+    var html = '';
+
+    if(data && data.error){
+      html += blockHtml('alert', 'is-alert', '情報を取得できませんでした', 'しばらくしてから再度ご確認ください');
+      html += hoursHtml(s);
+      el.innerHTML = html;
+      return;
+    }
+
+    if(s.t==='hol'){
+      html += blockHtml('calendar', 'is-closed', '本日は休診日です', '診療は月・火・水・金・土曜日に行っております');
+      html += hoursHtml(s);
+    } else if(s.t==='pre'){
+      html += blockHtml('clock', 'is-prep', '本日の受付はまだ始まっていません', '朝の受付開始までお待ちください');
+      html += resumeHtml('午前の受付開始', '8:30', 'から受付を開始します');
+      html += hoursHtml(s);
+    } else if(s.t==='lun'){
+      html += blockHtml('cup', 'is-prep', 'ただいま昼休み中です', '午後の受付開始までお待ちください');
+      html += resumeHtml('午後の受付開始', '14:30', 'から受付を再開します');
+      html += hoursHtml(s);
+    } else if(s.t==='aft'){
+      html += blockHtml('moon', 'is-closed', '本日の受付は終了しました', 'またのご来院をお待ちしております');
+      html += hoursHtml(s);
+    } else if(s.t==='open'){
+      if(!data || !data.is_open){
+        html += blockHtml('clock', 'is-closed', '現在受付時間外です', '');
+        html += hoursHtml(s);
+      } else if(data.current_slot){
+        html += blockHtml('stethoscope', '', '現在診察中', 'この時間帯にご予約の方を診察しています');
+        html += resumeHtml('ご予約枠', data.current_slot+'〜', 'の方を診察中');
+        html += hoursHtml(s);
+      } else {
+        html += blockHtml('hourglass', 'is-prep', '次の診察の準備をしています', 'まもなく次の方をお呼びします');
+        html += hoursHtml(s);
+      }
+    } else {
+      html += blockHtml('clock', 'is-closed', '現在受付時間外です', '');
+      html += hoursHtml(s);
+    }
+
+    el.innerHTML = html;
+  }
+
+  function load(){
+    fetch(URL+'?t='+Date.now())
+      .then(function(r){return r.json();})
+      .then(function(d){
+        render(d);
+        var u = document.getElementById('updated');
+        if(u) u.textContent = fmtUpdated(d.updated_at);
+      })
+      .catch(function(){ render({error:true}); });
+  }
+
+  load();
+  setInterval(load, INTERVAL);
+})();
+</script>
+</body>
+</html>
