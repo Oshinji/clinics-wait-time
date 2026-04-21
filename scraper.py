@@ -29,10 +29,13 @@ OPEN_HOUR    = int(os.getenv("OPEN_HOUR",  "8"))
 CLOSE_HOUR   = int(os.getenv("CLOSE_HOUR", "18"))
 JST          = timezone(timedelta(hours=9))
 
-MIN_DURATION = int(os.getenv("MIN_DURATION_MINUTES", "20"))  # 物療のみ患者の判定閾値（分）
-MAX_DURATION = 180    # エラーデータ除外閾値（分）
-HISTORY_DAYS = 90     # 履歴保持日数
-MIN_SAMPLES  = 5      # フォールバック閾値（件未満は固定値を使用）
+MIN_DURATION    = int(os.getenv("MIN_DURATION_MINUTES", "20"))  # 物療のみ患者の判定閾値（分）
+MAX_DURATION    = 180    # エラーデータ除外閾値（分）
+HISTORY_DAYS    = 90     # 履歴保持日数
+MIN_SAMPLES     = 5      # フォールバック閾値（件未満は固定値を使用）
+# 予約枠時間（診療メニューごと）
+MINUTES_RESIN   = int(os.getenv("MINUTES_RESIN",   "10"))  # 再診外来
+MINUTES_SHINSIN = int(os.getenv("MINUTES_SHINSIN", "15"))  # 初診外来
 # ────────────────────────────────────────────────────────────────
 # 受付時間
 #   月火水金・土　午前  8:30〜11:30
@@ -185,13 +188,15 @@ async def scan_all_pages(page) -> tuple:
     label_idx    = next((i for i, t in enumerate(header_texts) if "ラベル"    in t), None)
     checkin_idx  = next((i for i, t in enumerate(header_texts) if "受付"      in t), None)
     checkout_idx = next((i for i, t in enumerate(header_texts) if "終了"      in t), None)
+    menu_idx     = next((i for i, t in enumerate(header_texts) if "メニュー"  in t), None)
 
-    print(f"カラム: ステータス={status_idx}, ラベル={label_idx}, "
+    print(f"カラム: ステータス={status_idx}, ラベル={label_idx}, メニュー={menu_idx}, "
           f"受付={checkin_idx}, 終了={checkout_idx}")
 
     today         = datetime.now(JST).strftime("%Y-%m-%d")
     walkin_count  = 0   # 直来 診察待ち
-    appt_count    = 0   # 予約 診察待ち（予約優先のため待ち時間に加算）
+    appt_count    = 0   # 予約 診察待ち（件数）
+    appt_minutes  = 0   # 予約 診察待ちの合計枠時間（分）
     completed_rec = []
 
     for page_num in range(1, 21):   # 最大20ページ（安全ガード）
@@ -205,12 +210,14 @@ async def scan_all_pages(page) -> tuple:
                     status_idx, label_idx,
                     checkin_idx  if checkin_idx  is not None else 0,
                     checkout_idx if checkout_idx is not None else 0,
+                    menu_idx     if menu_idx     is not None else 0,
                 )
                 if len(cells) <= max_idx:
                     continue
 
                 status_text = await cells[status_idx].inner_text()
                 label_text  = await cells[label_idx].inner_text()
+                menu_text   = (await cells[menu_idx].inner_text()) if menu_idx is not None else ""
                 is_walkin   = "直来" in label_text
 
                 if "診察待ち" in status_text:
@@ -218,8 +225,17 @@ async def scan_all_pages(page) -> tuple:
                         walkin_count += 1
                         print(f"  → 直来 診察待ち 発見 (p{page_num})")
                     else:
-                        appt_count += 1
-                        print(f"  → 予約 診察待ち 発見 (p{page_num})")
+                        # 診療メニューで枠時間を決定
+                        if "再診" in menu_text:
+                            slot = MINUTES_RESIN
+                        elif "初診" in menu_text:
+                            slot = MINUTES_SHINSIN
+                        else:
+                            slot = MINUTES_PER  # 不明な場合はデフォルト値
+                        appt_count   += 1
+                        appt_minutes += slot
+                        print(f"  → 予約 診察待ち 発見 [{menu_text.strip()[:10]}] "
+                              f"{slot}分枠 (p{page_num})")
 
                 elif "会計完了" in status_text and is_walkin:
                     # 直来の受付〜終了の時間を記録（物療比率の学習に使用）
@@ -264,9 +280,9 @@ async def scan_all_pages(page) -> tuple:
         await page.wait_for_timeout(1500)
         await page.wait_for_selector('tbody tr', timeout=10000)
 
-    print(f"集計完了: 直来 診察待ち={walkin_count}人, 予約 診察待ち={appt_count}人, "
-          f"完了直来（履歴用）={len(completed_rec)}件")
-    return walkin_count, appt_count, completed_rec
+    print(f"集計完了: 直来 診察待ち={walkin_count}人, 予約 診察待ち={appt_count}人"
+          f"（合計{appt_minutes}分枠）, 完了直来（履歴用）={len(completed_rec)}件")
+    return walkin_count, appt_count, appt_minutes, completed_rec
 
 
 # ─── 履歴管理 ──────────────────────────────────────────────────────
@@ -326,24 +342,25 @@ def update_history(new_records: list) -> None:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
-def compute_estimated(walkin_count: int, appt_count: int) -> int:
+def compute_estimated(walkin_count: int, appt_count: int, appt_minutes: int) -> int:
     """
     現在の待ち人数から推定待ち時間（分）を計算する。
 
-    当院は予約優先のため、予約患者の診察待ち人数も加味する。
+    当院は予約優先のため、予約患者の合計枠時間(appt_minutes)を直接加算する。
+    予約枠: 再診外来=MINUTES_RESIN分、初診外来=MINUTES_SHINSIN分
 
     物療比率(pt_ratio)が学習済みの場合:
-        estimated = (appt_count + walkin_count × (1 − pt_ratio)) × MINUTES_PER
+        estimated = appt_minutes + walkin_count × (1 − pt_ratio) × MINUTES_PER
     データ不足の場合:
-        estimated = (appt_count + walkin_count) × MINUTES_PER  （固定値でフォールバック）
+        estimated = appt_minutes + walkin_count × MINUTES_PER  （固定値でフォールバック）
 
     ※ pt_ratio は直来患者の履歴から算出（物療のみ患者の割合）。
-      予約患者には pt_ratio を適用せず保守的に全員 MINUTES_PER を使用する。
     """
     if not HISTORY_FILE.exists():
         print(f"履歴なし: フォールバック {MINUTES_PER}分/人")
-        estimated = (appt_count + walkin_count) * MINUTES_PER
-        print(f"推定: (予約{appt_count}人 + 直来{walkin_count}人) × {MINUTES_PER}分 = {estimated}分")
+        estimated = appt_minutes + walkin_count * MINUTES_PER
+        print(f"推定: 予約枠{appt_minutes}分({appt_count}人) + "
+              f"直来{walkin_count}人 × {MINUTES_PER}分 = {estimated}分")
         return estimated
 
     with open(HISTORY_FILE, encoding="utf-8") as f:
@@ -355,14 +372,15 @@ def compute_estimated(walkin_count: int, appt_count: int) -> int:
     if record_count < MIN_SAMPLES or pt_ratio is None:
         print(f"データ不足({record_count}件 < {MIN_SAMPLES}件): "
               f"フォールバック {MINUTES_PER}分/人")
-        estimated = (appt_count + walkin_count) * MINUTES_PER
-        print(f"推定: (予約{appt_count}人 + 直来{walkin_count}人) × {MINUTES_PER}分 = {estimated}分")
+        estimated = appt_minutes + walkin_count * MINUTES_PER
+        print(f"推定: 予約枠{appt_minutes}分({appt_count}人) + "
+              f"直来{walkin_count}人 × {MINUTES_PER}分 = {estimated}分")
         return estimated
 
-    effective = appt_count + walkin_count * (1.0 - pt_ratio)
-    estimated = max(0, round(effective * MINUTES_PER))
-    print(f"推定: (予約{appt_count}人 + 直来{walkin_count}人 × (1 - {pt_ratio:.2f})) "
-          f"× {MINUTES_PER}分 = {estimated}分")
+    walkin_effective = walkin_count * (1.0 - pt_ratio) * MINUTES_PER
+    estimated = max(0, round(appt_minutes + walkin_effective))
+    print(f"推定: 予約枠{appt_minutes}分({appt_count}人) + "
+          f"直来{walkin_count}人 × (1 - {pt_ratio:.2f}) × {MINUTES_PER}分 = {estimated}分")
     return estimated
 
 
@@ -398,21 +416,23 @@ async def scrape() -> dict:
             await wait_for_page(page, context)
 
             # 全ページ走査（待ち人数カウント + 完了患者データ収集）
-            walkin_count, appt_count, completed_records = await scan_all_pages(page)
+            walkin_count, appt_count, appt_minutes, completed_records = \
+                await scan_all_pages(page)
 
             # 完了患者データで履歴を更新 → pt_ratio を学習
             update_history(completed_records)
 
-            # pt_ratio と予約待ち人数を使って推定待ち時間を計算
-            estimated = compute_estimated(walkin_count, appt_count)
+            # pt_ratio・予約枠時間を使って推定待ち時間を計算
+            estimated = compute_estimated(walkin_count, appt_count, appt_minutes)
 
-            print(f"直来 診察待ち: {walkin_count}人, 予約 診察待ち: {appt_count}人 "
-                  f"→ 推定 約{estimated}分")
+            print(f"直来 診察待ち: {walkin_count}人, 予約 診察待ち: {appt_count}人"
+                  f"({appt_minutes}分枠) → 推定 約{estimated}分")
             await save_debug_screenshot(page, "debug_success.png")
 
             return {
                 "count":             walkin_count,
                 "appt_count":        appt_count,
+                "appt_minutes":      appt_minutes,
                 "estimated_minutes": estimated,
                 "updated_at":        datetime.now(JST).isoformat(),
                 "is_open":           True,
@@ -425,6 +445,7 @@ async def scrape() -> dict:
             return {
                 "count":             0,
                 "appt_count":        0,
+                "appt_minutes":      0,
                 "estimated_minutes": 0,
                 "updated_at":        datetime.now(JST).isoformat(),
                 "is_open":           True,
@@ -447,6 +468,7 @@ def main():
         data = {
             "count":             0,
             "appt_count":        0,
+            "appt_minutes":      0,
             "estimated_minutes": 0,
             "updated_at":        datetime.now(JST).isoformat(),
             "is_open":           False,
