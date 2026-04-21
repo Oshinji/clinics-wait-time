@@ -4,20 +4,22 @@
 
   /* ── CSS注入 ── */
   var css = '#mw-widget{font-family:"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;max-width:560px;margin:8px auto 24px}'
-    + '#mw-widget .mw-card{background:#fff;border:2px solid #b3d4f0;border-radius:12px;padding:28px 32px;text-align:center;box-shadow:0 2px 12px rgba(21,101,192,.08)}'
-    + '#mw-widget .mw-label{display:inline-block;background:#1565c0;color:#fff;font-size:12px;font-weight:700;letter-spacing:.1em;padding:3px 14px;border-radius:20px;margin-bottom:14px}'
-    + '#mw-widget .mw-title{font-size:17px;font-weight:700;color:#1a3a6e;margin-bottom:20px;line-height:1.6}'
-    + '#mw-widget .mw-icon{font-size:40px;margin-bottom:10px}'
-    + '#mw-widget .mw-msg-gray{font-size:17px;font-weight:700;color:#555}'
-    + '#mw-widget .mw-msg-blue{font-size:18px;font-weight:700;color:#1565c0}'
-    + '#mw-widget .mw-sub{font-size:13px;color:#888;margin-top:8px;line-height:1.8}'
-    + '#mw-widget .mw-timeval{font-size:60px;font-weight:800;color:#c0392b;line-height:1}'
-    + '#mw-widget .mw-timeunit{font-size:20px;font-weight:700;color:#c0392b;margin-bottom:8px}'
-    + '#mw-widget .mw-count{font-size:12px;color:#888}'
-    + '#mw-widget .mw-timelabel{font-size:13px;color:#555;margin-bottom:4px}'
-    + '#mw-widget .mw-footer{margin-top:18px;padding-top:14px;border-top:1px solid #e8f0fb;font-size:11px;color:#bbb;line-height:1.7}'
-    + '#mw-widget .mw-updated{font-size:11px;color:#b0bec5;margin-bottom:4px}'
-    + '#mw-widget .mw-loading{font-size:14px;color:#b0bec5;padding:16px 0}';
+    + '#mw-widget .mw-card{background:#fff;border:2px solid #b3d4f0;border-radius:16px;padding:32px 28px 28px;text-align:center;box-shadow:0 4px 20px rgba(21,101,192,.10)}'
+    + '#mw-widget .mw-label{display:inline-block;background:#1565c0;color:#fff;font-size:13px;font-weight:700;letter-spacing:.12em;padding:5px 18px;border-radius:20px;margin-bottom:16px}'
+    + '#mw-widget .mw-title{font-size:20px;font-weight:700;color:#1a3a6e;margin-bottom:24px;line-height:1.7}'
+    + '#mw-widget .mw-icon{font-size:48px;margin-bottom:10px}'
+    + '#mw-widget .mw-msg-gray{font-size:22px;font-weight:700;color:#444}'
+    + '#mw-widget .mw-msg-blue{font-size:22px;font-weight:700;color:#1565c0}'
+    + '#mw-widget .mw-sub{font-size:16px;color:#666;margin-top:12px;line-height:2.0}'
+    + '#mw-widget .mw-timeval{font-size:88px;font-weight:800;color:#c0392b;line-height:1;letter-spacing:-.02em}'
+    + '#mw-widget .mw-timeunit{font-size:26px;font-weight:700;color:#c0392b;margin-bottom:10px}'
+    + '#mw-widget .mw-count{font-size:15px;color:#888}'
+    + '#mw-widget .mw-timelabel{font-size:16px;color:#555;margin-bottom:6px}'
+    + '#mw-widget .mw-footer{margin-top:20px;padding-top:14px;border-top:1px solid #e8f0fb;font-size:13px;color:#aaa;line-height:1.8}'
+    + '#mw-widget .mw-updated{font-size:13px;color:#b0bec5;margin-bottom:4px}'
+    + '#mw-widget .mw-loading{font-size:16px;color:#b0bec5;padding:20px 0}'
+    + '@media(max-width:479px){#mw-widget .mw-title{font-size:18px}#mw-widget .mw-msg-gray,#mw-widget .mw-msg-blue{font-size:20px}#mw-widget .mw-timeval{font-size:96px}}'
+    + '@media(min-width:768px){#mw-widget .mw-card{padding:40px 48px 36px}#mw-widget .mw-title{font-size:22px}#mw-widget .mw-msg-gray,#mw-widget .mw-msg-blue{font-size:24px}#mw-widget .mw-timeval{font-size:100px}#mw-widget .mw-timeunit{font-size:28px}#mw-widget .mw-sub{font-size:17px}}';
   var st = document.createElement('style');
   st.textContent = css;
   document.head.appendChild(st);
@@ -62,7 +64,7 @@
       return;
     }
     if(s.t==='lunch'){
-      el.innerHTML='<div class="mw-icon">\ud83c\udf7d\ufe0f</div><div class="mw-msg-gray">\u53ea\u4ecax\u3001\u304a\u6615\u4f11\u307f\u3067\u3059</div><div class="mw-sub">\u5348\u5f8c\u306e\u53d7\u4ed8\u958b\u59cb\uff1a<strong>'+s.next+'</strong><br>\u53d7\u4ed8\u6642\u9593\uff1a'+s.hrs+'</div>';
+      el.innerHTML='<div class="mw-icon">\ud83c\udf7d\ufe0f</div><div class="mw-msg-gray">\u53ea\u4eca\u3001\u304a\u6615\u4f11\u307f\u3067\u3059</div><div class="mw-sub">\u5348\u5f8c\u306e\u53d7\u4ed8\u958b\u59cb\uff1a<strong>'+s.next+'</strong><br>\u53d7\u4ed8\u6642\u9593\uff1a'+s.hrs+'</div>';
       return;
     }
     if(s.t==='after'){
