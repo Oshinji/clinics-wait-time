@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# 環境変数・認証情報
+.env
+session.json
+
+# デバッグ用スクリーンショット
+debug_*.png
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
