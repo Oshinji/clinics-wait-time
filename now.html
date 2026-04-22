@@ -382,19 +382,25 @@ body {
 
       case 'open':
       case 'ext':
-        // 表示優先順:
-        //   1) 予約診察中              → current_slot で表示（正確）
-        //   2) 予約外診察中            → last_predicted_slot で同じ形式表示
-        //        （「予約外」とは言わず、直近呼ばれた予約枠時刻を継続表示して
-        //          予約患者の不安を避ける）
-        //   3) 延長枠で誰もなし         → 本日の診察終了間近
-        //   4) それ以外（切替中）        → 切り替え中
+        // 予約が今後一切診察される見込みがない状態:
+        //   診察中ナシ + 診察待ちナシ + 未受付ナシ
+        var allPredictedDone = !!data
+          && !data.current_slot
+          && !(data.appt_count > 0)
+          && !(data.appt_upcoming_count > 0);
+
+        // 表示する予約枠時刻の決定（monotonic 表示）:
+        //   ① current_slot あり        → 予約診察中（正確）
+        //   ② 直来診察中で予約がまだ残 → last_predicted_slot で同形式表示
+        //      （「予約外」とは言わず、直近呼ばれた予約枠時刻を継続表示）
+        //   ③ 予約全消化時は monotonic 表示しない → 終了間近へ
         var slotToShow = null;
         if(data && data.current_slot){
           slotToShow = data.current_slot;
-        } else if(data && data.walkin_in_exam && data.last_predicted_slot){
+        } else if(data && data.walkin_in_exam && data.last_predicted_slot && !allPredictedDone){
           slotToShow = data.last_predicted_slot;
         }
+
         if(slotToShow){
           h = '<div class="hero">'
             +'<div class="status-badge open">診察中</div>'
@@ -402,11 +408,13 @@ body {
             +'<div class="hero-slot">'+slotToShow+'〜</div>'
             +'<div class="hero-desc">の方を診察しています</div>'
             +'</div>';
-        } else if(s.t==='ext'){
+        } else if(allPredictedDone || s.t==='ext'){
+          // 予約全終了 or 延長枠 → 本日の診察終了間近
           var hl = (s.half==='am') ? '午前' : '午後';
           h = '<div class="hero">'
             +'<div class="status-badge wait">'+hl+'の診察終了間近</div>'
             +'<div class="state-big">まもなく本日'+hl+'の<br>診察が終了します</div>'
+            +'<div class="state-resume-note">ご予約の方の診察はすべて終了しました</div>'
             +'</div>';
         } else {
           // 誰も診察中でない → 切り替え中（「まもなく」という時間的な約束はしない）
