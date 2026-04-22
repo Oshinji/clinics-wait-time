@@ -257,12 +257,17 @@ async def scan_all_pages(page) -> tuple:
                               f"{slot}分枠 (p{page_num})")
 
                 elif "診察中" in status_text:
-                    if appt_idx is not None and len(cells) > appt_idx:
+                    # 予約患者の本診察のみ採用（直来・リハビリテーションは除外）
+                    is_rehab = "リハビリ" in menu_text
+                    if is_walkin or is_rehab:
+                        reason = "直来" if is_walkin else "リハビリ"
+                        print(f"  → 診察中 発見 [除外: {reason}] (p{page_num})")
+                    elif appt_idx is not None and len(cells) > appt_idx:
                         appt_text = await cells[appt_idx].inner_text()
                         start_min = extract_slot_start(appt_text)
                         if start_min is not None and (current_min is None or start_min < current_min):
                             current_min = start_min
-                            print(f"  → 診察中 発見 [{appt_text.strip()[:15]}] "
+                            print(f"  → 診察中 発見 [予約/{menu_text.strip()[:10]}/{appt_text.strip()[:15]}] "
                                   f"開始={start_min // 60:02d}:{start_min % 60:02d} (p{page_num})")
 
                 elif "会計完了" in status_text and is_walkin:
