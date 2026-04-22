@@ -2,9 +2,12 @@
   "count": 0,
   "appt_count": 0,
   "appt_minutes": 0,
+  "appt_upcoming_count": 0,
+  "appt_upcoming_minutes": 0,
+  "in_exam_remain": 0,
   "estimated_minutes": 0,
   "current_slot": null,
-  "updated_at": "2026-04-22T12:01:14.350342+09:00",
+  "updated_at": "2026-04-22T12:10:48.301616+09:00",
   "is_open": false,
   "error": null
 }
