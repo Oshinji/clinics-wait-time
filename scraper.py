@@ -290,6 +290,8 @@ async def scan_all_pages(page) -> tuple:
     completed_rec   = []
     current_min     = None   # 予約 診察中の最早開始時刻（分）
     walkin_in_exam  = False  # 直来（予約外）が1件でも診察中か
+    last_called_min = None   # 予約（医師診察）で「呼ばれた」ことのある最新 slot 開始分
+                              # （診察中/算定待ち/会計待ち/完了/会計完了 を"呼ばれた"と見なす）
 
     # 診断用：実際に観測された status / label 文字列を全記録
     status_seen = {}   # status_text -> count
@@ -341,6 +343,15 @@ async def scan_all_pages(page) -> tuple:
                 l_key = repr(label_text.strip())[:60]
                 status_seen[s_key] = status_seen.get(s_key, 0) + 1
                 label_seen[l_key]  = label_seen.get(l_key, 0)  + 1
+
+                # 予約（医師診察）で「呼ばれた」経歴のある最新 slot を追跡
+                #   診察中/算定待ち/会計待ち/完了/会計完了 いずれかなら "呼ばれた" と見なす
+                if ((not is_walkin)
+                        and "リハビリ" not in menu_text
+                        and any(x in status_text for x in ("診察中", "算定", "会計", "完了"))):
+                    _s = extract_slot_start(appt_text)
+                    if _s is not None and (last_called_min is None or _s > last_called_min):
+                        last_called_min = _s
 
                 if "診察待ち" in status_text:
                     if is_walkin:
@@ -433,6 +444,19 @@ async def scan_all_pages(page) -> tuple:
     )
     in_exam_remain = MINUTES_IN_EXAM_REMAIN if current_min is not None else 0
 
+    # 直近に呼ばれた予約 slot（walkin_in_exam 時のフォールバック表示用）
+    if last_called_min is not None:
+        last_predicted_slot = f"{last_called_min // 60:02d}:{last_called_min % 60:02d}"
+    else:
+        # 誰もまだ予約診察してない → セッション開始時刻
+        _now_t = datetime.now(JST).time()
+        if AM_START <= _now_t < dt_time(12, 0):
+            last_predicted_slot = "08:30"
+        elif PM_START <= _now_t < dt_time(18, 0):
+            last_predicted_slot = "14:30"
+        else:
+            last_predicted_slot = None
+
     # ─── 診断出力: 観測された status / label の分布 ───
     print("=" * 60)
     print(f"[DIAGNOSTIC] 全行数: {total_rows}")
@@ -462,10 +486,11 @@ async def scan_all_pages(page) -> tuple:
           f"（合計{appt_minutes}分枠）, 未受付予約={upcoming_count}人"
           f"（合計{upcoming_minutes}分枠）, 完了直来（履歴用）={len(completed_rec)}件, "
           f"診察中={current_slot or 'なし'}（残{in_exam_remain}分）, "
-          f"直来診察中={walkin_in_exam}")
+          f"直来診察中={walkin_in_exam}, 直近呼ばれた予約枠={last_predicted_slot}")
     return (walkin_count, appt_count, appt_minutes,
             upcoming_count, upcoming_minutes,
-            in_exam_remain, completed_rec, current_slot, walkin_in_exam)
+            in_exam_remain, completed_rec, current_slot,
+            walkin_in_exam, last_predicted_slot)
 
 
 # ─── 履歴管理 ──────────────────────────────────────────────────────
@@ -609,10 +634,11 @@ async def scrape() -> dict:
 
             await wait_for_page(page, context)
 
-            # 全ページ走査（全カウント + 履歴収集 + 診察中予約枠 + 直来診察中フラグ）
+            # 全ページ走査（全カウント + 履歴収集 + 診察中予約枠 + 直来診察中フラグ + 直近予約枠）
             (walkin_count, appt_count, appt_minutes,
              upcoming_count, upcoming_minutes, in_exam_remain,
-             completed_records, current_slot, walkin_in_exam) = await scan_all_pages(page)
+             completed_records, current_slot, walkin_in_exam,
+             last_predicted_slot) = await scan_all_pages(page)
 
             # 完了患者データで履歴を更新 → pt_ratio を学習
             update_history(completed_records)
@@ -639,6 +665,7 @@ async def scrape() -> dict:
                 "estimated_minutes": estimated,
                 "current_slot":      current_slot,
                 "walkin_in_exam":    walkin_in_exam,
+                "last_predicted_slot": last_predicted_slot,
                 "updated_at":        datetime.now(JST).isoformat(),
                 "is_open":           is_open(),
                 "error":             None,
@@ -657,6 +684,7 @@ async def scrape() -> dict:
                 "estimated_minutes": 0,
                 "current_slot":      None,
                 "walkin_in_exam":    False,
+                "last_predicted_slot": None,
                 "updated_at":        datetime.now(JST).isoformat(),
                 "is_open":           is_open(),
                 "error":             str(e),
@@ -685,6 +713,7 @@ def main():
             "estimated_minutes": 0,
             "current_slot":      None,
             "walkin_in_exam":    False,
+            "last_predicted_slot": None,
             "updated_at":        datetime.now(JST).isoformat(),
             "is_open":           False,
             "error":             None,
@@ -693,10 +722,59 @@ def main():
     else:
         data = asyncio.run(scrape())
 
+        # ─── セーフティネット: 全ゼロ誤報なら前回値を保持 ───
+        # 診察窓内なのに count/appt/walkin/current 全て空 = scraper が行を拾えていない
+        # 可能性大。前回値が1時間以内なら書き込みをスキップして保持する。
+        if _should_preserve_previous(data):
+            prev = _load_previous_status()
+            if prev is not None and _prev_is_recent(prev):
+                prev_at = prev.get("updated_at", "unknown")
+                print(f"⚠️ 診察時間中に全ゼロ検出 → 前回値を保持（前回updated_at={prev_at}）")
+                print(f"   (status.json 書き込みスキップ。history.json は通常通り更新)")
+                return
+            else:
+                print(f"⚠️ 全ゼロ検出だが前回値が1時間超過 or 無し → そのまま書き込み")
+
     OUTPUT_FILE.write_text(
         json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
     )
     print(f"保存完了: {OUTPUT_FILE}")
+
+
+def _should_preserve_previous(data: dict) -> bool:
+    """診察時間中なのに全ゼロ＝誤検出の可能性大と判定する。
+    エラーが明示されている場合はそのまま書いてクライアントに伝える。"""
+    if data.get("error"):
+        return False
+    people = (data.get("count", 0)
+              + data.get("appt_count", 0)
+              + data.get("appt_upcoming_count", 0))
+    nothing_in_exam = (not data.get("walkin_in_exam")
+                       and not data.get("current_slot"))
+    return people == 0 and nothing_in_exam
+
+
+def _load_previous_status() -> dict | None:
+    """前回の status.json を読む。存在しない/壊れている時は None。"""
+    if not OUTPUT_FILE.exists():
+        return None
+    try:
+        return json.loads(OUTPUT_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
+def _prev_is_recent(prev: dict, max_age_sec: int = 3600) -> bool:
+    """前回値の鮮度チェック（デフォルト1時間）"""
+    prev_at = prev.get("updated_at")
+    if not prev_at:
+        return False
+    try:
+        prev_dt = datetime.fromisoformat(prev_at)
+        age_sec = (datetime.now(JST) - prev_dt).total_seconds()
+        return age_sec < max_age_sec
+    except Exception:
+        return False
 
 
 if __name__ == "__main__":

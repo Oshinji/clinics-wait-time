@@ -382,19 +382,25 @@ body {
 
       case 'open':
       case 'ext':
+        // 表示優先順:
+        //   1) 予約診察中              → current_slot で表示（正確）
+        //   2) 予約外診察中            → last_predicted_slot で同じ形式表示
+        //        （「予約外」とは言わず、直近呼ばれた予約枠時刻を継続表示して
+        //          予約患者の不安を避ける）
+        //   3) 延長枠で誰もなし         → 本日の診察終了間近
+        //   4) それ以外（切替中）        → 切り替え中
+        var slotToShow = null;
         if(data && data.current_slot){
+          slotToShow = data.current_slot;
+        } else if(data && data.walkin_in_exam && data.last_predicted_slot){
+          slotToShow = data.last_predicted_slot;
+        }
+        if(slotToShow){
           h = '<div class="hero">'
             +'<div class="status-badge open">診察中</div>'
             +'<div class="hero-label">ご予約枠</div>'
-            +'<div class="hero-slot">'+data.current_slot+'〜</div>'
+            +'<div class="hero-slot">'+slotToShow+'〜</div>'
             +'<div class="hero-desc">の方を診察しています</div>'
-            +'</div>';
-        } else if(data && data.walkin_in_exam){
-          // 予約外（直来）の方を診察中 — 予約の方は順番待ち
-          h = '<div class="hero">'
-            +'<div class="status-badge wait">予約外の方を診察中</div>'
-            +'<div class="state-big">現在、予約外の方を<br>診察しています</div>'
-            +'<div class="state-resume-note">ご予約の方は順番にご案内いたしますので、もうしばらくお待ちください</div>'
             +'</div>';
         } else if(s.t==='ext'){
           var hl = (s.half==='am') ? '午前' : '午後';
