@@ -26,8 +26,6 @@ MINUTES_PER  = int(os.getenv("MINUTES_PER_PATIENT", "15"))
 SESSION_FILE = Path("session.json")
 OUTPUT_FILE  = Path("data/status.json")
 HISTORY_FILE = Path("data/history.json")
-OPEN_HOUR    = int(os.getenv("OPEN_HOUR",  "8"))
-CLOSE_HOUR   = int(os.getenv("CLOSE_HOUR", "18"))
 JST          = timezone(timedelta(hours=9))
 
 MIN_DURATION    = int(os.getenv("MIN_DURATION_MINUTES", "20"))  # 物療のみ患者の判定閾値（分）
@@ -293,11 +291,6 @@ async def scan_all_pages(page) -> tuple:
     last_called_min = None   # 予約（医師診察）で「呼ばれた」ことのある最新 slot 開始分
                               # （診察中/算定待ち/会計待ち/完了/会計完了 を"呼ばれた"と見なす）
 
-    # 診断用：実際に観測された status / label 文字列を全記録
-    status_seen = {}   # status_text -> count
-    label_seen  = {}   # label_text  -> count
-    total_rows  = 0    # 全ページ横断の総行数
-
     # 未受付予約カウント用：セッション終了時刻と現在時刻
     now_jst         = datetime.now(JST)
     now_min         = now_jst.hour * 60 + now_jst.minute
@@ -336,13 +329,6 @@ async def scan_all_pages(page) -> tuple:
                 checkin_text = (await cells[checkin_idx].inner_text()) if checkin_idx is not None else ""
                 appt_text    = (await cells[appt_idx].inner_text())    if appt_idx    is not None else ""
                 is_walkin    = "直来" in label_text
-
-                # 診断：観測した status / label 文字列を集計（repr で不可視文字も可視化）
-                total_rows += 1
-                s_key = repr(status_text.strip())[:60]
-                l_key = repr(label_text.strip())[:60]
-                status_seen[s_key] = status_seen.get(s_key, 0) + 1
-                label_seen[l_key]  = label_seen.get(l_key, 0)  + 1
 
                 # 予約（医師診察）で「呼ばれた」経歴のある最新 slot を追跡
                 #   診察中/算定待ち/会計待ち/完了/会計完了 いずれかなら "呼ばれた" と見なす
@@ -456,31 +442,6 @@ async def scan_all_pages(page) -> tuple:
             last_predicted_slot = "14:30"
         else:
             last_predicted_slot = None
-
-    # ─── 診断出力: 観測された status / label の分布 ───
-    print("=" * 60)
-    print(f"[DIAGNOSTIC] 全行数: {total_rows}")
-    print(f"[DIAGNOSTIC] status 分布:")
-    for k, v in sorted(status_seen.items(), key=lambda x: -x[1]):
-        print(f"  {v:>3}行  status={k}")
-    print(f"[DIAGNOSTIC] label 分布:")
-    for k, v in sorted(label_seen.items(), key=lambda x: -x[1]):
-        print(f"  {v:>3}行  label={k}")
-    print("=" * 60)
-
-    # ファイルにも残す（Actions の artifact で取得可能に）
-    try:
-        with open("debug_status_report.txt", "w", encoding="utf-8") as f:
-            f.write(f"total_rows={total_rows}\n")
-            f.write(f"updated_at={datetime.now(JST).isoformat()}\n\n")
-            f.write("== status distribution ==\n")
-            for k, v in sorted(status_seen.items(), key=lambda x: -x[1]):
-                f.write(f"{v:>4}  {k}\n")
-            f.write("\n== label distribution ==\n")
-            for k, v in sorted(label_seen.items(), key=lambda x: -x[1]):
-                f.write(f"{v:>4}  {k}\n")
-    except Exception as e:
-        print(f"debug_status_report.txt 書き込み失敗: {e}")
 
     print(f"集計完了: 直来 診察待ち={walkin_count}人, 予約 診察待ち={appt_count}人"
           f"（合計{appt_minutes}分枠）, 未受付予約={upcoming_count}人"
@@ -628,7 +589,6 @@ async def scrape() -> dict:
             print(f"アクセス中: {CLINICS_URL}")
             await page.goto(CLINICS_URL, wait_until="domcontentloaded", timeout=30000)
             await page.wait_for_timeout(5000)
-            await save_debug_screenshot(page, "debug_initial.png")
             print(f"初期URL: {page.url}")
             print(f"ページタイトル: {await page.title()}")
 
@@ -653,7 +613,6 @@ async def scrape() -> dict:
                   f"/{appt_minutes}分, 未受付予約: {upcoming_count}人"
                   f"/{upcoming_minutes}分, 診察中残: {in_exam_remain}分 "
                   f"→ 推定 約{estimated}分")
-            await save_debug_screenshot(page, "debug_success.png")
 
             return {
                 "count":             walkin_count,
