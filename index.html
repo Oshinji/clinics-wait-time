@@ -411,7 +411,9 @@ body {
       case 'open':
         if(!data || !data.is_open){
           h = '<div class="hero"><div class="status-badge off">受付時間外です</div></div>';
-        } else if(data.count === 0){
+        } else if(!data.estimated_minutes){
+          // estimated_minutes が 0 または未定義のときだけ「お待ちなし」
+          // 直来0でも予約や診察中で estimated>0 なら待ち時間を表示する
           h = '<div class="hero">'
             +'<div class="status-badge open">受付中</div>'
             +'<div class="no-wait-big">お待ちの方は<br>いません</div>'
