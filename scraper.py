@@ -291,6 +291,11 @@ async def scan_all_pages(page) -> tuple:
     current_min     = None   # 予約 診察中の最早開始時刻（分）
     walkin_in_exam  = False  # 直来（予約外）が1件でも診察中か
 
+    # 診断用：実際に観測された status / label 文字列を全記録
+    status_seen = {}   # status_text -> count
+    label_seen  = {}   # label_text  -> count
+    total_rows  = 0    # 全ページ横断の総行数
+
     # 未受付予約カウント用：セッション終了時刻と現在時刻
     now_jst         = datetime.now(JST)
     now_min         = now_jst.hour * 60 + now_jst.minute
@@ -329,6 +334,13 @@ async def scan_all_pages(page) -> tuple:
                 checkin_text = (await cells[checkin_idx].inner_text()) if checkin_idx is not None else ""
                 appt_text    = (await cells[appt_idx].inner_text())    if appt_idx    is not None else ""
                 is_walkin    = "直来" in label_text
+
+                # 診断：観測した status / label 文字列を集計（repr で不可視文字も可視化）
+                total_rows += 1
+                s_key = repr(status_text.strip())[:60]
+                l_key = repr(label_text.strip())[:60]
+                status_seen[s_key] = status_seen.get(s_key, 0) + 1
+                label_seen[l_key]  = label_seen.get(l_key, 0)  + 1
 
                 if "診察待ち" in status_text:
                     if is_walkin:
@@ -420,6 +432,32 @@ async def scan_all_pages(page) -> tuple:
         if current_min is not None else None
     )
     in_exam_remain = MINUTES_IN_EXAM_REMAIN if current_min is not None else 0
+
+    # ─── 診断出力: 観測された status / label の分布 ───
+    print("=" * 60)
+    print(f"[DIAGNOSTIC] 全行数: {total_rows}")
+    print(f"[DIAGNOSTIC] status 分布:")
+    for k, v in sorted(status_seen.items(), key=lambda x: -x[1]):
+        print(f"  {v:>3}行  status={k}")
+    print(f"[DIAGNOSTIC] label 分布:")
+    for k, v in sorted(label_seen.items(), key=lambda x: -x[1]):
+        print(f"  {v:>3}行  label={k}")
+    print("=" * 60)
+
+    # ファイルにも残す（Actions の artifact で取得可能に）
+    try:
+        with open("debug_status_report.txt", "w", encoding="utf-8") as f:
+            f.write(f"total_rows={total_rows}\n")
+            f.write(f"updated_at={datetime.now(JST).isoformat()}\n\n")
+            f.write("== status distribution ==\n")
+            for k, v in sorted(status_seen.items(), key=lambda x: -x[1]):
+                f.write(f"{v:>4}  {k}\n")
+            f.write("\n== label distribution ==\n")
+            for k, v in sorted(label_seen.items(), key=lambda x: -x[1]):
+                f.write(f"{v:>4}  {k}\n")
+    except Exception as e:
+        print(f"debug_status_report.txt 書き込み失敗: {e}")
+
     print(f"集計完了: 直来 診察待ち={walkin_count}人, 予約 診察待ち={appt_count}人"
           f"（合計{appt_minutes}分枠）, 未受付予約={upcoming_count}人"
           f"（合計{upcoming_minutes}分枠）, 完了直来（履歴用）={len(completed_rec)}件, "

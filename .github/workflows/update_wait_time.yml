@@ -50,7 +50,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: debug-screenshot
-          path: "debug_*.png"
+          path: "debug_*"
           retention-days: 3
           if-no-files-found: ignore
 
