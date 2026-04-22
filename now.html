@@ -398,16 +398,20 @@
   function getSession(){
     var _d=new Date(), d=new Date(_d.toLocaleString("en-US",{timeZone:"Asia/Tokyo"}));
     var w=d.getDay(), n=d.getHours()*60+d.getMinutes();
-    var amEnd = toMin('11:30');
-    var pmStart = toMin('14:30');
-    var pmEnd = (w===6) ? toMin('16:30') : toMin('17:30');
+    var amEnd    = toMin('11:30');
+    var amEndExt = toMin('12:00');                              // 受付+30分
+    var pmStart  = toMin('14:30');
+    var pmEnd    = (w===6) ? toMin('16:30') : toMin('17:30');
+    var pmEndExt = (w===6) ? toMin('17:00') : toMin('18:00');   // 受付+30分
     var pmEndStr = (w===6) ? '16:30' : '17:30';
     var ctx = { w:w, amEndStr:'11:30', pmStartStr:'14:30', pmEndStr:pmEndStr };
     if(w===0||w===4) return {t:'hol', ctx:ctx};
     if(n<toMin('08:30')) return {t:'pre', ctx:ctx};
     if(n<amEnd)          return {t:'open', half:'am', ctx:ctx};
+    if(n<amEndExt)       return {t:'ext',  half:'am', ctx:ctx};  // 午前延長（診察のみ継続）
     if(n<pmStart)        return {t:'lun', ctx:ctx};
     if(n<pmEnd)          return {t:'open', half:'pm', ctx:ctx};
+    if(n<pmEndExt)       return {t:'ext',  half:'pm', ctx:ctx};  // 午後延長
     return {t:'aft', ctx:ctx};
   }
 
@@ -484,13 +488,16 @@
     } else if(s.t==='aft'){
       html += blockHtml('moon', 'is-closed', '本日の受付は終了しました', 'またのご来院をお待ちしております');
       html += hoursHtml(s);
-    } else if(s.t==='open'){
-      if(!data || !data.is_open){
-        html += blockHtml('clock', 'is-closed', '現在受付時間外です', '');
-        html += hoursHtml(s);
-      } else if(data.current_slot){
+    } else if(s.t==='open' || s.t==='ext'){
+      // 受付時間内 OR 受付終了後30分の延長枠（診察のみ継続中）
+      if(data && data.current_slot){
         html += blockHtml('stethoscope', '', '現在診察中', 'この時間帯にご予約の方を診察しています');
         html += resumeHtml('ご予約枠', data.current_slot+'〜', 'の方を診察中');
+        html += hoursHtml(s);
+      } else if(s.t==='ext'){
+        // 延長枠中で診察中の方なし → 本日（の午前/午後）の診察終わりかけ
+        var halfLabel = (s.half==='am') ? '午前' : '午後';
+        html += blockHtml('clock', 'is-prep', '本日'+halfLabel+'の診察は間もなく終了します', '最後の患者さまの診察を終えました');
         html += hoursHtml(s);
       } else {
         html += blockHtml('hourglass', 'is-prep', '次の診察の準備をしています', 'まもなく次の方をお呼びします');

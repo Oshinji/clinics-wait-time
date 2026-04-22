@@ -60,6 +60,26 @@ def is_open() -> bool:
     return (AM_START <= t < AM_END) or (PM_START <= t < pm_end)
 
 
+def is_exam_window() -> bool:
+    """
+    診察中の患者が残っている可能性がある時間帯（受付時間 + 終了後30分）。
+    scraper.main() はこの範囲で実行される。is_open() は受付時間のみ True。
+    """
+    now = datetime.now(JST)
+    wd  = now.weekday()
+    t   = now.time()
+    if wd in (3, 6):
+        return False
+    # 午前 8:30〜12:00（受付11:30 + 延長30分）
+    if AM_START <= t < dt_time(12, 0):
+        return True
+    # 午後 14:30〜 17:00(土曜) / 18:00(平日)（受付 + 延長30分）
+    pm_end_ext = dt_time(17, 0) if wd == 5 else dt_time(18, 0)
+    if PM_START <= t < pm_end_ext:
+        return True
+    return False
+
+
 # ─── 時刻パーサー ─────────────────────────────────────────────────
 
 def parse_hhmm(s: str):
@@ -474,7 +494,7 @@ async def scrape() -> dict:
                 "estimated_minutes": estimated,
                 "current_slot":      current_slot,
                 "updated_at":        datetime.now(JST).isoformat(),
-                "is_open":           True,
+                "is_open":           is_open(),
                 "error":             None,
             }
 
@@ -488,7 +508,7 @@ async def scrape() -> dict:
                 "estimated_minutes": 0,
                 "current_slot":      None,
                 "updated_at":        datetime.now(JST).isoformat(),
-                "is_open":           True,
+                "is_open":           is_open(),
                 "error":             str(e),
             }
 
@@ -504,7 +524,7 @@ def main():
 
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
 
-    if not is_open():
+    if not is_exam_window():
         data = {
             "count":             0,
             "appt_count":        0,
@@ -515,7 +535,7 @@ def main():
             "is_open":           False,
             "error":             None,
         }
-        print("診療時間外のため、スクレイピングをスキップします")
+        print("診察窓外（受付終了後30分超過）のため、スクレイピングをスキップします")
     else:
         data = asyncio.run(scrape())
 
