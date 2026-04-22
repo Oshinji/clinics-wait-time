@@ -389,6 +389,13 @@ body {
             +'<div class="hero-slot">'+data.current_slot+'〜</div>'
             +'<div class="hero-desc">の方を診察しています</div>'
             +'</div>';
+        } else if(data && data.walkin_in_exam){
+          // 予約外（直来）の方を診察中 — 予約の方は順番待ち
+          h = '<div class="hero">'
+            +'<div class="status-badge wait">予約外の方を診察中</div>'
+            +'<div class="state-big">現在、予約外の方を<br>診察しています</div>'
+            +'<div class="state-resume-note">ご予約の方は順番にご案内いたしますので、もうしばらくお待ちください</div>'
+            +'</div>';
         } else if(s.t==='ext'){
           var hl = (s.half==='am') ? '午前' : '午後';
           h = '<div class="hero">'
@@ -396,9 +403,11 @@ body {
             +'<div class="state-big">まもなく本日'+hl+'の<br>診察が終了します</div>'
             +'</div>';
         } else {
+          // 誰も診察中でない → 切り替え中（「まもなく」という時間的な約束はしない）
           h = '<div class="hero">'
-            +'<div class="status-badge wait">準備中</div>'
-            +'<div class="state-big">まもなく次の方を<br>お呼びします</div>'
+            +'<div class="status-badge wait">切り替え中</div>'
+            +'<div class="state-big">診察の切り替え中です</div>'
+            +'<div class="state-resume-note">順次ご案内いたします</div>'
             +'</div>';
         }
         break;

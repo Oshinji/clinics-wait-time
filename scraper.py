@@ -282,13 +282,14 @@ async def scan_all_pages(page) -> tuple:
           f"受付={checkin_idx}, 終了={checkout_idx}, 診察予定={appt_idx}")
 
     today           = datetime.now(JST).strftime("%Y-%m-%d")
-    walkin_count    = 0   # 直来 診察待ち
-    appt_count      = 0   # 予約 診察待ち（件数）
-    appt_minutes    = 0   # 予約 診察待ちの合計枠時間（分）
-    upcoming_count  = 0   # 未受付予約（今後来院予定）の件数
-    upcoming_minutes = 0  # 未受付予約の合計枠時間（分）
+    walkin_count    = 0      # 直来 診察待ち
+    appt_count      = 0      # 予約 診察待ち（件数）
+    appt_minutes    = 0      # 予約 診察待ちの合計枠時間（分）
+    upcoming_count  = 0      # 未受付予約（今後来院予定）の件数
+    upcoming_minutes = 0     # 未受付予約の合計枠時間（分）
     completed_rec   = []
-    current_min     = None   # 診察中の最早開始時刻（分）
+    current_min     = None   # 予約 診察中の最早開始時刻（分）
+    walkin_in_exam  = False  # 直来（予約外）が1件でも診察中か
 
     # 未受付予約カウント用：セッション終了時刻と現在時刻
     now_jst         = datetime.now(JST)
@@ -357,11 +358,13 @@ async def scan_all_pages(page) -> tuple:
                                       f"{slot}分枠 (p{page_num})")
 
                 elif "診察中" in status_text:
-                    # 予約患者の本診察のみ採用（直来・リハビリテーションは除外）
+                    # 3分岐: リハビリは無視 / 直来はフラグ化 / 予約は current_slot へ
                     is_rehab = "リハビリ" in menu_text
-                    if is_walkin or is_rehab:
-                        reason = "直来" if is_walkin else "リハビリ"
-                        print(f"  → 診察中 発見 [除外: {reason}] (p{page_num})")
+                    if is_rehab:
+                        print(f"  → 診察中 発見 [除外: リハビリ] (p{page_num})")
+                    elif is_walkin:
+                        walkin_in_exam = True
+                        print(f"  → 診察中 発見 [直来診察中 → walkin_in_exam=True] (p{page_num})")
                     elif appt_idx is not None and len(cells) > appt_idx:
                         start_min = extract_slot_start(appt_text)
                         if start_min is not None and (current_min is None or start_min < current_min):
@@ -420,10 +423,11 @@ async def scan_all_pages(page) -> tuple:
     print(f"集計完了: 直来 診察待ち={walkin_count}人, 予約 診察待ち={appt_count}人"
           f"（合計{appt_minutes}分枠）, 未受付予約={upcoming_count}人"
           f"（合計{upcoming_minutes}分枠）, 完了直来（履歴用）={len(completed_rec)}件, "
-          f"診察中={current_slot or 'なし'}（残{in_exam_remain}分）")
+          f"診察中={current_slot or 'なし'}（残{in_exam_remain}分）, "
+          f"直来診察中={walkin_in_exam}")
     return (walkin_count, appt_count, appt_minutes,
             upcoming_count, upcoming_minutes,
-            in_exam_remain, completed_rec, current_slot)
+            in_exam_remain, completed_rec, current_slot, walkin_in_exam)
 
 
 # ─── 履歴管理 ──────────────────────────────────────────────────────
@@ -567,10 +571,10 @@ async def scrape() -> dict:
 
             await wait_for_page(page, context)
 
-            # 全ページ走査（全カウント + 履歴収集 + 診察中予約枠）
+            # 全ページ走査（全カウント + 履歴収集 + 診察中予約枠 + 直来診察中フラグ）
             (walkin_count, appt_count, appt_minutes,
              upcoming_count, upcoming_minutes, in_exam_remain,
-             completed_records, current_slot) = await scan_all_pages(page)
+             completed_records, current_slot, walkin_in_exam) = await scan_all_pages(page)
 
             # 完了患者データで履歴を更新 → pt_ratio を学習
             update_history(completed_records)
@@ -596,6 +600,7 @@ async def scrape() -> dict:
                 "in_exam_remain":    in_exam_remain,
                 "estimated_minutes": estimated,
                 "current_slot":      current_slot,
+                "walkin_in_exam":    walkin_in_exam,
                 "updated_at":        datetime.now(JST).isoformat(),
                 "is_open":           is_open(),
                 "error":             None,
@@ -613,6 +618,7 @@ async def scrape() -> dict:
                 "in_exam_remain":    0,
                 "estimated_minutes": 0,
                 "current_slot":      None,
+                "walkin_in_exam":    False,
                 "updated_at":        datetime.now(JST).isoformat(),
                 "is_open":           is_open(),
                 "error":             str(e),
@@ -640,6 +646,7 @@ def main():
             "in_exam_remain":    0,
             "estimated_minutes": 0,
             "current_slot":      None,
+            "walkin_in_exam":    False,
             "updated_at":        datetime.now(JST).isoformat(),
             "is_open":           False,
             "error":             None,
