@@ -390,16 +390,8 @@ async def scan_all_pages(page) -> tuple:
                         if dur is not None:
                             checkin_clean = "".join(ci.split())[:5]  # "HH:MM"
                             completed_rec.append((today, checkin_clean, dur))
-
-            else:
-                # フォールバック: 行テキスト全体で判断（時刻情報は取得不可）
-                text = await row.inner_text()
-                if "直来" in text and "診察待ち" in text:
-                    walkin_count += 1
-                    print(f"  → 直来 診察待ち 発見（フォールバック, p{page_num}）")
-                elif "直来" not in text and "診察待ち" in text:
-                    appt_count += 1
-                    print(f"  → 予約 診察待ち 発見（フォールバック, p{page_num}）")
+            # 注: ステータス/ラベル カラムが検出できない場合（CLINICS のヘッダーが変わった等）は
+            # 行を 全てスキップ → status.json は全ゼロ → main() のセーフティネットで前回値保持。
 
         # ── 次ページへ ──
         # tbody 外にある「次のページ番号」ボタンを JavaScript でクリック
@@ -588,9 +580,8 @@ async def scrape() -> dict:
         try:
             print(f"アクセス中: {CLINICS_URL}")
             await page.goto(CLINICS_URL, wait_until="domcontentloaded", timeout=30000)
-            await page.wait_for_timeout(5000)
+            # wait_for_page() 内で tbody または login フォームを待機するので個別の sleep は不要
             print(f"初期URL: {page.url}")
-            print(f"ページタイトル: {await page.title()}")
 
             await wait_for_page(page, context)
 
@@ -654,6 +645,46 @@ async def scrape() -> dict:
             await browser.close()
 
 
+# ─── セーフティネット用ヘルパー ────────────────────────────────────
+
+def _should_preserve_previous(data: dict) -> bool:
+    """診察時間中なのに全ゼロ＝誤検出の可能性大と判定する。
+    エラーが明示されている場合はそのまま書いてクライアントに伝える。"""
+    if data.get("error"):
+        return False
+    people = (data.get("count", 0)
+              + data.get("appt_count", 0)
+              + data.get("appt_upcoming_count", 0))
+    nothing_in_exam = (not data.get("walkin_in_exam")
+                       and not data.get("current_slot"))
+    return people == 0 and nothing_in_exam
+
+
+def _load_previous_status() -> dict | None:
+    """前回の status.json を読む。存在しない/壊れている時は None。"""
+    if not OUTPUT_FILE.exists():
+        return None
+    try:
+        return json.loads(OUTPUT_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
+def _prev_is_recent(prev: dict, max_age_sec: int = 3600) -> bool:
+    """前回値の鮮度チェック（デフォルト1時間）"""
+    prev_at = prev.get("updated_at")
+    if not prev_at:
+        return False
+    try:
+        prev_dt = datetime.fromisoformat(prev_at)
+        age_sec = (datetime.now(JST) - prev_dt).total_seconds()
+        return age_sec < max_age_sec
+    except Exception:
+        return False
+
+
+# ─── エントリポイント ──────────────────────────────────────────────
+
 def main():
     if not EMAIL or not PASSWORD:
         print("エラー: .env に CLINICS_EMAIL と CLINICS_PASSWORD を設定してください")
@@ -698,42 +729,6 @@ def main():
         json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
     )
     print(f"保存完了: {OUTPUT_FILE}")
-
-
-def _should_preserve_previous(data: dict) -> bool:
-    """診察時間中なのに全ゼロ＝誤検出の可能性大と判定する。
-    エラーが明示されている場合はそのまま書いてクライアントに伝える。"""
-    if data.get("error"):
-        return False
-    people = (data.get("count", 0)
-              + data.get("appt_count", 0)
-              + data.get("appt_upcoming_count", 0))
-    nothing_in_exam = (not data.get("walkin_in_exam")
-                       and not data.get("current_slot"))
-    return people == 0 and nothing_in_exam
-
-
-def _load_previous_status() -> dict | None:
-    """前回の status.json を読む。存在しない/壊れている時は None。"""
-    if not OUTPUT_FILE.exists():
-        return None
-    try:
-        return json.loads(OUTPUT_FILE.read_text(encoding="utf-8"))
-    except Exception:
-        return None
-
-
-def _prev_is_recent(prev: dict, max_age_sec: int = 3600) -> bool:
-    """前回値の鮮度チェック（デフォルト1時間）"""
-    prev_at = prev.get("updated_at")
-    if not prev_at:
-        return False
-    try:
-        prev_dt = datetime.fromisoformat(prev_at)
-        age_sec = (datetime.now(JST) - prev_dt).total_seconds()
-        return age_sec < max_age_sec
-    except Exception:
-        return False
 
 
 if __name__ == "__main__":
