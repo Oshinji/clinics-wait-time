@@ -1,10 +1,10 @@
 {
   "count": 1,
-  "appt_count": 1,
-  "appt_minutes": 15,
-  "estimated_minutes": 20,
+  "appt_count": 2,
+  "appt_minutes": 20,
+  "estimated_minutes": 24,
   "current_slot": "09:00",
-  "updated_at": "2026-04-22T10:01:31.757729+09:00",
+  "updated_at": "2026-04-22T10:16:04.454897+09:00",
   "is_open": true,
   "error": null
 }
