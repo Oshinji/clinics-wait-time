@@ -17,6 +17,9 @@ permissions:
 jobs:
   scrape:
     runs-on: ubuntu-22.04
+    # ハング対策：5分で強制停止（通常は1分強で完了する）
+    # これがないとハング時に次の run が走らず数時間更新が止まるリスク
+    timeout-minutes: 5
     steps:
       - name: リポジトリをチェックアウト
         uses: actions/checkout@v4
