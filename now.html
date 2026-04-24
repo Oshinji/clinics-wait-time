@@ -86,6 +86,14 @@ body {
   line-height: 1.4;
   letter-spacing: 0.01em;
 }
+.page-title .accent {
+  font-size: 1.25em;
+  color: var(--navy);
+  font-weight: 900;
+  background: linear-gradient(transparent 65%, rgba(74,144,194,0.28) 65%);
+  padding: 0 2px;
+  letter-spacing: 0.02em;
+}
 .update-badge {
   font-size: 11px;
   color: var(--gray);
@@ -271,7 +279,7 @@ body {
   </header>
 
   <div class="page-title-wrap">
-    <h1 class="page-title">ご予約の方の<br>進行状況</h1>
+    <h1 class="page-title"><span class="accent">ご予約の方</span>の<br>進行状況</h1>
     <div class="update-badge">
       <span class="live-dot"></span>
       <span id="updated">更新 --:--</span>
