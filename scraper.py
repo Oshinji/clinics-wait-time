@@ -283,8 +283,8 @@ async def scan_all_pages(page) -> tuple:
     walkin_count    = 0      # 直来 診察待ち
     appt_count      = 0      # 予約 診察待ち（件数）
     appt_minutes    = 0      # 予約 診察待ちの合計枠時間（分）
-    upcoming_count  = 0      # 未受付予約（今後来院予定）の件数
-    upcoming_minutes = 0     # 未受付予約の合計枠時間（分）
+    upcoming_slots  = []     # 未受付予約（今後来院予定）のリスト [(slot_start_min, duration_min), ...]
+                              # ← 反復計算で「自分が呼ばれる時刻までに到着する予約のみ」加算するために個別保持
     completed_rec   = []
     current_min     = None   # 予約 診察中の最早開始時刻（分）
     walkin_in_exam  = False  # 直来（予約外）が1件でも診察中か
@@ -351,7 +351,7 @@ async def scan_all_pages(page) -> tuple:
                               f"{slot}分枠 (p{page_num})")
 
                 elif "受付待ち" in status_text:
-                    # 未受付の予約（今後来院予定）をカウント
+                    # 未受付の予約（今後来院予定）を個別スロットで保持
                     # 条件: 直来ラベルなし + 診察予定がセッション終了以内 + 医師診察あり(リハ除く)
                     if (not is_walkin
                             and session_end_min > 0
@@ -360,8 +360,7 @@ async def scan_all_pages(page) -> tuple:
                         if slot_start is not None and now_min <= slot_start < session_end_min:
                             slot = slot_minutes_for(menu_text)
                             if slot > 0:
-                                upcoming_count   += 1
-                                upcoming_minutes += slot
+                                upcoming_slots.append((slot_start, slot))
                                 print(f"  → 未受付予約 発見 [{menu_text.strip()[:10]}] "
                                       f"開始={slot_start // 60:02d}:{slot_start % 60:02d} "
                                       f"{slot}分枠 (p{page_num})")
@@ -435,15 +434,19 @@ async def scan_all_pages(page) -> tuple:
         else:
             last_predicted_slot = None
 
+    # 未受付予約の集計値（表示・ログ用）
+    upcoming_count   = len(upcoming_slots)
+    upcoming_minutes = sum(d for _, d in upcoming_slots)
+
     print(f"集計完了: 直来 診察待ち={walkin_count}人, 予約 診察待ち={appt_count}人"
           f"（合計{appt_minutes}分枠）, 未受付予約={upcoming_count}人"
           f"（合計{upcoming_minutes}分枠）, 完了直来（履歴用）={len(completed_rec)}件, "
           f"診察中={current_slot or 'なし'}（残{in_exam_remain}分）, "
           f"直来診察中={walkin_in_exam}, 直近呼ばれた予約枠={last_predicted_slot}")
     return (walkin_count, appt_count, appt_minutes,
-            upcoming_count, upcoming_minutes,
+            upcoming_count, upcoming_minutes, upcoming_slots,
             in_exam_remain, completed_rec, current_slot,
-            walkin_in_exam, last_predicted_slot)
+            walkin_in_exam, last_predicted_slot, now_min)
 
 
 # ─── 履歴管理 ──────────────────────────────────────────────────────
@@ -505,29 +508,28 @@ def update_history(new_records: list) -> None:
 
 def compute_estimated(walkin_count: int, appt_count: int, appt_minutes: int,
                       upcoming_count: int, upcoming_minutes: int,
-                      in_exam_remain: int) -> int:
+                      upcoming_slots: list, in_exam_remain: int,
+                      now_min: int) -> int:
     """
-    現在の待ち人数から推定待ち時間（分）を計算する。
+    現在の待ち状況から推定待ち時間（分）を反復計算する。
 
-    当院は予約優先のため、以下を合算する：
-      - 診察中の残り時間（in_exam_remain）
-      - 診察待ちの予約患者の合計枠時間（appt_minutes）
-      - 未受付予約（今後来院予定）の合計枠時間（upcoming_minutes）
-      - 直来の pt_ratio 反映時間
+    当院は予約優先。新規直来の待ち時間は「自分が呼ばれる予想時刻までに
+    到着する予約」のみが影響する（朝一に全予約分を足すと過大評価になる）。
+
+    反復計算：
+        base = 診察中残 + 診察待ち予約 + 直来 × (1 − pt_ratio) × MINUTES_PER
+        total = base
+        loop:
+            到着予定時刻 <= 現在時刻 + total の未受付予約のみ加算
+            new_total = base + 加算分
+            |new_total - total| < 1 で収束
+
+    朝一や昼一で「セッション残り全員を足す」過大評価を防ぎ、
+    現実的な値に収束する（60〜70分前後）。
 
     予約枠: 再診外来=MINUTES_RESIN(6)分、初診外来=MINUTES_SHINSIN(10)分、
             リハビリ=0分（医師不使用）
-
-    物療比率(pt_ratio)が学習済みの場合:
-        estimated = in_exam_remain + appt_minutes + upcoming_minutes
-                  + walkin_count × (1 − pt_ratio) × MINUTES_PER
-    データ不足の場合:
-        walkin は固定値 MINUTES_PER で計算
-
-    ※ pt_ratio は直来患者の履歴から算出（物療のみ患者の割合）。
     """
-    appt_sum = appt_minutes + upcoming_minutes
-
     pt_ratio = None
     record_count = 0
     if HISTORY_FILE.exists():
@@ -549,10 +551,29 @@ def compute_estimated(walkin_count: int, appt_count: int, appt_minutes: int,
         else:
             print(f"データ不足({record_count}件 < {MIN_SAMPLES}件): フォールバック")
 
-    estimated = max(0, round(in_exam_remain + appt_sum + walkin_effective))
+    base = in_exam_remain + appt_minutes + walkin_effective
+
+    # 反復計算：自分が呼ばれる予想時刻までに到着する未受付予約のみ加算
+    total = base
+    added = 0
+    converged_iter = 0
+    for i in range(10):  # 最大10回で収束
+        cutoff = now_min + total
+        new_added = sum(dur for slot, dur in upcoming_slots if slot <= cutoff)
+        new_total = base + new_added
+        converged_iter = i + 1
+        if abs(new_total - total) < 1:
+            added = new_added
+            total = new_total
+            break
+        added = new_added
+        total = new_total
+
+    estimated = max(0, round(total))
+    included_cnt = sum(1 for slot, _ in upcoming_slots if slot <= now_min + estimated)
     print(f"推定: 診察中残{in_exam_remain}分 + 診察待ち予約{appt_minutes}分({appt_count}人) "
-          f"+ 未受付予約{upcoming_minutes}分({upcoming_count}人) + {walkin_desc} "
-          f"= {estimated}分")
+          f"+ 反復加算{added}分（未受付{included_cnt}/{upcoming_count}人, {converged_iter}回反復） "
+          f"+ {walkin_desc} = {estimated}分")
     return estimated
 
 
@@ -587,17 +608,19 @@ async def scrape() -> dict:
 
             # 全ページ走査（全カウント + 履歴収集 + 診察中予約枠 + 直来診察中フラグ + 直近予約枠）
             (walkin_count, appt_count, appt_minutes,
-             upcoming_count, upcoming_minutes, in_exam_remain,
-             completed_records, current_slot, walkin_in_exam,
-             last_predicted_slot) = await scan_all_pages(page)
+             upcoming_count, upcoming_minutes, upcoming_slots,
+             in_exam_remain, completed_records, current_slot,
+             walkin_in_exam, last_predicted_slot,
+             now_min) = await scan_all_pages(page)
 
             # 完了患者データで履歴を更新 → pt_ratio を学習
             update_history(completed_records)
 
-            # 予約優先・未来予約含めて推定待ち時間を計算
+            # 予約優先・反復計算で過大評価を防ぎつつ推定待ち時間を計算
             estimated = compute_estimated(
                 walkin_count, appt_count, appt_minutes,
-                upcoming_count, upcoming_minutes, in_exam_remain
+                upcoming_count, upcoming_minutes, upcoming_slots,
+                in_exam_remain, now_min
             )
 
             print(f"直来: {walkin_count}人, 予約(待ち): {appt_count}人"
