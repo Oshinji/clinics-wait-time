@@ -328,9 +328,18 @@ body {
 
   function toMin(s){ var p=s.split(':'); return +p[0]*60+ +p[1]; }
 
+  // JST (UTC+9 固定, 夏時間なし) の時刻部品を安全に取り出す。
+  // toLocaleString + new Date() は Safari/iOS が narrow no-break space (U+202F)
+  // を挿入する既知不具合があり Invalid Date になる → UTC+9h ms 加算で回避。
+  function jstParts(epochMs){
+    var t = (typeof epochMs === 'number') ? epochMs : new Date().getTime();
+    var j = new Date(t + 9 * 60 * 60 * 1000);
+    return { w: j.getUTCDay(), h: j.getUTCHours(), m: j.getUTCMinutes() };
+  }
+
   function getSession(){
-    var _d=new Date(), d=new Date(_d.toLocaleString("en-US",{timeZone:"Asia/Tokyo"}));
-    var w=d.getDay(), n=d.getHours()*60+d.getMinutes();
+    var p = jstParts();
+    var w = p.w, n = p.h * 60 + p.m;
     var pmEnd    = (w===6) ? toMin('16:30') : toMin('17:30');
     var pmEndStr = (w===6) ? '16:30' : '17:30';
     var ctx = { pmEndStr: pmEndStr };
@@ -344,8 +353,10 @@ body {
 
   function fmtUpdated(iso){
     if(!iso) return '更新 --:--';
-    var d=new Date(iso);
-    return '更新 '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);
+    var d = new Date(iso);                // ISO8601 (+09:00 付き) は全ブラウザでパース可
+    if(isNaN(d.getTime())) return '更新 --:--';
+    var p = jstParts(d.getTime());
+    return '更新 '+('0'+p.h).slice(-2)+':'+('0'+p.m).slice(-2);
   }
 
   function hoursHtml(s){
