@@ -404,9 +404,14 @@
       "date": "2026-04-24",
       "checkin": "10:59",
       "duration_min": 10
+    },
+    {
+      "date": "2026-04-24",
+      "checkin": "11:07",
+      "duration_min": 16
     }
   ],
-  "pt_ratio": 0.642,
-  "record_count": 81,
-  "updated_at": "2026-04-24T11:31:17.340643+09:00"
+  "pt_ratio": 0.6463,
+  "record_count": 82,
+  "updated_at": "2026-04-24T11:36:00.520399+09:00"
 }
