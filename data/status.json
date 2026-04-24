@@ -1,15 +1,15 @@
 {
   "count": 2,
-  "appt_count": 5,
-  "appt_minutes": 24,
+  "appt_count": 8,
+  "appt_minutes": 36,
   "appt_upcoming_count": 0,
   "appt_upcoming_minutes": 0,
   "in_exam_remain": 7,
-  "estimated_minutes": 42,
+  "estimated_minutes": 54,
   "current_slot": "10:40",
   "walkin_in_exam": true,
   "last_predicted_slot": "10:40",
-  "updated_at": "2026-04-24T11:11:09.097231+09:00",
+  "updated_at": "2026-04-24T11:16:03.700867+09:00",
   "is_open": true,
   "error": null
 }
