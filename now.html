@@ -331,38 +331,20 @@ body {
     return {t:'aft', ctx:ctx};
   }
 
-  // 受付終了に近い（残り NEAR_END_MIN 分以内）か、延長枠中か。
-  // 「終了間近」表示はこの条件下でのみ出す。
-  // ※ allPredictedDone だけで判定すると、朝一で予約が CLINICS にまだ反映されてない
-  //   タイミング等で 9:25 に「終了間近」が出る誤動作が起きるため、時刻ガードを必須化。
-  // ※※ さらに、s.t が想定外の値でも保険として絶対時刻も併せて確認する
-  //     （8:25 等の非常に早い時間で「終了間近」が出る不具合を完全に防ぐため）。
+  // 「終了間近」表示の可否判定。受付終了 NEAR_END_MIN 分前 〜 延長枠終了 の間のみ true。
+  // ※ allPredictedDone だけで判定すると朝一・データ未反映時に誤発火するため時刻ガード必須。
+  //   絶対時刻で範囲を限定し、s.t が 'open' or 'ext' のときのみ表示候補とする。
+  //   有効範囲: AM 11:00〜12:00 / 平日PM 17:00〜18:00 / 土PM 16:00〜17:00
   var NEAR_END_MIN = 30;
   function isNearEndOfSession(s){
+    if(s.t !== 'open' && s.t !== 'ext') return false;
     var p = jstParts();
     var nMin = p.h * 60 + p.m;
-    var w = p.w;
-
-    // ── 絶対時刻ガード ──────────────────────────────────────────────
-    // 「終了間近」が出てよい絶対時刻範囲（受付終了時刻−30分から延長枠終了まで）
-    //   AM: 11:00 〜 12:00
-    //   PM (平日): 17:00 〜 18:00
-    //   PM (土曜): 16:00 〜 17:00
-    var amOK = (nMin >= toMin('11:00')) && (nMin < toMin('12:00'));
-    var pmEndStrFinal = (w === 6) ? '16:30' : '17:30';
-    var pmEndExtMin   = (w === 6) ? toMin('17:00') : toMin('18:00');
-    var pmOK = (nMin >= toMin(pmEndStrFinal) - NEAR_END_MIN) && (nMin < pmEndExtMin);
-    if(!amOK && !pmOK) return false;            // 上記範囲外なら絶対に false
-
-    // ── セッション種別ガード ────────────────────────────────────────
-    if(s.t === 'ext')  return true;             // 延長枠は定義上「終了直前」
-    if(s.t !== 'open') return false;            // pre/lun/aft/hol は対象外
-
-    // ── open 中の最終確認（受付終了 NEAR_END_MIN 分前以内） ──────────
-    var endMin = (s.half === 'am')
-      ? toMin('11:30')
-      : toMin(s.ctx.pmEndStr);                   // '17:30' 平日 / '16:30' 土曜
-    return nMin >= endMin - NEAR_END_MIN;
+    var pmEndMin    = (p.w === 6) ? toMin('16:30') : toMin('17:30');
+    var pmEndExtMin = (p.w === 6) ? toMin('17:00') : toMin('18:00');
+    var amOK = (nMin >= toMin('11:30') - NEAR_END_MIN) && (nMin < toMin('12:00'));
+    var pmOK = (nMin >= pmEndMin - NEAR_END_MIN)         && (nMin < pmEndExtMin);
+    return amOK || pmOK;
   }
 
   function fmtUpdated(iso){
