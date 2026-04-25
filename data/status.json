@@ -1,6 +1,6 @@
 {
   "count": 1,
-  "appt_count": 4,
+  "appt_count": 5,
   "appt_minutes": 20,
   "appt_upcoming_count": 0,
   "appt_upcoming_minutes": 0,
@@ -9,7 +9,7 @@
   "current_slot": "11:15",
   "walkin_in_exam": true,
   "last_predicted_slot": "11:15",
-  "updated_at": "2026-04-25T11:31:14.557398+09:00",
+  "updated_at": "2026-04-25T11:36:02.106998+09:00",
   "is_open": false,
   "error": null
 }
