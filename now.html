@@ -331,6 +331,22 @@ body {
     return {t:'aft', ctx:ctx};
   }
 
+  // 受付終了に近い（残り NEAR_END_MIN 分以内）か、延長枠中か。
+  // 「終了間近」表示はこの条件下でのみ出す。
+  // ※ allPredictedDone だけで判定すると、朝一で予約が CLINICS にまだ反映されてない
+  //   タイミング等で 9:25 に「終了間近」が出る誤動作が起きるため、時刻ガードを必須化。
+  var NEAR_END_MIN = 30;
+  function isNearEndOfSession(s){
+    if(s.t === 'ext')  return true;            // 延長枠は定義上「終了直前」
+    if(s.t !== 'open') return false;
+    var p = jstParts();
+    var nMin = p.h * 60 + p.m;
+    var endMin = (s.half === 'am')
+      ? toMin('11:30')
+      : toMin(s.ctx.pmEndStr);                  // '17:30' 平日 / '16:30' 土曜
+    return nMin >= endMin - NEAR_END_MIN;
+  }
+
   function fmtUpdated(iso){
     if(!iso) return '更新 --:--';
     var d = new Date(iso);                // ISO8601 (+09:00 付き) は全ブラウザでパース可
@@ -427,8 +443,9 @@ body {
             +'<div class="hero-slot">'+slotToShow+'〜</div>'
             +'<div class="hero-desc">の方を診察しています</div>'
             +'</div>';
-        } else if(allPredictedDone || s.t==='ext'){
-          // 予約全終了 or 延長枠 → 本日の診察終了間近
+        } else if((allPredictedDone || s.t==='ext') && isNearEndOfSession(s)){
+          // 「終了間近」は 受付終了30分前以内 or 延長枠中 でないと出さない。
+          // 予約全消化または延長枠中の状況下で限定的に表示。
           var hl = (s.half==='am') ? '午前' : '午後';
           h = '<div class="hero">'
             +'<div class="status-badge wait">'+hl+'の診察終了間近</div>'
@@ -436,7 +453,7 @@ body {
             +'<div class="state-resume-note">ご予約の方の診察はすべて終了しました</div>'
             +'</div>';
         } else {
-          // 誰も診察中でない → 切り替え中（「まもなく」という時間的な約束はしない）
+          // 誰も診察中でない（受付時間内のセッション中盤等） → 切り替え中
           h = '<div class="hero">'
             +'<div class="status-badge wait">切り替え中</div>'
             +'<div class="state-big">診察の切り替え中です</div>'
