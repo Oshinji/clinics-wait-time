@@ -7,9 +7,9 @@
   "in_exam_remain": 7,
   "estimated_minutes": 42,
   "current_slot": "10:20",
-  "walkin_in_exam": true,
+  "walkin_in_exam": false,
   "last_predicted_slot": "10:50",
-  "updated_at": "2026-04-25T11:11:03.155364+09:00",
+  "updated_at": "2026-04-25T11:16:00.492430+09:00",
   "is_open": true,
   "error": null
 }
