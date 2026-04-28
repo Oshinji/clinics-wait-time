@@ -412,7 +412,7 @@ body {
 
       case 'lun':
         h = '<div class="hero">'
-          +'<div class="status-badge busy">昼休み中</div>'
+          +'<div class="status-badge busy">午前の受付終了</div>'
           +'<div class="state-resume-label">午後の受付開始</div>'
           +'<div class="state-resume-time">14:30</div>'
           +'<div class="state-resume-note">から受付を再開します</div>'
@@ -428,8 +428,14 @@ body {
         break;
 
       case 'open':
-        if(!data || !data.is_open){
-          h = '<div class="hero"><div class="status-badge off">受付時間外です</div></div>';
+        // is_open は scraper 取得時刻のフラグで最大5分のラグがある。
+        // クライアント時刻が 'open' セッション内なら受付中として扱い、
+        // 8:30 / 14:30 直後の境界で「受付時間外」表示を出さない。
+        // データ未取得や scraper 直前の状態は estimated_minutes=0 として
+        // 「お待ちなし」表示にフォールバックする。
+        if(!data){
+          h = '<div class="hero"><div class="status-badge busy">受付中</div>'
+            +'<div class="state-resume-note">最新情報を取得中です</div></div>';
         } else if(!data.estimated_minutes){
           // estimated_minutes が 0 または未定義のときだけ「お待ちなし」
           // 直来0でも予約や診察中で estimated>0 なら待ち時間を表示する
