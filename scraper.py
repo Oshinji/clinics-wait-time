@@ -613,6 +613,32 @@ async def scrape() -> dict:
              walkin_in_exam, last_predicted_slot,
              now_min) = await scan_all_pages(page)
 
+            # ─── セーフティネット: 直来カウントの急減を検出して前回値を保持 ───
+            # シナリオ: 直前に直来 N(≥2) 名いたのに今回 0 名 + 他に活動継続中
+            #          → ラベル取得タイミングのDOM取りこぼしで誤検出している可能性大
+            #          → 前回値を1サイクルだけ保持して estimated_minutes を再計算
+            #
+            # 連鎖的な保護を避けるため、前回が既に保護状態だった場合は今回は保護しない
+            # （最大1サイクル＝5分間だけ保護、その後は scraper の真の値を信頼）
+            walkin_protected = False
+            if is_open():
+                prev = _load_previous_status()
+                if prev is not None and _prev_is_recent(prev, max_age_sec=900):
+                    prev_walkin = int(prev.get("count", 0) or 0)
+                    prev_was_protected = bool(prev.get("walkin_protected", False))
+                    activity = (appt_count > 0
+                                or upcoming_count > 0
+                                or in_exam_remain > 0
+                                or walkin_in_exam)
+                    if (prev_walkin >= 2
+                            and walkin_count == 0
+                            and not prev_was_protected
+                            and activity):
+                        print(f"⚠️ 直来カウント急減検出 (前回{prev_walkin}名→今回0名) "
+                              f"+ 他活動あり → 前回値で保護（次回は保護しない）")
+                        walkin_count = prev_walkin
+                        walkin_protected = True
+
             # 完了患者データで履歴を更新 → pt_ratio を学習
             update_history(completed_records)
 
@@ -623,10 +649,10 @@ async def scrape() -> dict:
                 in_exam_remain, now_min
             )
 
-            print(f"直来: {walkin_count}人, 予約(待ち): {appt_count}人"
-                  f"/{appt_minutes}分, 未受付予約: {upcoming_count}人"
-                  f"/{upcoming_minutes}分, 診察中残: {in_exam_remain}分 "
-                  f"→ 推定 約{estimated}分")
+            print(f"直来: {walkin_count}人{'(保護中)' if walkin_protected else ''}, "
+                  f"予約(待ち): {appt_count}人/{appt_minutes}分, "
+                  f"未受付予約: {upcoming_count}人/{upcoming_minutes}分, "
+                  f"診察中残: {in_exam_remain}分 → 推定 約{estimated}分")
 
             return {
                 "count":             walkin_count,
@@ -639,6 +665,7 @@ async def scrape() -> dict:
                 "current_slot":      current_slot,
                 "walkin_in_exam":    walkin_in_exam,
                 "last_predicted_slot": last_predicted_slot,
+                "walkin_protected":  walkin_protected,
                 "updated_at":        datetime.now(JST).isoformat(),
                 "is_open":           is_open(),
                 "error":             None,
@@ -658,6 +685,7 @@ async def scrape() -> dict:
                 "current_slot":      None,
                 "walkin_in_exam":    False,
                 "last_predicted_slot": None,
+                "walkin_protected":  False,
                 "updated_at":        datetime.now(JST).isoformat(),
                 "is_open":           is_open(),
                 "error":             str(e),
@@ -727,6 +755,7 @@ def main():
             "current_slot":      None,
             "walkin_in_exam":    False,
             "last_predicted_slot": None,
+            "walkin_protected":  False,
             "updated_at":        datetime.now(JST).isoformat(),
             "is_open":           False,
             "error":             None,
