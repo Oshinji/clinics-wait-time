@@ -429,16 +429,19 @@ body {
 
       case 'open':
         // is_open は scraper 取得時刻のフラグで最大5分のラグがある。
-        // クライアント時刻が 'open' セッション内なら受付中として扱い、
-        // 8:30 / 14:30 直後の境界で「受付時間外」表示を出さない。
-        // データ未取得や scraper 直前の状態は estimated_minutes=0 として
-        // 「お待ちなし」表示にフォールバックする。
-        if(!data){
-          h = '<div class="hero"><div class="status-badge busy">受付中</div>'
-            +'<div class="state-resume-note">最新情報を取得中です</div></div>';
+        // 8:30 / 14:30 直後の境界では scraper の更新が間に合わず
+        // is_open=false のままになることがあるため、
+        // その場合は「情報取得中」表示にして "受付時間外" や
+        // "お待ちなし" の誤表示を避ける（混雑状況不明と分かるように）。
+        if(!data || !data.is_open){
+          h = '<div class="hero">'
+            +'<div class="status-badge busy">受付中</div>'
+            +'<div class="state-big">最新の待ち時間を<br>取得しています</div>'
+            +'<div class="state-resume-note">しばらくお待ちください</div>'
+            +'</div>';
         } else if(!data.estimated_minutes){
-          // estimated_minutes が 0 または未定義のときだけ「お待ちなし」
-          // 直来0でも予約や診察中で estimated>0 なら待ち時間を表示する
+          // is_open=true で estimated_minutes が 0 または未定義 → 真にお待ちなし
+          // （直来0でも予約や診察中で estimated>0 なら待ち時間を表示する）
           h = '<div class="hero">'
             +'<div class="status-badge open">受付中</div>'
             +'<div class="no-wait-big">お待ちの方は<br>いません</div>'
