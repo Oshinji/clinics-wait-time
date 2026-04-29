@@ -8,9 +8,9 @@
   "estimated_minutes": 0,
   "current_slot": null,
   "walkin_in_exam": false,
-  "last_predicted_slot": null,
+  "last_predicted_slot": "14:30",
   "walkin_protected": false,
-  "updated_at": "2026-04-29T14:25:49.605313+09:00",
-  "is_open": false,
+  "updated_at": "2026-04-29T15:26:11.405707+09:00",
+  "is_open": true,
   "error": null
 }
