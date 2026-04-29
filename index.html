@@ -392,6 +392,17 @@ body {
       return;
     }
 
+    // 祝日・臨時休診: クライアント時刻のセッション判定より優先
+    if(data && data.is_holiday){
+      h = '<div class="hero">'
+        +'<div class="status-badge off">休診日</div>'
+        +'<div class="state-big">本日は休診日です</div>'
+        +'<div class="state-resume-note">またのご来院をお待ちしております</div>'
+        +'</div>';
+      el.innerHTML = h + hoursHtml(s);
+      return;
+    }
+
     switch(s.t){
       case 'hol':
         h = '<div class="hero">'

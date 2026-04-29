@@ -26,6 +26,7 @@ MINUTES_PER  = int(os.getenv("MINUTES_PER_PATIENT", "15"))
 SESSION_FILE = Path("session.json")
 OUTPUT_FILE  = Path("data/status.json")
 HISTORY_FILE = Path("data/history.json")
+HOLIDAYS_FILE = Path("data/holidays.json")
 JST          = timezone(timedelta(hours=9))
 
 MIN_DURATION    = int(os.getenv("MIN_DURATION_MINUTES", "20"))  # 物療のみ患者の判定閾値（分）
@@ -51,8 +52,30 @@ PM_END     = dt_time(17, 30)
 PM_END_SAT = dt_time(16, 30)
 
 
+def _load_holidays() -> set:
+    """data/holidays.json から休診日リストを読み込む。失敗時は空セット（=祝日扱いなし）。"""
+    if not HOLIDAYS_FILE.exists():
+        return set()
+    try:
+        data = json.loads(HOLIDAYS_FILE.read_text(encoding="utf-8"))
+        return set(data.get("closed", []))
+    except Exception as e:
+        print(f"⚠️ holidays.json 読込失敗: {e}")
+        return set()
+
+
+def is_special_closed(now: datetime | None = None) -> bool:
+    """holidays.json の closed リストに今日の日付が含まれるか"""
+    if now is None:
+        now = datetime.now(JST)
+    today = now.strftime("%Y-%m-%d")
+    return today in _load_holidays()
+
+
 def is_open() -> bool:
     now = datetime.now(JST)
+    if is_special_closed(now):
+        return False
     wd  = now.weekday()   # 0=月 … 3=木(休) … 5=土 … 6=日(休)
     t   = now.time()
     if wd in (3, 6):
@@ -65,8 +88,11 @@ def is_exam_window() -> bool:
     """
     診察中の患者が残っている可能性がある時間帯（受付時間 + 終了後30分）。
     scraper.main() はこの範囲で実行される。is_open() は受付時間のみ True。
+    holidays.json で指定された休診日も False を返す。
     """
     now = datetime.now(JST)
+    if is_special_closed(now):
+        return False
     wd  = now.weekday()
     t   = now.time()
     if wd in (3, 6):
@@ -668,6 +694,7 @@ async def scrape() -> dict:
                 "walkin_protected":  walkin_protected,
                 "updated_at":        datetime.now(JST).isoformat(),
                 "is_open":           is_open(),
+                "is_holiday":        is_special_closed(),
                 "error":             None,
             }
 
@@ -688,6 +715,7 @@ async def scrape() -> dict:
                 "walkin_protected":  False,
                 "updated_at":        datetime.now(JST).isoformat(),
                 "is_open":           is_open(),
+                "is_holiday":        is_special_closed(),
                 "error":             str(e),
             }
 
@@ -744,6 +772,7 @@ def main():
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
 
     if not is_exam_window():
+        is_holiday_today = is_special_closed()
         data = {
             "count":             0,
             "appt_count":        0,
@@ -758,9 +787,13 @@ def main():
             "walkin_protected":  False,
             "updated_at":        datetime.now(JST).isoformat(),
             "is_open":           False,
+            "is_holiday":        is_holiday_today,
             "error":             None,
         }
-        print("診察窓外（受付終了後30分超過）のため、スクレイピングをスキップします")
+        if is_holiday_today:
+            print("本日は休診日です（holidays.json）→ スクレイピングをスキップ")
+        else:
+            print("診察窓外（受付終了後30分超過）のため、スクレイピングをスキップします")
     else:
         data = asyncio.run(scrape())
 
