@@ -1,6 +1,6 @@
 {
   "count": 0,
-  "appt_count": 1,
+  "appt_count": 0,
   "appt_minutes": 0,
   "appt_upcoming_count": 0,
   "appt_upcoming_minutes": 0,
@@ -8,9 +8,9 @@
   "estimated_minutes": 0,
   "current_slot": null,
   "walkin_in_exam": false,
-  "last_predicted_slot": "17:30",
+  "last_predicted_slot": null,
   "walkin_protected": false,
-  "updated_at": "2026-05-01T17:56:18.497438+09:00",
+  "updated_at": "2026-05-01T18:01:14.138541+09:00",
   "is_open": false,
   "is_holiday": false,
   "error": null
