@@ -312,7 +312,7 @@ async def scan_all_pages(page) -> tuple:
     upcoming_slots  = []     # 未受付予約（今後来院予定）のリスト [(slot_start_min, duration_min), ...]
                               # ← 反復計算で「自分が呼ばれる時刻までに到着する予約のみ」加算するために個別保持
     completed_rec   = []
-    current_min     = None   # 予約 診察中の最早開始時刻（分）
+    current_mins    = []     # 予約 診察中の全開始時刻（分）リスト（最大3件取得）
     walkin_in_exam  = False  # 直来（予約外）が1件でも診察中か
     last_called_min = None   # 予約（医師診察）で「呼ばれた」ことのある最新 slot 開始分
                               # （診察中/算定待ち/会計待ち/完了/会計完了 を"呼ばれた"と見なす）
@@ -401,8 +401,8 @@ async def scan_all_pages(page) -> tuple:
                         print(f"  → 診察中 発見 [直来診察中 → walkin_in_exam=True] (p{page_num})")
                     elif appt_idx is not None and len(cells) > appt_idx:
                         start_min = extract_slot_start(appt_text)
-                        if start_min is not None and (current_min is None or start_min < current_min):
-                            current_min = start_min
+                        if start_min is not None:
+                            current_mins.append(start_min)
                             print(f"  → 診察中 発見 [予約/{menu_text.strip()[:10]}/{appt_text.strip()[:15]}] "
                                   f"開始={start_min // 60:02d}:{start_min % 60:02d} (p{page_num})")
 
@@ -441,11 +441,11 @@ async def scan_all_pages(page) -> tuple:
         await page.wait_for_timeout(1500)
         await page.wait_for_selector('tbody tr', timeout=10000)
 
-    current_slot = (
-        f"{current_min // 60:02d}:{current_min % 60:02d}"
-        if current_min is not None else None
-    )
-    in_exam_remain = MINUTES_IN_EXAM_REMAIN if current_min is not None else 0
+    # 重複排除 → 昇順ソート → 最大3枠
+    current_mins_sorted = sorted(set(current_mins))[:3]
+    current_slots = [f"{m // 60:02d}:{m % 60:02d}" for m in current_mins_sorted]
+    current_slot  = current_slots[0] if current_slots else None   # 後方互換
+    in_exam_remain = MINUTES_IN_EXAM_REMAIN if current_slots else 0
 
     # 直近に呼ばれた予約 slot（walkin_in_exam 時のフォールバック表示用）
     if last_called_min is not None:
@@ -467,11 +467,11 @@ async def scan_all_pages(page) -> tuple:
     print(f"集計完了: 直来 診察待ち={walkin_count}人, 予約 診察待ち={appt_count}人"
           f"（合計{appt_minutes}分枠）, 未受付予約={upcoming_count}人"
           f"（合計{upcoming_minutes}分枠）, 完了直来（履歴用）={len(completed_rec)}件, "
-          f"診察中={current_slot or 'なし'}（残{in_exam_remain}分）, "
+          f"診察中={current_slots or 'なし'}（残{in_exam_remain}分）, "
           f"直来診察中={walkin_in_exam}, 直近呼ばれた予約枠={last_predicted_slot}")
     return (walkin_count, appt_count, appt_minutes,
             upcoming_count, upcoming_minutes, upcoming_slots,
-            in_exam_remain, completed_rec, current_slot,
+            in_exam_remain, completed_rec, current_slot, current_slots,
             walkin_in_exam, last_predicted_slot, now_min)
 
 
@@ -635,7 +635,7 @@ async def scrape() -> dict:
             # 全ページ走査（全カウント + 履歴収集 + 診察中予約枠 + 直来診察中フラグ + 直近予約枠）
             (walkin_count, appt_count, appt_minutes,
              upcoming_count, upcoming_minutes, upcoming_slots,
-             in_exam_remain, completed_records, current_slot,
+             in_exam_remain, completed_records, current_slot, current_slots,
              walkin_in_exam, last_predicted_slot,
              now_min) = await scan_all_pages(page)
 
@@ -689,6 +689,7 @@ async def scrape() -> dict:
                 "in_exam_remain":    in_exam_remain,
                 "estimated_minutes": estimated,
                 "current_slot":      current_slot,
+                "current_slots":     current_slots,
                 "walkin_in_exam":    walkin_in_exam,
                 "last_predicted_slot": last_predicted_slot,
                 "walkin_protected":  walkin_protected,
@@ -710,6 +711,7 @@ async def scrape() -> dict:
                 "in_exam_remain":    0,
                 "estimated_minutes": 0,
                 "current_slot":      None,
+                "current_slots":     [],
                 "walkin_in_exam":    False,
                 "last_predicted_slot": None,
                 "walkin_protected":  False,
@@ -782,6 +784,7 @@ def main():
             "in_exam_remain":    0,
             "estimated_minutes": 0,
             "current_slot":      None,
+            "current_slots":     [],
             "walkin_in_exam":    False,
             "last_predicted_slot": None,
             "walkin_protected":  False,

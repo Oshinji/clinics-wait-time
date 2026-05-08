@@ -156,6 +156,8 @@ body {
   line-height: 1;
   margin-bottom: 12px;
 }
+.hero-slot.double { font-size: 56px; }
+.hero-slot.triple { font-size: 44px; }
 .hero-desc {
   font-size: 22px;
   font-weight: 700;
@@ -262,6 +264,8 @@ body {
   .page-title { font-size: 22px; }
   .hero { padding: 26px 20px 22px; }
   .hero-slot { font-size: 72px; }
+  .hero-slot.double { font-size: 46px; }
+  .hero-slot.triple { font-size: 36px; }
   .hero-desc { font-size: 19px; }
   .state-big { font-size: 25px; }
   .state-resume-time { font-size: 68px; }
@@ -436,22 +440,31 @@ body {
           && !(data.appt_upcoming_count > 0);
 
         // 表示する予約枠時刻の決定（monotonic 表示）:
-        //   ① current_slot あり        → 予約診察中（正確）
+        //   ① current_slots あり       → 予約診察中（複数枠対応・最大3枠）
         //   ② 直来診察中で予約がまだ残 → last_predicted_slot で同形式表示
         //      （「予約外」とは言わず、直近呼ばれた予約枠時刻を継続表示）
         //   ③ 予約全消化時は monotonic 表示しない → 終了間近へ
-        var slotToShow = null;
-        if(data && data.current_slot){
-          slotToShow = data.current_slot;
+        //
+        // current_slots (複数枠) を優先利用。未対応データは current_slot にフォールバック
+        var rawSlots = (data && Array.isArray(data.current_slots) && data.current_slots.length > 0)
+          ? data.current_slots
+          : (data && data.current_slot ? [data.current_slot] : []);
+
+        var slotsToShow = [];
+        if(rawSlots.length > 0){
+          slotsToShow = rawSlots;
         } else if(data && data.walkin_in_exam && data.last_predicted_slot && !allPredictedDone){
-          slotToShow = data.last_predicted_slot;
+          slotsToShow = [data.last_predicted_slot];
         }
 
-        if(slotToShow){
+        if(slotsToShow.length > 0){
+          var cnt = slotsToShow.length;
+          var slotClass = cnt === 3 ? ' triple' : cnt === 2 ? ' double' : '';
+          var slotHtml = slotsToShow.map(function(sl){ return sl+'〜'; }).join(' / ');
           h = '<div class="hero">'
             +'<div class="status-badge open">診察中</div>'
             +'<div class="hero-label">ご予約枠</div>'
-            +'<div class="hero-slot">'+slotToShow+'〜</div>'
+            +'<div class="hero-slot'+slotClass+'">'+slotHtml+'</div>'
             +'<div class="hero-desc">の方を診察しています</div>'
             +'</div>';
         } else if((allPredictedDone || s.t==='ext') && isNearEndOfSession(s)){
