@@ -15,8 +15,8 @@
   "walkin_in_exam": true,
   "last_predicted_slot": "11:15",
   "walkin_protected": false,
-  "updated_at": "2026-05-09T11:25:58.254667+09:00",
-  "is_open": true,
+  "updated_at": "2026-05-09T11:31:33.812327+09:00",
+  "is_open": false,
   "is_holiday": false,
   "error": null
 }
