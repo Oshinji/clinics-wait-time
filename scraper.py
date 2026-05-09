@@ -405,6 +405,10 @@ async def scan_all_pages(page) -> tuple:
                             current_mins.append(start_min)
                             print(f"  → 診察中 発見 [予約/{menu_text.strip()[:10]}/{appt_text.strip()[:15]}] "
                                   f"開始={start_min // 60:02d}:{start_min % 60:02d} (p{page_num})")
+                        else:
+                            # 診察予定セルが空 or 解析不能 → 枠時刻不明のためスキップ
+                            print(f"  ⚠️ 診察中 発見 [予約/{menu_text.strip()[:10]}] "
+                                  f"診察予定セル空 or 解析不能 (appt={repr(appt_text.strip()[:20])}) → スキップ (p{page_num})")
 
                 elif "会計完了" in status_text and is_walkin:
                     # 直来の受付〜終了の時間を記録（物療比率の学習に使用）
