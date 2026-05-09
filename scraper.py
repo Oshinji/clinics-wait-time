@@ -306,7 +306,10 @@ async def scan_all_pages(page) -> tuple:
           f"受付={checkin_idx}, 終了={checkout_idx}, 診察予定={appt_idx}")
 
     today           = datetime.now(JST).strftime("%Y-%m-%d")
-    walkin_count    = 0      # 直来 診察待ち
+    walkin_count    = 0      # 直来 診察待ちの総数（旧来の急減検知セーフティ用）
+    walkin_resin_count   = 0 # 直来 診察待ち のうち再診外来（pt_ratio で実効時間を計算）
+    walkin_shoshin_count = 0 # 直来 診察待ち のうち初診外来（必ず医師診察 → 固定時間）
+    walkin_shoshin_minutes = 0  # 上記の合計時間（MINUTES_SHINSIN × 件数）
     appt_count      = 0      # 予約 診察待ち（件数）
     appt_minutes    = 0      # 予約 診察待ちの合計枠時間（分）
     upcoming_slots  = []     # 未受付予約（今後来院予定）のリスト [(slot_start_min, duration_min), ...]
@@ -368,7 +371,19 @@ async def scan_all_pages(page) -> tuple:
                 if "診察待ち" in status_text:
                     if is_walkin:
                         walkin_count += 1
-                        print(f"  → 直来 診察待ち 発見 (p{page_num})")
+                        # メニューによって扱いを分岐
+                        if "リハビリ" in menu_text:
+                            # リハビリのみは医師時間を消費しない（カウントだけ残す）
+                            print(f"  → 直来 診察待ち [リハビリ→0分扱い] (p{page_num})")
+                        elif "初診" in menu_text:
+                            # 初診は必ず医師診察あり → pt_ratio 適用しない固定時間
+                            walkin_shoshin_count   += 1
+                            walkin_shoshin_minutes += MINUTES_SHINSIN
+                            print(f"  → 直来 診察待ち [初診→固定{MINUTES_SHINSIN}分] (p{page_num})")
+                        else:
+                            # 再診（または不明）: pt_ratio で実効時間を計算
+                            walkin_resin_count += 1
+                            print(f"  → 直来 診察待ち [再診→pt_ratio適用] (p{page_num})")
                     else:
                         slot = slot_minutes_for(menu_text)
                         appt_count   += 1
@@ -412,7 +427,12 @@ async def scan_all_pages(page) -> tuple:
 
                 elif "会計完了" in status_text and is_walkin:
                     # 直来の受付〜終了の時間を記録（物療比率の学習に使用）
-                    if checkin_idx is not None and checkout_idx is not None:
+                    # ※ 初診とリハビリは pt_ratio 学習対象から除外:
+                    #   - 初診は必ず医師診察あり → 物療のみと混ぜると pt_ratio が下がってしまう
+                    #   - リハビリ単独受診はそもそも医師時間を使わない別カテゴリ
+                    if "初診" in menu_text or "リハビリ" in menu_text:
+                        pass  # 履歴学習対象外
+                    elif checkin_idx is not None and checkout_idx is not None:
                         ci  = await cells[checkin_idx].inner_text()
                         co  = await cells[checkout_idx].inner_text()
                         dur = calc_duration(ci, co)
@@ -468,12 +488,16 @@ async def scan_all_pages(page) -> tuple:
     upcoming_count   = len(upcoming_slots)
     upcoming_minutes = sum(d for _, d in upcoming_slots)
 
-    print(f"集計完了: 直来 診察待ち={walkin_count}人, 予約 診察待ち={appt_count}人"
-          f"（合計{appt_minutes}分枠）, 未受付予約={upcoming_count}人"
-          f"（合計{upcoming_minutes}分枠）, 完了直来（履歴用）={len(completed_rec)}件, "
+    print(f"集計完了: 直来 診察待ち={walkin_count}人 "
+          f"(初診{walkin_shoshin_count}人/{walkin_shoshin_minutes}分・再診{walkin_resin_count}人), "
+          f"予約 診察待ち={appt_count}人（合計{appt_minutes}分枠）, "
+          f"未受付予約={upcoming_count}人（合計{upcoming_minutes}分枠）, "
+          f"完了直来（履歴用）={len(completed_rec)}件, "
           f"診察中={current_slots or 'なし'}（残{in_exam_remain}分）, "
           f"直来診察中={walkin_in_exam}, 直近呼ばれた予約枠={last_predicted_slot}")
-    return (walkin_count, appt_count, appt_minutes,
+    return (walkin_count, walkin_resin_count,
+            walkin_shoshin_count, walkin_shoshin_minutes,
+            appt_count, appt_minutes,
             upcoming_count, upcoming_minutes, upcoming_slots,
             in_exam_remain, completed_rec, current_slot, current_slots,
             walkin_in_exam, last_predicted_slot, now_min)
@@ -536,7 +560,9 @@ def update_history(new_records: list) -> None:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
-def compute_estimated(walkin_count: int, appt_count: int, appt_minutes: int,
+def compute_estimated(walkin_resin_count: int, walkin_shoshin_count: int,
+                      walkin_shoshin_minutes: int,
+                      appt_count: int, appt_minutes: int,
                       upcoming_count: int, upcoming_minutes: int,
                       upcoming_slots: list, in_exam_remain: int,
                       now_min: int) -> int:
@@ -546,8 +572,13 @@ def compute_estimated(walkin_count: int, appt_count: int, appt_minutes: int,
     当院は予約優先。新規直来の待ち時間は「自分が呼ばれる予想時刻までに
     到着する予約」のみが影響する（朝一に全予約分を足すと過大評価になる）。
 
+    直来の扱い:
+      - 初診外来 直来 → 必ず医師診察あり → 固定 MINUTES_SHINSIN 分（pt_ratio無視）
+      - 再診外来 直来 → 物療のみが多いため pt_ratio で実効時間を計算
+      - リハビリ 直来 → 0分（医師不使用、scan側でカウント外）
+
     反復計算：
-        base = 診察中残 + 診察待ち予約 + 直来 × (1 − pt_ratio) × MINUTES_PER
+        base = 診察中残 + 診察待ち予約 + 直来初診時間 + 直来再診×(1-pt_ratio)×MINUTES_PER
         total = base
         loop:
             到着予定時刻 <= 現在時刻 + total の未受付予約のみ加算
@@ -571,16 +602,19 @@ def compute_estimated(walkin_count: int, appt_count: int, appt_minutes: int,
     use_pt_ratio = (pt_ratio is not None and record_count >= MIN_SAMPLES)
 
     if use_pt_ratio:
-        walkin_effective = walkin_count * (1.0 - pt_ratio) * MINUTES_PER
-        walkin_desc = f"直来{walkin_count}人 × (1 - {pt_ratio:.2f}) × {MINUTES_PER}分"
+        walkin_resin_eff = walkin_resin_count * (1.0 - pt_ratio) * MINUTES_PER
+        resin_desc = f"再診直来{walkin_resin_count}人 × (1 - {pt_ratio:.2f}) × {MINUTES_PER}分"
     else:
-        walkin_effective = walkin_count * MINUTES_PER
-        walkin_desc = f"直来{walkin_count}人 × {MINUTES_PER}分"
+        walkin_resin_eff = walkin_resin_count * MINUTES_PER
+        resin_desc = f"再診直来{walkin_resin_count}人 × {MINUTES_PER}分"
         if not HISTORY_FILE.exists():
             print(f"履歴なし: フォールバック {MINUTES_PER}分/人")
         else:
             print(f"データ不足({record_count}件 < {MIN_SAMPLES}件): フォールバック")
 
+    walkin_effective = walkin_resin_eff + walkin_shoshin_minutes
+    walkin_desc = (f"{resin_desc} + 初診直来{walkin_shoshin_count}人×"
+                   f"{MINUTES_SHINSIN}分(固定)")
     base = in_exam_remain + appt_minutes + walkin_effective
 
     # 反復計算：自分が呼ばれる予想時刻までに到着する未受付予約のみ加算
@@ -637,7 +671,9 @@ async def scrape() -> dict:
             await wait_for_page(page, context)
 
             # 全ページ走査（全カウント + 履歴収集 + 診察中予約枠 + 直来診察中フラグ + 直近予約枠）
-            (walkin_count, appt_count, appt_minutes,
+            (walkin_count, walkin_resin_count,
+             walkin_shoshin_count, walkin_shoshin_minutes,
+             appt_count, appt_minutes,
              upcoming_count, upcoming_minutes, upcoming_slots,
              in_exam_remain, completed_records, current_slot, current_slots,
              walkin_in_exam, last_predicted_slot,
@@ -646,7 +682,7 @@ async def scrape() -> dict:
             # ─── セーフティネット: 直来カウントの急減を検出して前回値を保持 ───
             # シナリオ: 直前に直来 N(≥2) 名いたのに今回 0 名 + 他に活動継続中
             #          → ラベル取得タイミングのDOM取りこぼしで誤検出している可能性大
-            #          → 前回値を1サイクルだけ保持して estimated_minutes を再計算
+            #          → 前回の再診/初診カウントを1サイクルだけ保持して再計算
             #
             # 連鎖的な保護を避けるため、前回が既に保護状態だった場合は今回は保護しない
             # （最大1サイクル＝5分間だけ保護、その後は scraper の真の値を信頼）
@@ -664,28 +700,39 @@ async def scrape() -> dict:
                             and walkin_count == 0
                             and not prev_was_protected
                             and activity):
+                        prev_resin = int(prev.get("walkin_resin_count", 0) or 0)
+                        prev_shoshin = int(prev.get("walkin_shoshin_count", 0) or 0)
+                        prev_shoshin_min = int(prev.get("walkin_shoshin_minutes", 0) or 0)
                         print(f"⚠️ 直来カウント急減検出 (前回{prev_walkin}名→今回0名) "
                               f"+ 他活動あり → 前回値で保護（次回は保護しない）")
-                        walkin_count = prev_walkin
-                        walkin_protected = True
+                        walkin_count            = prev_walkin
+                        walkin_resin_count      = prev_resin
+                        walkin_shoshin_count    = prev_shoshin
+                        walkin_shoshin_minutes  = prev_shoshin_min
+                        walkin_protected        = True
 
-            # 完了患者データで履歴を更新 → pt_ratio を学習
+            # 完了患者データで履歴を更新 → pt_ratio を学習（再診直来のみ）
             update_history(completed_records)
 
             # 予約優先・反復計算で過大評価を防ぎつつ推定待ち時間を計算
             estimated = compute_estimated(
-                walkin_count, appt_count, appt_minutes,
+                walkin_resin_count, walkin_shoshin_count, walkin_shoshin_minutes,
+                appt_count, appt_minutes,
                 upcoming_count, upcoming_minutes, upcoming_slots,
                 in_exam_remain, now_min
             )
 
-            print(f"直来: {walkin_count}人{'(保護中)' if walkin_protected else ''}, "
+            print(f"直来: 計{walkin_count}人 (再診{walkin_resin_count}・初診{walkin_shoshin_count})"
+                  f"{'(保護中)' if walkin_protected else ''}, "
                   f"予約(待ち): {appt_count}人/{appt_minutes}分, "
                   f"未受付予約: {upcoming_count}人/{upcoming_minutes}分, "
                   f"診察中残: {in_exam_remain}分 → 推定 約{estimated}分")
 
             return {
                 "count":             walkin_count,
+                "walkin_resin_count":     walkin_resin_count,
+                "walkin_shoshin_count":   walkin_shoshin_count,
+                "walkin_shoshin_minutes": walkin_shoshin_minutes,
                 "appt_count":        appt_count,
                 "appt_minutes":      appt_minutes,
                 "appt_upcoming_count":   upcoming_count,
@@ -708,6 +755,9 @@ async def scrape() -> dict:
             await save_debug_screenshot(page, "debug_screenshot.png")
             return {
                 "count":             0,
+                "walkin_resin_count":     0,
+                "walkin_shoshin_count":   0,
+                "walkin_shoshin_minutes": 0,
                 "appt_count":        0,
                 "appt_minutes":      0,
                 "appt_upcoming_count":   0,
@@ -781,6 +831,9 @@ def main():
         is_holiday_today = is_special_closed()
         data = {
             "count":             0,
+            "walkin_resin_count":     0,
+            "walkin_shoshin_count":   0,
+            "walkin_shoshin_minutes": 0,
             "appt_count":        0,
             "appt_minutes":      0,
             "appt_upcoming_count":   0,
