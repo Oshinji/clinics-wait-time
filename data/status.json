@@ -1,19 +1,20 @@
 {
-  "count": 2,
-  "appt_count": 5,
-  "appt_minutes": 28,
+  "count": 3,
+  "appt_count": 2,
+  "appt_minutes": 10,
   "appt_upcoming_count": 7,
   "appt_upcoming_minutes": 66,
   "in_exam_remain": 7,
-  "estimated_minutes": 92,
+  "estimated_minutes": 73,
   "current_slot": "09:10",
   "current_slots": [
-    "09:10"
+    "09:10",
+    "09:20"
   ],
-  "walkin_in_exam": true,
-  "last_predicted_slot": "09:10",
+  "walkin_in_exam": false,
+  "last_predicted_slot": "09:20",
   "walkin_protected": false,
-  "updated_at": "2026-05-09T09:26:00.581764+09:00",
+  "updated_at": "2026-05-09T09:31:23.646137+09:00",
   "is_open": true,
   "is_holiday": false,
   "error": null
