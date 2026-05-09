@@ -11,10 +11,10 @@
     "09:20",
     "09:30"
   ],
-  "walkin_in_exam": true,
+  "walkin_in_exam": false,
   "last_predicted_slot": "09:30",
   "walkin_protected": false,
-  "updated_at": "2026-05-09T09:51:11.543610+09:00",
+  "updated_at": "2026-05-09T09:56:00.534299+09:00",
   "is_open": true,
   "is_holiday": false,
   "error": null
