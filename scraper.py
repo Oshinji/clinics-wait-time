@@ -755,34 +755,43 @@ async def scrape() -> dict:
         except Exception as e:
             print(f"エラー: {e}", file=sys.stderr)
             await save_debug_screenshot(page, "debug_screenshot.png")
-            return {
-                "count":             0,
-                "walkin_resin_count":     0,
-                "walkin_shoshin_count":   0,
-                "walkin_shoshin_minutes": 0,
-                "appt_count":        0,
-                "appt_minutes":      0,
-                "appt_upcoming_count":   0,
-                "appt_upcoming_minutes": 0,
-                "in_exam_remain":    0,
-                "estimated_minutes": 0,
-                "current_slot":      None,
-                "current_slots":     [],
-                "walkin_in_exam":    False,
-                "last_predicted_slot": None,
-                "walkin_protected":  False,
-                "updated_at":        datetime.now(JST).isoformat(),
-                "is_open":           is_open(),
-                "is_holiday":        is_special_closed(),
-                "error":             str(e),
-            }
+            return _empty_status_data(error=str(e), is_open_val=is_open())
 
         finally:
             await context.close()
             await browser.close()
 
 
-# ─── セーフティネット用ヘルパー ────────────────────────────────────
+# ─── 状態データ・セーフティネット用ヘルパー ────────────────────────────
+
+def _empty_status_data(error: str | None = None,
+                      is_open_val: bool = False,
+                      is_holiday_val: bool | None = None) -> dict:
+    """全ゼロの status.json データを生成（エラー時・診察窓外時で共通化）"""
+    if is_holiday_val is None:
+        is_holiday_val = is_special_closed()
+    return {
+        "count":             0,
+        "walkin_resin_count":     0,
+        "walkin_shoshin_count":   0,
+        "walkin_shoshin_minutes": 0,
+        "appt_count":        0,
+        "appt_minutes":      0,
+        "appt_upcoming_count":   0,
+        "appt_upcoming_minutes": 0,
+        "in_exam_remain":    0,
+        "estimated_minutes": 0,
+        "current_slot":      None,
+        "current_slots":     [],
+        "walkin_in_exam":    False,
+        "last_predicted_slot": None,
+        "walkin_protected":  False,
+        "updated_at":        datetime.now(JST).isoformat(),
+        "is_open":           is_open_val,
+        "is_holiday":        is_holiday_val,
+        "error":             error,
+    }
+
 
 def _should_preserve_previous(data: dict) -> bool:
     """診察時間中なのに全ゼロ＝誤検出の可能性大と判定する。
@@ -831,27 +840,7 @@ def main():
 
     if not is_exam_window():
         is_holiday_today = is_special_closed()
-        data = {
-            "count":             0,
-            "walkin_resin_count":     0,
-            "walkin_shoshin_count":   0,
-            "walkin_shoshin_minutes": 0,
-            "appt_count":        0,
-            "appt_minutes":      0,
-            "appt_upcoming_count":   0,
-            "appt_upcoming_minutes": 0,
-            "in_exam_remain":    0,
-            "estimated_minutes": 0,
-            "current_slot":      None,
-            "current_slots":     [],
-            "walkin_in_exam":    False,
-            "last_predicted_slot": None,
-            "walkin_protected":  False,
-            "updated_at":        datetime.now(JST).isoformat(),
-            "is_open":           False,
-            "is_holiday":        is_holiday_today,
-            "error":             None,
-        }
+        data = _empty_status_data(is_holiday_val=is_holiday_today)
         if is_holiday_today:
             print("本日は休診日です（holidays.json）→ スクレイピングをスキップ")
         else:
