@@ -36,9 +36,10 @@ MIN_SAMPLES     = 5      # フォールバック閾値（件未満は固定値�
 # 予約枠時間（診療メニューごと）
 # 予約枠は再診10分/初診15分だが、実際の医師診察時間は枠より短く
 # 残り時間が直来の隙間になる。実績に基づき短縮値を採用。
-MINUTES_RESIN         = int(os.getenv("MINUTES_RESIN",         "6"))   # 再診外来の実診察時間
-MINUTES_SHINSIN       = int(os.getenv("MINUTES_SHINSIN",       "10"))  # 初診外来の実診察時間
-MINUTES_IN_EXAM_REMAIN = int(os.getenv("MINUTES_IN_EXAM_REMAIN", "7"))  # 診察中患者の残り時間見積もり
+MINUTES_RESIN          = int(os.getenv("MINUTES_RESIN",          "6"))   # 予約再診外来の実診察時間
+MINUTES_SHINSIN        = int(os.getenv("MINUTES_SHINSIN",        "10"))  # 予約初診外来の実診察時間（枠15分内）
+MINUTES_SHINSIN_WALKIN = int(os.getenv("MINUTES_SHINSIN_WALKIN", "15"))  # 直来初診の医師占有時間（枠なし割込のため長め）
+MINUTES_IN_EXAM_REMAIN = int(os.getenv("MINUTES_IN_EXAM_REMAIN", "7"))   # 診察中患者の残り時間見積もり
 # ────────────────────────────────────────────────────────────────
 # 受付時間
 #   月火水金・土　午前  8:30〜11:30
@@ -376,10 +377,11 @@ async def scan_all_pages(page) -> tuple:
                             # リハビリのみは医師時間を消費しない（カウントだけ残す）
                             print(f"  → 直来 診察待ち [リハビリ→0分扱い] (p{page_num})")
                         elif "初診" in menu_text:
-                            # 初診は必ず医師診察あり → pt_ratio 適用しない固定時間
+                            # 直来初診は予約と違い「枠なしの割込」となるため、
+                            # 予約初診の MINUTES_SHINSIN(10) より長い MINUTES_SHINSIN_WALKIN(15) を使う
                             walkin_shoshin_count   += 1
-                            walkin_shoshin_minutes += MINUTES_SHINSIN
-                            print(f"  → 直来 診察待ち [初診→固定{MINUTES_SHINSIN}分] (p{page_num})")
+                            walkin_shoshin_minutes += MINUTES_SHINSIN_WALKIN
+                            print(f"  → 直来 診察待ち [初診→固定{MINUTES_SHINSIN_WALKIN}分（直来用）] (p{page_num})")
                         else:
                             # 再診（または不明）: pt_ratio で実効時間を計算
                             walkin_resin_count += 1
@@ -614,7 +616,7 @@ def compute_estimated(walkin_resin_count: int, walkin_shoshin_count: int,
 
     walkin_effective = walkin_resin_eff + walkin_shoshin_minutes
     walkin_desc = (f"{resin_desc} + 初診直来{walkin_shoshin_count}人×"
-                   f"{MINUTES_SHINSIN}分(固定)")
+                   f"{MINUTES_SHINSIN_WALKIN}分(固定)")
     base = in_exam_remain + appt_minutes + walkin_effective
 
     # 反復計算：自分が呼ばれる予想時刻までに到着する未受付予約のみ加算
