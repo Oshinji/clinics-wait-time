@@ -322,32 +322,30 @@ body {
     var p = jstParts();
     var w = p.w, n = p.h * 60 + p.m;
     var pmEnd    = (w===6) ? toMin('16:30') : toMin('17:30');
-    var pmEndExt = (w===6) ? toMin('17:00') : toMin('18:00');
     var pmEndStr = (w===6) ? '16:30' : '17:30';
     var ctx = { pmEndStr: pmEndStr };
     if(w===0||w===4)             return {t:'hol', ctx:ctx};
     if(n<toMin('08:30'))         return {t:'pre', ctx:ctx};
     if(n<toMin('11:30'))         return {t:'open', half:'am', ctx:ctx};
-    if(n<toMin('12:00'))         return {t:'ext',  half:'am', ctx:ctx};
+    if(n<toMin('13:00'))         return {t:'ext',  half:'am', ctx:ctx};
     if(n<toMin('14:30'))         return {t:'lun', ctx:ctx};
     if(n<pmEnd)                  return {t:'open', half:'pm', ctx:ctx};
-    if(n<pmEndExt)               return {t:'ext',  half:'pm', ctx:ctx};
+    if(n<toMin('19:00'))         return {t:'ext',  half:'pm', ctx:ctx};
     return {t:'aft', ctx:ctx};
   }
 
   // 「終了間近」表示の可否判定。受付終了 NEAR_END_MIN 分前 〜 延長枠終了 の間のみ true。
   // ※ allPredictedDone だけで判定すると朝一・データ未反映時に誤発火するため時刻ガード必須。
   //   絶対時刻で範囲を限定し、s.t が 'open' or 'ext' のときのみ表示候補とする。
-  //   有効範囲: AM 11:00〜12:00 / 平日PM 17:00〜18:00 / 土PM 16:00〜17:00
+  //   有効範囲: AM 11:00〜13:00 / PM 17:00〜19:00（土 16:00〜19:00）
   var NEAR_END_MIN = 30;
   function isNearEndOfSession(s){
     if(s.t !== 'open' && s.t !== 'ext') return false;
     var p = jstParts();
     var nMin = p.h * 60 + p.m;
-    var pmEndMin    = (p.w === 6) ? toMin('16:30') : toMin('17:30');
-    var pmEndExtMin = (p.w === 6) ? toMin('17:00') : toMin('18:00');
-    var amOK = (nMin >= toMin('11:30') - NEAR_END_MIN) && (nMin < toMin('12:00'));
-    var pmOK = (nMin >= pmEndMin - NEAR_END_MIN)         && (nMin < pmEndExtMin);
+    var pmEndMin = (p.w === 6) ? toMin('16:30') : toMin('17:30');
+    var amOK = (nMin >= toMin('11:30') - NEAR_END_MIN) && (nMin < toMin('13:00'));
+    var pmOK = (nMin >= pmEndMin - NEAR_END_MIN)         && (nMin < toMin('19:00'));
     return amOK || pmOK;
   }
 

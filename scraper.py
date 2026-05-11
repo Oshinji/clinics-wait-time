@@ -98,12 +98,11 @@ def is_exam_window() -> bool:
     t   = now.time()
     if wd in (3, 6):
         return False
-    # 午前 8:30〜12:00（受付11:30 + 延長30分）
-    if AM_START <= t < dt_time(12, 0):
+    # 午前 8:30〜13:00（受付11:30 + 延長1.5時間）
+    if AM_START <= t < dt_time(13, 0):
         return True
-    # 午後 14:30〜 17:00(土曜) / 18:00(平日)（受付 + 延長30分）
-    pm_end_ext = dt_time(17, 0) if wd == 5 else dt_time(18, 0)
-    if PM_START <= t < pm_end_ext:
+    # 午後 14:30〜19:00（受付17:30/16:30 + 延長）
+    if PM_START <= t < dt_time(19, 0):
         return True
     return False
 
