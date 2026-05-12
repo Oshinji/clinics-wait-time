@@ -31,7 +31,7 @@ JST          = timezone(timedelta(hours=9))
 
 MIN_DURATION    = int(os.getenv("MIN_DURATION_MINUTES", "20"))  # 物療のみ患者の判定閾値（分）
 MAX_DURATION    = 180    # エラーデータ除外閾値（分）
-HISTORY_DAYS    = 90     # 履歴保持日数
+HISTORY_DAYS    = 30     # 履歴保持日数（30日でpt_ratioが直近の傾向を反映）
 MIN_SAMPLES     = 5      # フォールバック閾値（件未満は固定値を使用）
 # 予約枠時間（診療メニューごと）
 # 予約枠は再診10分/初診15分だが、実際の医師診察時間は枠より短く
