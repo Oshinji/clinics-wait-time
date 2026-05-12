@@ -22,7 +22,7 @@ load_dotenv()
 CLINICS_URL  = "https://karte.medley.life/d"
 EMAIL        = os.getenv("CLINICS_EMAIL", "")
 PASSWORD     = os.getenv("CLINICS_PASSWORD", "")
-MINUTES_PER  = int(os.getenv("MINUTES_PER_PATIENT", "15"))
+MINUTES_PER  = int(os.getenv("MINUTES_PER_PATIENT", "10"))  # 直来再診の枠時間（pt_ratio で実効時間を計算）
 SESSION_FILE = Path("session.json")
 OUTPUT_FILE  = Path("data/status.json")
 HISTORY_FILE = Path("data/history.json")
