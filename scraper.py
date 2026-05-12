@@ -38,7 +38,7 @@ MIN_SAMPLES     = 5      # フォールバック閾値（件未満は固定値�
 # 残り時間が直来の隙間になる。実績に基づき短縮値を採用。
 MINUTES_RESIN          = int(os.getenv("MINUTES_RESIN",          "6"))   # 予約再診外来の実診察時間
 MINUTES_SHINSIN        = int(os.getenv("MINUTES_SHINSIN",        "10"))  # 予約初診外来の実診察時間（枠15分内）
-MINUTES_SHINSIN_WALKIN = int(os.getenv("MINUTES_SHINSIN_WALKIN", "15"))  # 直来初診の医師占有時間（枠なし割込のため長め）
+MINUTES_SHINSIN_WALKIN = int(os.getenv("MINUTES_SHINSIN_WALKIN", "10"))  # 直来初診の医師占有時間（予約初診と同じ10分）
 MINUTES_IN_EXAM_REMAIN = int(os.getenv("MINUTES_IN_EXAM_REMAIN", "7"))   # 診察中患者の残り時間見積もり
 ATTENDANCE_RATE        = float(os.getenv("ATTENDANCE_RATE",      "0.9")) # 未受付予約の出席率（キャンセル/遅刻/no-show を考慮、実測キャンセル率 約10%）
 # ────────────────────────────────────────────────────────────────

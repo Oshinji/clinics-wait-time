@@ -172,6 +172,8 @@ body {
   line-height: 1;
   padding-bottom: 10px;
 }
+/* 「分以上」表記時は3文字あるので少し小さめに */
+.hero-unit.over { font-size: 32px; }
 .hero-desc {
   font-size: 22px;
   font-weight: 700;
@@ -292,6 +294,7 @@ body {
   .hero { padding: 26px 20px 22px; }
   .hero-number { font-size: 92px; }
   .hero-unit { font-size: 34px; }
+  .hero-unit.over { font-size: 28px; }
   .hero-desc { font-size: 19px; }
   .no-wait-big { font-size: 29px; }
   .state-big { font-size: 25px; }
@@ -458,12 +461,16 @@ body {
             +'<div class="no-wait-sub">比較的スムーズにご案内できます</div>'
             +'</div>';
         } else {
+          // 150分を超える場合は「150分以上」表記（具体的な分数の不安感を抑制）
+          var isOverMax = data.estimated_minutes > 150;
+          var displayNum  = isOverMax ? 150 : data.estimated_minutes;
+          var displayUnit = isOverMax ? '分以上' : '分';
           h = '<div class="hero">'
             +'<div class="status-badge busy">受付中</div>'
             +'<div class="hero-label">目安の待ち時間</div>'
             +'<div class="hero-number-row">'
-            +'<span class="hero-number">'+data.estimated_minutes+'</span>'
-            +'<span class="hero-unit">分</span>'
+            +'<span class="hero-number">'+displayNum+'</span>'
+            +'<span class="hero-unit'+(isOverMax ? ' over' : '')+'">'+displayUnit+'</span>'
             +'</div>'
             +'<div class="hero-desc">程度お待ちいただきます</div>'
             +'</div>';
