@@ -40,6 +40,7 @@ MINUTES_RESIN          = int(os.getenv("MINUTES_RESIN",          "6"))   # 予�
 MINUTES_SHINSIN        = int(os.getenv("MINUTES_SHINSIN",        "10"))  # 予約初診外来の実診察時間（枠15分内）
 MINUTES_SHINSIN_WALKIN = int(os.getenv("MINUTES_SHINSIN_WALKIN", "15"))  # 直来初診の医師占有時間（枠なし割込のため長め）
 MINUTES_IN_EXAM_REMAIN = int(os.getenv("MINUTES_IN_EXAM_REMAIN", "7"))   # 診察中患者の残り時間見積もり
+ATTENDANCE_RATE        = float(os.getenv("ATTENDANCE_RATE",      "0.7")) # 未受付予約の出席率（キャンセル/遅刻/no-showを考慮）
 # ────────────────────────────────────────────────────────────────
 # 受付時間
 #   月火水金・土　午前  8:30〜11:30
@@ -583,7 +584,7 @@ def compute_estimated(walkin_resin_count: int, walkin_shoshin_count: int,
         total = base
         loop:
             到着予定時刻 <= 現在時刻 + total の未受付予約のみ加算
-            new_total = base + 加算分
+            new_total = base + (加算分 × ATTENDANCE_RATE)
             |new_total - total| < 1 で収束
 
     朝一や昼一で「セッション残り全員を足す」過大評価を防ぎ、
@@ -591,6 +592,9 @@ def compute_estimated(walkin_resin_count: int, walkin_shoshin_count: int,
 
     予約枠: 再診外来=MINUTES_RESIN(6)分、初診外来=MINUTES_SHINSIN(10)分、
             リハビリ=0分（医師不使用）
+
+    出席率(ATTENDANCE_RATE=0.7): 未受付予約の30%はキャンセル/遅刻/no-showと想定。
+    朝一の過大評価を抑制し、180分→約120分相当に補正する。
     """
     pt_ratio = None
     record_count = 0
@@ -619,12 +623,14 @@ def compute_estimated(walkin_resin_count: int, walkin_shoshin_count: int,
     base = in_exam_remain + appt_minutes + walkin_effective
 
     # 反復計算：自分が呼ばれる予想時刻までに到着する未受付予約のみ加算
+    # ※ 未受付予約には ATTENDANCE_RATE（出席率）を掛けてキャンセル/遅刻/no-showを考慮
     total = base
     added = 0
     converged_iter = 0
     for i in range(10):  # 最大10回で収束
         cutoff = now_min + total
-        new_added = sum(dur for slot, dur in upcoming_slots if slot <= cutoff)
+        raw_added = sum(dur for slot, dur in upcoming_slots if slot <= cutoff)
+        new_added = raw_added * ATTENDANCE_RATE
         new_total = base + new_added
         converged_iter = i + 1
         if abs(new_total - total) < 1:
@@ -637,8 +643,8 @@ def compute_estimated(walkin_resin_count: int, walkin_shoshin_count: int,
     estimated = max(0, round(total))
     included_cnt = sum(1 for slot, _ in upcoming_slots if slot <= now_min + estimated)
     print(f"推定: 診察中残{in_exam_remain}分 + 診察待ち予約{appt_minutes}分({appt_count}人) "
-          f"+ 反復加算{added}分（未受付{included_cnt}/{upcoming_count}人, {converged_iter}回反復） "
-          f"+ {walkin_desc} = {estimated}分")
+          f"+ 反復加算{added:.0f}分（未受付{included_cnt}/{upcoming_count}人×出席率{ATTENDANCE_RATE}, "
+          f"{converged_iter}回反復） + {walkin_desc} = {estimated}分")
     return estimated
 
 
