@@ -448,10 +448,19 @@ body {
           ? data.current_slots
           : (data && data.current_slot ? [data.current_slot] : []);
 
+        // last_predicted_slot が現セッションの時間帯か確認（前日枠の混入防止）
+        // AM セッション中に17:xx等が入るのを防ぐ
+        function isSlotInCurrentSession(slotStr){
+          if(!slotStr) return false;
+          var m = toMin(slotStr);
+          return s.half === 'am' ? m < toMin('13:00') : m >= toMin('14:00');
+        }
+
         var slotsToShow = [];
         if(rawSlots.length > 0){
           slotsToShow = rawSlots;
-        } else if(data && data.walkin_in_exam && data.last_predicted_slot && !allPredictedDone){
+        } else if(data && data.walkin_in_exam && data.last_predicted_slot
+                  && !allPredictedDone && isSlotInCurrentSession(data.last_predicted_slot)){
           slotsToShow = [data.last_predicted_slot];
         }
 
