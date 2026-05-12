@@ -354,10 +354,8 @@ body {
     if(w===0||w===4)         return {t:'hol', ctx:ctx};
     if(n<toMin('08:30'))     return {t:'pre', ctx:ctx};
     if(n<toMin('11:30'))     return {t:'open', half:'am', ctx:ctx};
-    if(n<toMin('13:00'))     return {t:'ext',  half:'am', ctx:ctx};
     if(n<toMin('14:30'))     return {t:'lun', ctx:ctx};
     if(n<pmEnd)              return {t:'open', half:'pm', ctx:ctx};
-    if(n<toMin('19:00'))     return {t:'ext',  half:'pm', ctx:ctx};
     return {t:'aft', ctx:ctx};
   }
 
@@ -436,27 +434,6 @@ body {
           +'<div class="state-big">本日の受付は<br>終了しました</div>'
           +'<div class="state-resume-note">またのご来院をお待ちしております</div>'
           +'</div>';
-        break;
-
-      case 'ext':
-        // 受付時間外だが診察が続いている可能性がある時間帯（〜13時 / 〜19時）
-        if(data && data.estimated_minutes > 0){
-          h = '<div class="hero">'
-            +'<div class="status-badge busy">受付終了</div>'
-            +'<div class="hero-label">目安の待ち時間</div>'
-            +'<div class="hero-number-row">'
-            +'<span class="hero-number">'+data.estimated_minutes+'</span>'
-            +'<span class="hero-unit">分</span>'
-            +'</div>'
-            +'<div class="hero-desc">程度お待ちいただきます</div>'
-            +'</div>';
-        } else {
-          h = '<div class="hero">'
-            +'<div class="status-badge off">受付終了</div>'
-            +'<div class="state-big">本日の受付は<br>終了しました</div>'
-            +'<div class="state-resume-note">またのご来院をお待ちしております</div>'
-            +'</div>';
-        }
         break;
 
       case 'open':
