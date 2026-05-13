@@ -372,7 +372,8 @@ async def scan_all_pages(page) -> tuple:
                         and any(x in status_text for x in ("診察中", "算定", "会計", "完了"))):
                     _s = extract_slot_start(appt_text)
                     if (_s is not None
-                            and _session_lo <= _s < _session_hi   # セッション内の枠のみ
+                            and _session_lo <= _s < _session_hi        # 当日稼働時間内
+                            and _s <= now_min + 60                      # 現在+60分以内（前日の未来枠を除外）
                             and (last_called_min is None or _s > last_called_min)):
                         last_called_min = _s
 
@@ -426,13 +427,16 @@ async def scan_all_pages(page) -> tuple:
                     elif appt_idx is not None and len(cells) > appt_idx:
                         start_min = extract_slot_start(appt_text)
                         if start_min is not None:
-                            if _session_lo <= start_min < _session_hi:
+                            in_range   = _session_lo <= start_min < _session_hi
+                            not_future = start_min <= now_min + 60   # 現在+60分以内
+                            if in_range and not_future:
                                 current_mins.append(start_min)
                                 print(f"  → 診察中 発見 [予約/{menu_text.strip()[:10]}/{appt_text.strip()[:15]}] "
                                       f"開始={start_min // 60:02d}:{start_min % 60:02d} (p{page_num})")
                             else:
+                                reason = "セッション外" if not in_range else "現在時刻より大幅未来（前日データ疑い）"
                                 print(f"  ⚠️ 診察中 発見 [予約/{menu_text.strip()[:10]}] "
-                                      f"開始={start_min // 60:02d}:{start_min % 60:02d} セッション外 → スキップ (p{page_num})")
+                                      f"開始={start_min // 60:02d}:{start_min % 60:02d} {reason} → スキップ (p{page_num})")
                         else:
                             # 診察予定セルが空 or 解析不能 → 枠時刻不明のためスキップ
                             print(f"  ⚠️ 診察中 発見 [予約/{menu_text.strip()[:10]}] "
