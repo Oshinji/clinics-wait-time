@@ -448,12 +448,17 @@ body {
           ? data.current_slots
           : (data && data.current_slot ? [data.current_slot] : []);
 
-        // last_predicted_slot が現セッションの時間帯か確認（前日枠の混入防止）
-        // AM セッション中に14時以降、PM セッション中に13時以前が入るのを防ぐ
+        // last_predicted_slot が妥当な時刻か確認（前日データの混入防止）
+        // ① セッション範囲チェック: AM は〜13時、PM は14時〜
+        // ② 時刻チェック: 現在時刻+60分以内（それ以上未来の枠は当日に診察済み不可）
+        // → 2つとも満たす場合のみ使用。AM/PM 単独では防げない漏れを両方でカバー。
         function isSlotInCurrentSession(slotStr){
           if(!slotStr) return false;
           var m = toMin(slotStr);
-          return s.half === 'am' ? m < toMin('13:00') : m >= toMin('14:00');
+          var p = jstParts();
+          var nowMin = p.h * 60 + p.m;
+          var inSession = s.half === 'am' ? m < toMin('13:00') : m >= toMin('14:00');
+          return inSession && m <= nowMin + 60;
         }
 
         var slotsToShow = [];
