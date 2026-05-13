@@ -326,10 +326,15 @@ async def scan_all_pages(page) -> tuple:
     now_min         = now_jst.hour * 60 + now_jst.minute
     session_end_min = get_current_session_end_min()
 
-    # 当日稼働時間フィルタ（診察時間外の枠を除外）
-    # AM/PM をまたいで同一患者が診察中になる「出戻り」ケースに対応するため、
-    # セッション別ではなく当日全体（8:00-19:00）で統一する。
-    _session_lo, _session_hi = 8 * 60, 19 * 60   # 8:00-19:00
+    # セッション内時刻フィルタ（前日・他セッションの枠が混入しないよう）
+    # CLINICS の一覧には前日患者が残るため、現在のセッション時間帯のみを対象とする
+    _now_time = now_jst.time()
+    if AM_START <= _now_time < dt_time(13, 0):
+        _session_lo, _session_hi = 8 * 60, 13 * 60    # 8:00-13:00
+    elif PM_START <= _now_time < dt_time(19, 0):
+        _session_lo, _session_hi = 14 * 60, 19 * 60   # 14:00-19:00
+    else:
+        _session_lo, _session_hi = 0, 24 * 60         # フィルタなし（念のため）
 
     def slot_minutes_for(menu_text: str) -> int:
         """診療メニューから予約枠時間を決定。リハビリは0分（医師不使用）。"""
@@ -372,8 +377,7 @@ async def scan_all_pages(page) -> tuple:
                         and any(x in status_text for x in ("診察中", "算定", "会計", "完了"))):
                     _s = extract_slot_start(appt_text)
                     if (_s is not None
-                            and _session_lo <= _s < _session_hi        # 当日稼働時間内
-                            and _s <= now_min + 60                      # 現在+60分以内（前日の未来枠を除外）
+                            and _session_lo <= _s < _session_hi   # セッション内の枠のみ
                             and (last_called_min is None or _s > last_called_min)):
                         last_called_min = _s
 
@@ -427,16 +431,13 @@ async def scan_all_pages(page) -> tuple:
                     elif appt_idx is not None and len(cells) > appt_idx:
                         start_min = extract_slot_start(appt_text)
                         if start_min is not None:
-                            in_range   = _session_lo <= start_min < _session_hi
-                            not_future = start_min <= now_min + 60   # 現在+60分以内
-                            if in_range and not_future:
+                            if _session_lo <= start_min < _session_hi:
                                 current_mins.append(start_min)
                                 print(f"  → 診察中 発見 [予約/{menu_text.strip()[:10]}/{appt_text.strip()[:15]}] "
                                       f"開始={start_min // 60:02d}:{start_min % 60:02d} (p{page_num})")
                             else:
-                                reason = "セッション外" if not in_range else "現在時刻より大幅未来（前日データ疑い）"
                                 print(f"  ⚠️ 診察中 発見 [予約/{menu_text.strip()[:10]}] "
-                                      f"開始={start_min // 60:02d}:{start_min % 60:02d} {reason} → スキップ (p{page_num})")
+                                      f"開始={start_min // 60:02d}:{start_min % 60:02d} セッション外 → スキップ (p{page_num})")
                         else:
                             # 診察予定セルが空 or 解析不能 → 枠時刻不明のためスキップ
                             print(f"  ⚠️ 診察中 発見 [予約/{menu_text.strip()[:10]}] "

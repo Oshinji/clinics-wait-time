@@ -448,15 +448,12 @@ body {
           ? data.current_slots
           : (data && data.current_slot ? [data.current_slot] : []);
 
-        // last_predicted_slot が妥当な時刻か確認（前日データの混入防止）
-        // 当日稼働時間内(8:00-19:00) かつ 現在時刻+60分以内であること。
-        // 09:51に17:10が来る等、現在より大幅に未来の枠は前日データと判断して除外する。
+        // last_predicted_slot が現セッションの時間帯か確認（前日枠の混入防止）
+        // AM セッション中に14時以降、PM セッション中に13時以前が入るのを防ぐ
         function isSlotInCurrentSession(slotStr){
           if(!slotStr) return false;
           var m = toMin(slotStr);
-          var p = jstParts();
-          var nowMin = p.h * 60 + p.m;
-          return m >= toMin('08:00') && m < toMin('19:00') && m <= nowMin + 60;
+          return s.half === 'am' ? m < toMin('13:00') : m >= toMin('14:00');
         }
 
         var slotsToShow = [];
