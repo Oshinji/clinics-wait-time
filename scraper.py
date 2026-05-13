@@ -326,15 +326,10 @@ async def scan_all_pages(page) -> tuple:
     now_min         = now_jst.hour * 60 + now_jst.minute
     session_end_min = get_current_session_end_min()
 
-    # セッション内時刻フィルタ（前日・他セッションの枠が混入しないよう）
-    # CLINICS の一覧には前日患者が残るため、現在のセッション時間帯のみを対象とする
-    _now_time = now_jst.time()
-    if AM_START <= _now_time < dt_time(13, 0):
-        _session_lo, _session_hi = 8 * 60, 13 * 60    # 8:00-13:00
-    elif PM_START <= _now_time < dt_time(19, 0):
-        _session_lo, _session_hi = 14 * 60, 19 * 60   # 14:00-19:00
-    else:
-        _session_lo, _session_hi = 0, 24 * 60         # フィルタなし（念のため）
+    # 当日稼働時間フィルタ（診察時間外の枠を除外）
+    # AM/PM をまたいで同一患者が診察中になる「出戻り」ケースに対応するため、
+    # セッション別ではなく当日全体（8:00-19:00）で統一する。
+    _session_lo, _session_hi = 8 * 60, 19 * 60   # 8:00-19:00
 
     def slot_minutes_for(menu_text: str) -> int:
         """診療メニューから予約枠時間を決定。リハビリは0分（医師不使用）。"""
