@@ -880,13 +880,15 @@ def main():
         # 可能性大。前回値が1時間以内なら書き込みをスキップして保持する。
         if _should_preserve_previous(data):
             prev = _load_previous_status()
-            if prev is not None and _prev_is_recent(prev):
+            if prev is not None and _prev_is_recent(prev) and not prev.get("error"):
+                # 前回値がエラーの場合は保持しない（エラーを上書きして正常化する）
                 prev_at = prev.get("updated_at", "unknown")
                 print(f"⚠️ 診察時間中に全ゼロ検出 → 前回値を保持（前回updated_at={prev_at}）")
                 print(f"   (status.json 書き込みスキップ。history.json は通常通り更新)")
                 return
             else:
-                print(f"⚠️ 全ゼロ検出だが前回値が1時間超過 or 無し → そのまま書き込み")
+                reason = "前回がエラー" if (prev is not None and prev.get("error")) else "前回値が1時間超過 or 無し"
+                print(f"⚠️ 全ゼロ検出だが{reason} → そのまま書き込み")
 
     OUTPUT_FILE.write_text(
         json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
