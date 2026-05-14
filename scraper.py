@@ -821,10 +821,14 @@ def _empty_status_data(error: str | None = None,
 
 
 def _should_preserve_previous(data: dict) -> bool:
-    """診察時間中なのに全ゼロ＝誤検出の可能性大と判定する。
-    エラーが明示されている場合はそのまま書いてクライアントに伝える。"""
+    """前回値を保持すべきかを判定する。
+    対象:
+      ① エラー発生時（ログイン失敗・DOM未表示等）→ 前回の良いデータを失わないように保持
+      ② 全ゼロ＋診察中なし（誤検出の可能性大）→ 前回値を保持
+    どちらの場合も、最大 _prev_is_recent の有効期限まで前回値を維持する。
+    """
     if data.get("error"):
-        return False
+        return True
     people = (data.get("count", 0)
               + data.get("appt_count", 0)
               + data.get("appt_upcoming_count", 0))
