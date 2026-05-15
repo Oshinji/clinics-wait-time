@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>2画面表示</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #000; display: flex; }
+    iframe {
+      width: 50%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+    /* 中央に区切り線を入れたい場合は下記のコメントを外してください */
+    /* iframe:first-child { border-right: 2px solid #333; } */
+  </style>
+</head>
+<body>
+  <iframe src="https://oshinji.github.io/clinics-wait-time/"></iframe>
+  <iframe src="https://oshinji.github.io/clinics-wait-time/now.html"></iframe>
+</body>
+</html>
