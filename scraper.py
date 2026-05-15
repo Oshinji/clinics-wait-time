@@ -242,6 +242,14 @@ async def wait_for_page(page, context):
         await save_debug_screenshot(page, "debug_login_page.png")
         await do_login(page)
         await context.storage_state(path=str(SESSION_FILE))
+        # ログイン後は別URLへリダイレクトされることがある（ホーム画面等）。
+        # 患者一覧ページ(/d)でない場合は明示的に再遷移して tbody を確保する。
+        post_login_url = page.url
+        print(f"ログイン後URL: {post_login_url}")
+        if CLINICS_URL not in post_login_url:
+            print(f"→ 患者一覧と異なるURL。{CLINICS_URL} へ再遷移します")
+            await page.goto(CLINICS_URL, wait_until="networkidle", timeout=30000)
+            print(f"再遷移後URL: {page.url}")
         try:
             await page.wait_for_selector('tbody tr', timeout=30000)
         except PlaywrightTimeout:
@@ -884,7 +892,7 @@ def main():
         # 可能性大。前回値が1時間以内なら書き込みをスキップして保持する。
         if _should_preserve_previous(data):
             prev = _load_previous_status()
-            if prev is not None and _prev_is_recent(prev) and not prev.get("error"):
+            if prev is not None and _prev_is_recent(prev, max_age_sec=900) and not prev.get("error"):
                 # 前回値がエラーの場合は保持しない（エラーを上書きして正常化する）
                 prev_at = prev.get("updated_at", "unknown")
                 print(f"⚠️ 診察時間中に全ゼロ検出 → 前回値を保持（前回updated_at={prev_at}）")
