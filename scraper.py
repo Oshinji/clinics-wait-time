@@ -650,7 +650,28 @@ def compute_estimated(walkin_resin_count: int, walkin_shoshin_count: int,
     walkin_effective = walkin_resin_eff + walkin_shoshin_minutes
     walkin_desc = (f"{resin_desc} + 初診直来{walkin_shoshin_count}人×"
                    f"{MINUTES_SHINSIN_WALKIN}分(固定)")
-    base = in_exam_remain + appt_minutes + walkin_effective
+
+    # ── 直来ギャップ吸収モデル ────────────────────────────────────
+    # 直来患者は未受付予約の「スロット間の空き時間」に診察される。
+    # 隣接する upcoming スロット間の空き時間を合計し、
+    # その分だけ直来の待ち時間を短縮する。
+    # ・リハビリは upcoming_slots に含まれないため保守的に無視
+    #   (→ 見積は実態よりやや長め傾向を保つ)
+    # ・appt_count（診察待ち予約）は既に来院済みで優先診察されるため
+    #   walk-in のギャップ吸収源とはしない
+    sorted_up = sorted(upcoming_slots, key=lambda x: x[0])
+    gap_capacity = 0.0
+    for i in range(1, len(sorted_up)):
+        s_prev, d_prev = sorted_up[i - 1]
+        s_next = sorted_up[i][0]
+        gap = s_next - (s_prev + d_prev)
+        if gap > 0:
+            gap_capacity += gap
+    walkin_absorbed = min(walkin_effective, gap_capacity)
+    walkin_net      = walkin_effective - walkin_absorbed
+    # ─────────────────────────────────────────────────────────────
+
+    base = in_exam_remain + appt_minutes + walkin_net
 
     # 反復計算：自分が呼ばれる予想時刻までに到着する未受付予約のみ加算
     # ※ 未受付予約には ATTENDANCE_RATE（出席率）を掛けてキャンセル/遅刻/no-showを考慮
@@ -674,7 +695,9 @@ def compute_estimated(walkin_resin_count: int, walkin_shoshin_count: int,
     included_cnt = sum(1 for slot, _ in upcoming_slots if slot <= now_min + estimated)
     print(f"推定: 診察中残{in_exam_remain}分 + 診察待ち予約{appt_minutes}分({appt_count}人) "
           f"+ 反復加算{added:.0f}分（未受付{included_cnt}/{upcoming_count}人×出席率{ATTENDANCE_RATE}, "
-          f"{converged_iter}回反復） + {walkin_desc} = {estimated}分")
+          f"{converged_iter}回反復） + {walkin_desc} "
+          f"[ギャップ吸収: cap={gap_capacity:.1f}分, 吸収={walkin_absorbed:.1f}分, 純={walkin_net:.1f}分] "
+          f"= {estimated}分")
     return estimated
 
 
