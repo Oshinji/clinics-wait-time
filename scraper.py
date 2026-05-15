@@ -41,6 +41,7 @@ MINUTES_SHINSIN        = int(os.getenv("MINUTES_SHINSIN",        "10"))  # 予�
 MINUTES_SHINSIN_WALKIN = int(os.getenv("MINUTES_SHINSIN_WALKIN", "10"))  # 直来初診の医師占有時間（予約初診と同じ10分）
 MINUTES_IN_EXAM_REMAIN = int(os.getenv("MINUTES_IN_EXAM_REMAIN", "7"))   # 診察中患者の残り時間見積もり
 ATTENDANCE_RATE        = float(os.getenv("ATTENDANCE_RATE",      "0.9")) # 未受付予約の出席率（キャンセル/遅刻/no-show を考慮、実測キャンセル率 約10%）
+GAP_ABSORPTION_RATE    = float(os.getenv("GAP_ABSORPTION_RATE",  "0.5")) # 理論ギャップのうち実際に直来吸収に使える割合（0=吸収なし, 1=全量吸収）
 # ────────────────────────────────────────────────────────────────
 # 受付時間
 #   月火水金・土　午前  8:30〜11:30
@@ -667,7 +668,7 @@ def compute_estimated(walkin_resin_count: int, walkin_shoshin_count: int,
         gap = s_next - (s_prev + d_prev)
         if gap > 0:
             gap_capacity += gap
-    walkin_absorbed = min(walkin_effective, gap_capacity)
+    walkin_absorbed = min(walkin_effective, gap_capacity * GAP_ABSORPTION_RATE)
     walkin_net      = walkin_effective - walkin_absorbed
     # ─────────────────────────────────────────────────────────────
 
