@@ -8,15 +8,16 @@
   "appt_upcoming_count": 8,
   "appt_upcoming_minutes": 52,
   "in_exam_remain": 7,
-  "estimated_minutes": 78,
+  "estimated_minutes": 89,
   "current_slot": "15:00",
   "current_slots": [
-    "15:00"
+    "15:00",
+    "15:20"
   ],
   "walkin_in_exam": true,
-  "last_predicted_slot": "15:00",
+  "last_predicted_slot": "15:20",
   "walkin_protected": false,
-  "updated_at": "2026-05-15T15:31:30.713510+09:00",
+  "updated_at": "2026-05-15T15:37:30.973575+09:00",
   "is_open": true,
   "is_holiday": false,
   "error": null
