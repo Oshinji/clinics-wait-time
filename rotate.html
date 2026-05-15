@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ローテーター</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+    iframe { width: 100%; height: 100%; border: none; display: block; }
+  </style>
+</head>
+<body>
+  <iframe id="display" src="https://oshinji.github.io/clinics-wait-time/"></iframe>
+  <script>
+    const urls = [
+      "https://oshinji.github.io/clinics-wait-time/",
+      "https://oshinji.github.io/clinics-wait-time/now.html"
+    ];
+    const interval = 15 * 1000; // 15秒（変更する場合はこの数字を変えてください）
+    let current = 0;
+
+    setInterval(function () {
+      current = (current + 1) % urls.length;
+      document.getElementById("display").src = urls[current];
+    }, interval);
+  </script>
+</body>
+</html>
