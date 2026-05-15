@@ -2719,9 +2719,49 @@
       "date": "2026-05-13",
       "checkin": "17:37",
       "duration_min": 11
+    },
+    {
+      "date": "2026-05-15",
+      "checkin": "08:26",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-05-15",
+      "checkin": "08:27",
+      "duration_min": 17
+    },
+    {
+      "date": "2026-05-15",
+      "checkin": "08:31",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-05-15",
+      "checkin": "08:34",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-05-15",
+      "checkin": "09:13",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-05-15",
+      "checkin": "09:15",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-05-15",
+      "checkin": "09:17",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-05-15",
+      "checkin": "09:33",
+      "duration_min": 2
     }
   ],
-  "pt_ratio": 0.6746,
-  "record_count": 544,
-  "updated_at": "2026-05-15T08:31:07.816860+09:00"
+  "pt_ratio": 0.6793,
+  "record_count": 552,
+  "updated_at": "2026-05-15T09:56:10.565897+09:00"
 }
