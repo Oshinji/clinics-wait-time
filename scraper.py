@@ -500,7 +500,7 @@ async def scan_all_pages(page) -> tuple:
     current_mins_sorted = sorted(set(current_mins))[:3]
     current_slots = [f"{m // 60:02d}:{m % 60:02d}" for m in current_mins_sorted]
     current_slot  = current_slots[0] if current_slots else None   # 後方互換
-    in_exam_remain = MINUTES_IN_EXAM_REMAIN if current_slots else 0
+    in_exam_remain = MINUTES_IN_EXAM_REMAIN if (current_slots or walkin_in_exam) else 0
 
     # 直近に呼ばれた予約 slot（walkin_in_exam 時のフォールバック表示用）
     if last_called_min is not None:
