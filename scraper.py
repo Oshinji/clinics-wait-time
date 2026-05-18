@@ -676,7 +676,9 @@ def compute_estimated(walkin_resin_count: int, walkin_shoshin_count: int,
 
     # 反復計算：自分が呼ばれる予想時刻までに到着する未受付予約のみ加算
     # ※ 未受付予約には ATTENDANCE_RATE（出席率）を掛けてキャンセル/遅刻/no-showを考慮
-    total = base
+    # ※ 上界（全未受付予約を含む値）から収束させる。
+    #   下界(base)からだと予約が後半集中している場合に収束が早すぎ過小推定になる。
+    total = base + sum(d for _, d in upcoming_slots) * ATTENDANCE_RATE
     added = 0
     converged_iter = 0
     for i in range(10):  # 最大10回で収束
