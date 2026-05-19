@@ -41,7 +41,6 @@ MINUTES_SHINSIN        = int(os.getenv("MINUTES_SHINSIN",        "10"))  # 予�
 MINUTES_SHINSIN_WALKIN = int(os.getenv("MINUTES_SHINSIN_WALKIN", "10"))  # 直来初診の医師占有時間（予約初診と同じ10分）
 MINUTES_IN_EXAM_REMAIN = int(os.getenv("MINUTES_IN_EXAM_REMAIN", "7"))   # 診察中患者の残り時間見積もり
 ATTENDANCE_RATE        = float(os.getenv("ATTENDANCE_RATE",      "0.9")) # 未受付予約の出席率（キャンセル/遅刻/no-show を考慮、実測キャンセル率 約10%）
-GAP_ABSORPTION_RATE    = float(os.getenv("GAP_ABSORPTION_RATE",  "0.5")) # 理論ギャップのうち実際に直来吸収に使える割合（0=吸収なし, 1=全量吸収）
 # ────────────────────────────────────────────────────────────────
 # 受付時間
 #   月火水金・土　午前  8:30〜11:30
@@ -652,25 +651,7 @@ def compute_estimated(walkin_resin_count: int, walkin_shoshin_count: int,
     walkin_desc = (f"{resin_desc} + 初診直来{walkin_shoshin_count}人×"
                    f"{MINUTES_SHINSIN_WALKIN}分(固定)")
 
-    # ── 直来ギャップ吸収モデル（再診のみ） ─────────────────────────
-    # 予約スロット間の空き時間（10分枠 - 6分診察 = 4分）に
-    # 再診直来患者が入ることで待ち時間を短縮できる。
-    # ・初診直来（shoshin）は10分かかるためギャップに入れない → 吸収対象外
-    # ・再診直来（resin）の実効時間のみ吸収対象とする
-    # ・リハビリは upcoming_slots に含まれないため保守的に無視
-    sorted_up = sorted(upcoming_slots, key=lambda x: x[0])
-    gap_capacity = 0.0
-    for i in range(1, len(sorted_up)):
-        s_prev, d_prev = sorted_up[i - 1]
-        s_next = sorted_up[i][0]
-        gap = s_next - (s_prev + d_prev)
-        if gap > 0:
-            gap_capacity += gap
-    resin_absorbed  = min(walkin_resin_eff, gap_capacity * GAP_ABSORPTION_RATE)
-    walkin_net      = (walkin_resin_eff - resin_absorbed) + walkin_shoshin_minutes
-    # ─────────────────────────────────────────────────────────────
-
-    base = in_exam_remain + appt_minutes + walkin_net
+    base = in_exam_remain + appt_minutes + walkin_effective
 
     # 反復計算：自分が呼ばれる予想時刻までに到着する未受付予約のみ加算
     # ※ 未受付予約には ATTENDANCE_RATE（出席率）を掛けてキャンセル/遅刻/no-showを考慮
@@ -696,9 +677,7 @@ def compute_estimated(walkin_resin_count: int, walkin_shoshin_count: int,
     included_cnt = sum(1 for slot, _ in upcoming_slots if slot <= now_min + estimated)
     print(f"推定: 診察中残{in_exam_remain}分 + 診察待ち予約{appt_minutes}分({appt_count}人) "
           f"+ 反復加算{added:.0f}分（未受付{included_cnt}/{upcoming_count}人×出席率{ATTENDANCE_RATE}, "
-          f"{converged_iter}回反復） + {walkin_desc} "
-          f"[ギャップ吸収(再診のみ): cap={gap_capacity:.1f}分, 吸収={resin_absorbed:.1f}分, 純={walkin_net:.1f}分] "
-          f"= {estimated}分")
+          f"{converged_iter}回反復） + {walkin_desc} = {estimated}分")
     return estimated
 
 
