@@ -652,14 +652,12 @@ def compute_estimated(walkin_resin_count: int, walkin_shoshin_count: int,
     walkin_desc = (f"{resin_desc} + 初診直来{walkin_shoshin_count}人×"
                    f"{MINUTES_SHINSIN_WALKIN}分(固定)")
 
-    # ── 直来ギャップ吸収モデル ────────────────────────────────────
-    # 直来患者は未受付予約の「スロット間の空き時間」に診察される。
-    # 隣接する upcoming スロット間の空き時間を合計し、
-    # その分だけ直来の待ち時間を短縮する。
+    # ── 直来ギャップ吸収モデル（再診のみ） ─────────────────────────
+    # 予約スロット間の空き時間（10分枠 - 6分診察 = 4分）に
+    # 再診直来患者が入ることで待ち時間を短縮できる。
+    # ・初診直来（shoshin）は10分かかるためギャップに入れない → 吸収対象外
+    # ・再診直来（resin）の実効時間のみ吸収対象とする
     # ・リハビリは upcoming_slots に含まれないため保守的に無視
-    #   (→ 見積は実態よりやや長め傾向を保つ)
-    # ・appt_count（診察待ち予約）は既に来院済みで優先診察されるため
-    #   walk-in のギャップ吸収源とはしない
     sorted_up = sorted(upcoming_slots, key=lambda x: x[0])
     gap_capacity = 0.0
     for i in range(1, len(sorted_up)):
@@ -668,8 +666,8 @@ def compute_estimated(walkin_resin_count: int, walkin_shoshin_count: int,
         gap = s_next - (s_prev + d_prev)
         if gap > 0:
             gap_capacity += gap
-    walkin_absorbed = min(walkin_effective, gap_capacity * GAP_ABSORPTION_RATE)
-    walkin_net      = walkin_effective - walkin_absorbed
+    resin_absorbed  = min(walkin_resin_eff, gap_capacity * GAP_ABSORPTION_RATE)
+    walkin_net      = (walkin_resin_eff - resin_absorbed) + walkin_shoshin_minutes
     # ─────────────────────────────────────────────────────────────
 
     base = in_exam_remain + appt_minutes + walkin_net
@@ -699,7 +697,7 @@ def compute_estimated(walkin_resin_count: int, walkin_shoshin_count: int,
     print(f"推定: 診察中残{in_exam_remain}分 + 診察待ち予約{appt_minutes}分({appt_count}人) "
           f"+ 反復加算{added:.0f}分（未受付{included_cnt}/{upcoming_count}人×出席率{ATTENDANCE_RATE}, "
           f"{converged_iter}回反復） + {walkin_desc} "
-          f"[ギャップ吸収: cap={gap_capacity:.1f}分, 吸収={walkin_absorbed:.1f}分, 純={walkin_net:.1f}分] "
+          f"[ギャップ吸収(再診のみ): cap={gap_capacity:.1f}分, 吸収={resin_absorbed:.1f}分, 純={walkin_net:.1f}分] "
           f"= {estimated}分")
     return estimated
 
