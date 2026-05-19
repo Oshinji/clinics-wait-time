@@ -890,7 +890,7 @@ def main():
     else:
         data = asyncio.run(scrape())
 
-        # ─── セーフティネット: 全ゼロ誤報なら前回値を保持 ───
+        # ─── セーフティネット①: 全ゼロ誤報なら前回値を保持 ───
         # 診察窓内なのに count/appt/walkin/current 全て空 = scraper が行を拾えていない
         # 可能性大。前回値が1時間以内なら書き込みをスキップして保持する。
         if _should_preserve_previous(data):
@@ -904,6 +904,24 @@ def main():
             else:
                 reason = "前回がエラー" if (prev is not None and prev.get("error")) else "前回値が1時間超過 or 無し"
                 print(f"⚠️ 全ゼロ検出だが{reason} → そのまま書き込み")
+
+        # ─── セーフティネット②: 未受付予約の急減（DOM過渡状態検出）───
+        # 受付時間中に未受付予約が 5人以上→0人 に急減した場合、
+        # ページ再描画中の一時的な中間状態を読んだ可能性が高い。
+        # 前回値が15分以内なら書き込みをスキップして保持する。
+        if (not data.get("error")
+                and data.get("is_open")
+                and data.get("appt_upcoming_count", 0) == 0):
+            prev = _load_previous_status()
+            if (prev is not None
+                    and prev.get("appt_upcoming_count", 0) >= 5
+                    and _prev_is_recent(prev, max_age_sec=900)
+                    and not prev.get("error")):
+                prev_up  = prev.get("appt_upcoming_count")
+                prev_at  = prev.get("updated_at", "unknown")
+                print(f"⚠️ 未受付予約が急減（{prev_up}人→0人）かつ受付中 "
+                      f"→ DOM過渡状態の可能性 → 前回値を保持（前回updated_at={prev_at}）")
+                return
 
     OUTPUT_FILE.write_text(
         json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
