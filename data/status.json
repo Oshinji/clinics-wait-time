@@ -3,12 +3,12 @@
   "walkin_resin_count": 3,
   "walkin_shoshin_count": 3,
   "walkin_shoshin_minutes": 30,
-  "appt_count": 6,
-  "appt_minutes": 48,
-  "appt_upcoming_count": 7,
-  "appt_upcoming_minutes": 62,
+  "appt_count": 7,
+  "appt_minutes": 54,
+  "appt_upcoming_count": 8,
+  "appt_upcoming_minutes": 72,
   "in_exam_remain": 7,
-  "estimated_minutes": 153,
+  "estimated_minutes": 168,
   "current_slot": "09:20",
   "current_slots": [
     "09:20"
@@ -16,7 +16,7 @@
   "walkin_in_exam": false,
   "last_predicted_slot": "09:20",
   "walkin_protected": false,
-  "updated_at": "2026-05-20T09:51:02.744607+09:00",
+  "updated_at": "2026-05-20T09:56:00.613543+09:00",
   "is_open": true,
   "is_holiday": false,
   "error": null
