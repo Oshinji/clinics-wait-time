@@ -3774,9 +3774,14 @@
       "date": "2026-05-25",
       "checkin": "09:53",
       "duration_min": 70
+    },
+    {
+      "date": "2026-05-25",
+      "checkin": "10:55",
+      "duration_min": 19
     }
   ],
-  "pt_ratio": 0.7338,
-  "record_count": 755,
-  "updated_at": "2026-05-25T11:21:16.503077+09:00"
+  "pt_ratio": 0.7341,
+  "record_count": 756,
+  "updated_at": "2026-05-25T11:26:06.128412+09:00"
 }
