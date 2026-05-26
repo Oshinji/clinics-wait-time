@@ -6,23 +6,60 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
-    iframe { width: 100%; height: 100%; border: none; display: block; }
+    #frame, #image {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+    }
+    #frame { border: none; }
+    #image { object-fit: contain; display: none; }
   </style>
 </head>
 <body>
-  <iframe id="display" src="https://oshinji.github.io/clinics-wait-time/"></iframe>
+  <iframe id="frame"></iframe>
+  <img id="image" alt="">
+
   <script>
-    const urls = [
-      "https://oshinji.github.io/clinics-wait-time/",
-      "https://oshinji.github.io/clinics-wait-time/now.html"
+    // =============================================
+    // ここを編集してローテーション内容を設定します
+    // type: 'url'  → HTMLページ（iframeで表示）
+    // type: 'image'→ 画像ファイル（全画面で表示）
+    // seconds      → この項目を表示する秒数
+    // =============================================
+    const items = [
+      { type: 'url',   src: 'https://oshinji.github.io/clinics-wait-time/',          seconds: 15 },
+      { type: 'url',   src: 'https://oshinji.github.io/clinics-wait-time/now.html',  seconds: 15 },
+      // { type: 'url',   src: 'https://oshinji.github.io/clinics-wait-time/split.html', seconds: 20 },
+      // { type: 'image', src: 'https://oshinji.github.io/clinics-wait-time/image.jpg',  seconds: 10 },
     ];
-    const interval = 15 * 1000; // 15秒（変更する場合はこの数字を変えてください）
+    // =============================================
+
+    const frame = document.getElementById('frame');
+    const image = document.getElementById('image');
     let current = 0;
 
-    setInterval(function () {
-      current = (current + 1) % urls.length;
-      document.getElementById("display").src = urls[current];
-    }, interval);
+    function show(index) {
+      const item = items[index];
+      if (item.type === 'image') {
+        frame.style.display = 'none';
+        image.style.display = 'block';
+        image.src = item.src;
+      } else {
+        image.style.display = 'none';
+        frame.style.display = 'block';
+        frame.src = item.src;
+      }
+    }
+
+    function next() {
+      current = (current + 1) % items.length;
+      show(current);
+      clearTimeout(timer);
+      timer = setTimeout(next, items[current].seconds * 1000);
+    }
+
+    show(current);
+    var timer = setTimeout(next, items[current].seconds * 1000);
   </script>
 </body>
 </html>
