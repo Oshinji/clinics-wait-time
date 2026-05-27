@@ -321,8 +321,8 @@ body {
   function getSession(){
     var p = jstParts();
     var w = p.w, n = p.h * 60 + p.m;
-    var pmEnd    = (w===6) ? toMin('16:00') : toMin('17:00');
-    var pmEndStr = (w===6) ? '16:00' : '17:00';
+    var pmEnd    = (w===6) ? toMin('16:30') : toMin('17:30');
+    var pmEndStr = (w===6) ? '16:30' : '17:30';
     var ctx = { pmEndStr: pmEndStr };
     if(w===0||w===4)             return {t:'hol', ctx:ctx};
     if(n<toMin('08:30'))         return {t:'pre', ctx:ctx};
@@ -343,7 +343,7 @@ body {
     if(s.t !== 'open' && s.t !== 'ext') return false;
     var p = jstParts();
     var nMin = p.h * 60 + p.m;
-    var pmEndMin = (p.w === 6) ? toMin('16:00') : toMin('17:00');
+    var pmEndMin = (p.w === 6) ? toMin('16:30') : toMin('17:30');
     var amOK = (nMin >= toMin('11:30') - NEAR_END_MIN) && (nMin < toMin('13:00'));
     var pmOK = (nMin >= pmEndMin - NEAR_END_MIN)         && (nMin < toMin('19:00'));
     return amOK || pmOK;
