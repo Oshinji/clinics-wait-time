@@ -351,8 +351,8 @@ body {
   function getSession(){
     var p = jstParts();
     var w = p.w, n = p.h * 60 + p.m;
-    var pmEnd    = (w===6) ? toMin('16:30') : toMin('17:30');
-    var pmEndStr = (w===6) ? '16:30' : '17:30';
+    var pmEnd    = (w===6) ? toMin('16:00') : toMin('17:00');
+    var pmEndStr = (w===6) ? '16:00' : '17:00';
     var ctx = { pmEndStr: pmEndStr };
     if(w===0||w===4)         return {t:'hol', ctx:ctx};
     if(n<toMin('08:30'))     return {t:'pre', ctx:ctx};

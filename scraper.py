@@ -44,14 +44,14 @@ ATTENDANCE_RATE        = float(os.getenv("ATTENDANCE_RATE",      "0.8")) # 未�
 # ────────────────────────────────────────────────────────────────
 # 受付時間
 #   月火水金・土　午前  8:30〜11:30
-#              　午後 14:30〜17:30（土曜は〜16:30）
+#              　午後 14:30〜17:00（土曜は〜16:00）
 #   木・日　休診
 
 AM_START   = dt_time(8,  30)
 AM_END     = dt_time(11, 30)
 PM_START   = dt_time(14, 30)
-PM_END     = dt_time(17, 30)
-PM_END_SAT = dt_time(16, 30)
+PM_END     = dt_time(17,  0)
+PM_END_SAT = dt_time(16,  0)
 
 
 def _load_holidays() -> set:
@@ -102,7 +102,7 @@ def is_exam_window() -> bool:
     # 午前 8:30〜13:00（受付11:30 + 延長1.5時間）
     if AM_START <= t < dt_time(13, 0):
         return True
-    # 午後 14:30〜19:00（受付17:30/16:30 + 延長）
+    # 午後 14:30〜19:00（受付17:00/16:00 + 延長）
     if PM_START <= t < dt_time(19, 0):
         return True
     return False
@@ -120,7 +120,7 @@ def get_current_session_end_min() -> int:
         return AM_END.hour * 60 + AM_END.minute  # 11:30 → 690
     pm_end = PM_END_SAT if wd == 5 else PM_END
     if PM_START <= t < pm_end:
-        return pm_end.hour * 60 + pm_end.minute  # 17:30 or 16:30
+        return pm_end.hour * 60 + pm_end.minute  # 17:00 or 16:00
     return -1
 
 
