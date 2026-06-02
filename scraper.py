@@ -40,7 +40,7 @@ MINUTES_RESIN          = int(os.getenv("MINUTES_RESIN",          "6"))   # 予�
 MINUTES_SHINSIN        = int(os.getenv("MINUTES_SHINSIN",        "10"))  # 予約初診外来の実診察時間（枠15分内）
 MINUTES_SHINSIN_WALKIN = int(os.getenv("MINUTES_SHINSIN_WALKIN", "10"))  # 直来初診の医師占有時間（予約初診と同じ10分）
 MINUTES_IN_EXAM_REMAIN = int(os.getenv("MINUTES_IN_EXAM_REMAIN", "4"))   # 診察中患者の残り時間見積もり（再診枠6分より長くならないよう4分に設定）
-ATTENDANCE_RATE        = float(os.getenv("ATTENDANCE_RATE",      "0.8")) # 未受付予約の出席率（キャンセル/遅刻/no-show を考慮、実測キャンセル率 約20%）
+ATTENDANCE_RATE        = float(os.getenv("ATTENDANCE_RATE",      "0.9")) # 未受付予約の出席率（キャンセル/遅刻/no-show を考慮、実測キャンセル率 約10%）
 # ────────────────────────────────────────────────────────────────
 # 受付時間
 #   月火水金・土　午前  8:30〜11:30
