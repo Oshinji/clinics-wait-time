@@ -4209,9 +4209,84 @@
       "date": "2026-06-05",
       "checkin": "10:37",
       "duration_min": 80
+    },
+    {
+      "date": "2026-06-05",
+      "checkin": "14:26",
+      "duration_min": 32
+    },
+    {
+      "date": "2026-06-05",
+      "checkin": "14:28",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-05",
+      "checkin": "14:29",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-05",
+      "checkin": "14:35",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-05",
+      "checkin": "14:39",
+      "duration_min": 13
+    },
+    {
+      "date": "2026-06-05",
+      "checkin": "14:41",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-05",
+      "checkin": "14:55",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-05",
+      "checkin": "14:57",
+      "duration_min": 18
+    },
+    {
+      "date": "2026-06-05",
+      "checkin": "15:04",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-05",
+      "checkin": "15:28",
+      "duration_min": 20
+    },
+    {
+      "date": "2026-06-05",
+      "checkin": "15:31",
+      "duration_min": 17
+    },
+    {
+      "date": "2026-06-05",
+      "checkin": "15:38",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-05",
+      "checkin": "16:00",
+      "duration_min": 13
+    },
+    {
+      "date": "2026-06-05",
+      "checkin": "16:29",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-05",
+      "checkin": "16:32",
+      "duration_min": 8
     }
   ],
-  "pt_ratio": 0.7933,
-  "record_count": 842,
-  "updated_at": "2026-06-05T12:56:15.668436+09:00"
+  "pt_ratio": 0.7946,
+  "record_count": 857,
+  "updated_at": "2026-06-05T16:51:09.364336+09:00"
 }
