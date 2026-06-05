@@ -29,6 +29,7 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
+          cache-dependency-path: requirements-scraper.txt
 
       - name: 依存パッケージをインストール
         run: |
