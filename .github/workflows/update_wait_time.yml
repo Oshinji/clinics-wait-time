@@ -32,7 +32,7 @@ jobs:
 
       - name: 依存パッケージをインストール
         run: |
-          pip install -r requirements.txt
+          pip install -r requirements-scraper.txt
           playwright install chromium --with-deps
 
       - name: スクレイパーを実行
