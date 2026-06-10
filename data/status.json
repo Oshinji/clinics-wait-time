@@ -12,9 +12,9 @@
   "current_slot": null,
   "current_slots": [],
   "walkin_in_exam": false,
-  "last_predicted_slot": "17:30",
+  "last_predicted_slot": null,
   "walkin_protected": false,
-  "updated_at": "2026-06-10T18:51:29.254053+09:00",
+  "updated_at": "2026-06-10T19:01:56.505677+09:00",
   "is_open": false,
   "is_holiday": false,
   "error": null
