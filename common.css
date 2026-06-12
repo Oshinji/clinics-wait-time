@@ -1,0 +1,225 @@
+/* ============================================================
+   みがわ町整形外科クリニック 各表示ページ 共通スタイル
+   index.html / now.html で共有。
+   ページ固有の色変数(:root)・アクセント装飾・hero内の数値表示は
+   各ページの <style> 側に残しています。
+   ============================================================ */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Noto Sans JP', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.card {
+  width: 100%;
+  max-width: 560px;
+  background: var(--white);
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(30,90,140,.08), 0 12px 40px rgba(30,90,140,.10);
+  overflow: hidden;
+}
+
+/* ── Header ── */
+.header {
+  background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+  padding: 22px 28px 16px;
+}
+.clinic-name {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+}
+.header-line {
+  height: 3px;
+  background: linear-gradient(90deg, var(--blue), #a8d4f0);
+  margin-top: 14px;
+  border-radius: 2px;
+}
+
+/* ── Page title ── */
+.page-title-wrap {
+  padding: 24px 28px 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.page-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--navy);
+  border-left: 5px solid var(--blue);
+  padding-left: 14px;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+.update-badge {
+  font-size: 11px;
+  color: var(--gray);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  padding-top: 6px;
+  white-space: nowrap;
+}
+.live-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--blue);
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+
+/* ── Hero ── */
+.hero {
+  padding: 32px 28px 28px;
+  text-align: center;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 9px 22px;
+  border-radius: 100px;
+  margin-bottom: 26px;
+  letter-spacing: 0.06em;
+}
+.status-badge::before {
+  content: '';
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+.status-badge.open  { background: var(--green-bg); color: var(--green); }
+.status-badge.busy,
+.status-badge.wait  { background: var(--amber-bg); color: var(--amber); }
+.status-badge.off   { background: var(--gray-bg);  color: var(--gray); }
+
+.hero-desc {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  line-height: 1.4;
+}
+
+/* 休診・昼休み等のステート */
+.state-big {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.state-resume-label {
+  font-size: 15px;
+  color: var(--gray);
+  margin-bottom: 6px;
+}
+.state-resume-time {
+  font-family: 'Inter', sans-serif;
+  font-size: 80px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.state-resume-note {
+  font-size: 15px;
+  color: var(--gray);
+  line-height: 1.6;
+}
+
+/* ── Hours ── */
+.hours {
+  margin: 0 28px 24px;
+  border-top: 1px solid var(--border-lt);
+  padding-top: 16px;
+}
+.hours-title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 10px;
+}
+.hours-rows { display: flex; gap: 8px; }
+.hours-row {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  background: var(--gray-bg);
+  border: 1px solid var(--border-lt);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--gray);
+}
+.hours-row.is-current {
+  background: #e8f3fb;
+  border-color: var(--border);
+  color: var(--navy);
+  font-weight: 600;
+}
+.hours-period { font-size: 13px; flex-shrink: 0; }
+.hours-time {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* ── Footer ── */
+.footer {
+  padding: 14px 28px 20px;
+  border-top: 1px solid #e5e7eb;
+  background: #f8fafc;
+  font-size: 11px;
+  color: var(--gray);
+  line-height: 1.6;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+/* ── Loading ── */
+.loading {
+  padding: 60px 28px;
+  text-align: center;
+  color: var(--gray);
+  font-size: 14px;
+}
+
+/* ── Responsive (共通項目) ── */
+@media (max-width: 480px) {
+  body { padding: 0; background: var(--white); }
+  .card { border-radius: 0; box-shadow: none; min-height: 100vh; }
+  .header { padding: 18px 20px 14px; }
+  .clinic-name { font-size: 15px; }
+  .page-title-wrap { padding: 20px 20px 0; flex-direction: column; gap: 8px; }
+  .page-title { font-size: 22px; }
+  .hero { padding: 26px 20px 22px; }
+  .hero-desc { font-size: 19px; }
+  .state-big { font-size: 25px; }
+  .state-resume-time { font-size: 68px; }
+  .hours { margin: 0 20px 20px; }
+  .footer { padding: 12px 20px 18px; }
+}

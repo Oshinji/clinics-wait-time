@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700&family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
 <style>
 :root {
   --navy:       #1E5A8C;
@@ -26,66 +27,7 @@
   --border-lt:  #e0edf7;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: 'Noto Sans JP', -apple-system, sans-serif;
-  background: var(--bg);
-  color: var(--ink);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px 16px;
-  -webkit-font-smoothing: antialiased;
-}
-
-.card {
-  width: 100%;
-  max-width: 560px;
-  background: var(--white);
-  border-radius: 20px;
-  box-shadow: 0 2px 8px rgba(30,90,140,.08), 0 12px 40px rgba(30,90,140,.10);
-  overflow: hidden;
-}
-
-/* ── Header ── */
-.header {
-  background: linear-gradient(135deg, var(--navy-dark), var(--navy));
-  padding: 22px 28px 16px;
-}
-.clinic-name {
-  font-family: 'Noto Serif JP', serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 0.04em;
-  line-height: 1.4;
-}
-.header-line {
-  height: 3px;
-  background: linear-gradient(90deg, var(--blue), #a8d4f0);
-  margin-top: 14px;
-  border-radius: 2px;
-}
-
 /* ── Page title ── */
-.page-title-wrap {
-  padding: 24px 28px 0;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-}
-.page-title {
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--navy);
-  border-left: 5px solid var(--blue);
-  padding-left: 14px;
-  line-height: 1.4;
-  letter-spacing: 0.01em;
-}
 .page-title .accent {
   font-size: 1.25em;
   color: var(--navy);
@@ -94,51 +36,6 @@ body {
   padding: 0 2px;
   letter-spacing: 0.02em;
 }
-.update-badge {
-  font-size: 11px;
-  color: var(--gray);
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  flex-shrink: 0;
-  padding-top: 6px;
-  white-space: nowrap;
-}
-.live-dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--blue);
-  animation: blink 2s ease-in-out infinite;
-}
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
-
-/* ── Hero ── */
-.hero {
-  padding: 32px 28px 28px;
-  text-align: center;
-}
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 16px;
-  font-weight: 700;
-  padding: 9px 22px;
-  border-radius: 100px;
-  margin-bottom: 26px;
-  letter-spacing: 0.06em;
-}
-.status-badge::before {
-  content: '';
-  width: 9px; height: 9px;
-  border-radius: 50%;
-  background: currentColor;
-  flex-shrink: 0;
-}
-.status-badge.open  { background: var(--green-bg); color: var(--green); }
-.status-badge.wait  { background: var(--amber-bg); color: var(--amber); }
-.status-badge.off   { background: var(--gray-bg);  color: var(--gray); }
 
 /* 診察中の大表示 */
 .hero-label {
@@ -158,119 +55,12 @@ body {
 }
 .hero-slot.double { font-size: 56px; }
 .hero-slot.triple { font-size: 44px; }
-.hero-desc {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--ink-soft);
-  line-height: 1.4;
-}
 
-/* 休診・昼休み等のステート */
-.state-big {
-  font-size: 30px;
-  font-weight: 700;
-  color: var(--ink-soft);
-  line-height: 1.6;
-  margin-bottom: 16px;
-}
-.state-resume-label {
-  font-size: 15px;
-  color: var(--gray);
-  margin-bottom: 6px;
-}
-.state-resume-time {
-  font-family: 'Inter', sans-serif;
-  font-size: 80px;
-  font-weight: 700;
-  color: var(--navy);
-  letter-spacing: -0.02em;
-  line-height: 1;
-  margin-bottom: 8px;
-}
-.state-resume-note {
-  font-size: 15px;
-  color: var(--gray);
-  line-height: 1.6;
-}
-
-/* ── Hours ── */
-.hours {
-  margin: 0 28px 24px;
-  border-top: 1px solid var(--border-lt);
-  padding-top: 16px;
-}
-.hours-title {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--gray);
-  margin-bottom: 10px;
-}
-.hours-rows { display: flex; gap: 8px; }
-.hours-row {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 11px 14px;
-  background: var(--gray-bg);
-  border: 1px solid var(--border-lt);
-  border-radius: 8px;
-  font-size: 14px;
-  color: var(--gray);
-}
-.hours-row.is-current {
-  background: #e8f3fb;
-  border-color: var(--border);
-  color: var(--navy);
-  font-weight: 600;
-}
-.hours-period { font-size: 13px; flex-shrink: 0; }
-.hours-time {
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-}
-
-/* ── Footer ── */
-.footer {
-  padding: 14px 28px 20px;
-  border-top: 1px solid #e5e7eb;
-  background: #f8fafc;
-  font-size: 11px;
-  color: var(--gray);
-  line-height: 1.6;
-  display: flex;
-  align-items: flex-start;
-  gap: 6px;
-}
-
-/* ── Loading ── */
-.loading {
-  padding: 60px 28px;
-  text-align: center;
-  color: var(--gray);
-  font-size: 14px;
-}
-
-/* ── Responsive ── */
+/* ── Responsive (ページ固有) ── */
 @media (max-width: 480px) {
-  body { padding: 0; background: var(--white); }
-  .card { border-radius: 0; box-shadow: none; min-height: 100vh; }
-  .header { padding: 18px 20px 14px; }
-  .clinic-name { font-size: 15px; }
-  .page-title-wrap { padding: 20px 20px 0; flex-direction: column; gap: 8px; }
-  .page-title { font-size: 22px; }
-  .hero { padding: 26px 20px 22px; }
   .hero-slot { font-size: 72px; }
   .hero-slot.double { font-size: 46px; }
   .hero-slot.triple { font-size: 36px; }
-  .hero-desc { font-size: 19px; }
-  .state-big { font-size: 25px; }
-  .state-resume-time { font-size: 68px; }
-  .hours { margin: 0 20px 20px; }
-  .footer { padding: 12px 20px 18px; }
 }
 </style>
 </head>
@@ -290,7 +80,7 @@ body {
     </div>
   </div>
 
-  <div id="content"><div class="loading">読み込み中…</div></div>
+  <div id="content" aria-live="polite"><div class="loading">読み込み中…</div></div>
 
   <footer class="footer">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -302,21 +92,12 @@ body {
   </footer>
 </main>
 
+<script src="common.js"></script>
 <script>
 (function(){
-  var DATA_URL = "https://raw.githubusercontent.com/Oshinji/clinics-wait-time/main/data/status.json";
-  var INTERVAL  = 5 * 60 * 1000;
-
-  function toMin(s){ var p=s.split(':'); return +p[0]*60+ +p[1]; }
-
-  // JST (UTC+9 固定, 夏時間なし) の時刻部品を安全に取り出す。
-  // toLocaleString + new Date() は Safari/iOS が narrow no-break space (U+202F)
-  // を挿入する既知不具合があり Invalid Date になる → UTC+9h ms 加算で回避。
-  function jstParts(epochMs){
-    var t = (typeof epochMs === 'number') ? epochMs : new Date().getTime();
-    var j = new Date(t + 9 * 60 * 60 * 1000);
-    return { w: j.getUTCDay(), h: j.getUTCHours(), m: j.getUTCMinutes() };
-  }
+  var toMin     = ClinicCommon.toMin;
+  var jstParts  = ClinicCommon.jstParts;
+  var hoursHtml = ClinicCommon.hoursHtml;
 
   function getSession(){
     var p = jstParts();
@@ -347,25 +128,6 @@ body {
     var amOK = (nMin >= toMin('11:30') - NEAR_END_MIN) && (nMin < toMin('13:00'));
     var pmOK = (nMin >= pmEndMin - NEAR_END_MIN)         && (nMin < toMin('19:00'));
     return amOK || pmOK;
-  }
-
-  function fmtUpdated(iso){
-    if(!iso) return '更新 --:--';
-    var d = new Date(iso);                // ISO8601 (+09:00 付き) は全ブラウザでパース可
-    if(isNaN(d.getTime())) return '更新 --:--';
-    var p = jstParts(d.getTime());
-    return '更新 '+('0'+p.h).slice(-2)+':'+('0'+p.m).slice(-2);
-  }
-
-  function hoursHtml(s){
-    var amC = (s.t==='open' && s.half==='am') ? ' is-current' : '';
-    var pmC = (s.t==='open' && s.half==='pm') ? ' is-current' : '';
-    return '<div class="hours">'
-      +'<div class="hours-title">受付時間</div>'
-      +'<div class="hours-rows">'
-      +'<div class="hours-row'+amC+'"><span class="hours-period">午前</span><span class="hours-time">8:30–11:30</span></div>'
-      +'<div class="hours-row'+pmC+'"><span class="hours-period">午後</span><span class="hours-time">14:30–'+s.ctx.pmEndStr+'</span></div>'
-      +'</div></div>';
   }
 
   function render(data){
@@ -505,19 +267,7 @@ body {
     el.innerHTML = h + hoursHtml(s);
   }
 
-  function load(){
-    fetch(DATA_URL+'?t='+Date.now())
-      .then(function(r){ return r.json(); })
-      .then(function(d){
-        render(d);
-        var u = document.getElementById('updated');
-        if(u) u.textContent = fmtUpdated(d.updated_at);
-      })
-      .catch(function(){ render({error:true}); });
-  }
-
-  load();
-  setInterval(load, INTERVAL);
+  ClinicCommon.startPolling(render);
 })();
 </script>
 </body>
