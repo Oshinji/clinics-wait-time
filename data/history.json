@@ -4444,9 +4444,14 @@
       "date": "2026-06-13",
       "checkin": "08:29",
       "duration_min": 11
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "08:45",
+      "duration_min": 5
     }
   ],
-  "pt_ratio": 0.829,
-  "record_count": 889,
-  "updated_at": "2026-06-13T08:56:25.080825+09:00"
+  "pt_ratio": 0.8292,
+  "record_count": 890,
+  "updated_at": "2026-06-13T09:03:00.661354+09:00"
 }
