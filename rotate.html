@@ -38,14 +38,16 @@
 
     function show(index) {
       const item = items[index];
+      // src は同じ値でも再代入すると再読み込みが走るため、変わったときだけ代入する。
+      // iframe は display:none 中も生きており、中のページが自前で5分ごとに更新する。
       if (item.type === 'image') {
         frame.style.display = 'none';
         image.style.display = 'block';
-        image.src = item.src;
+        if (image.src !== item.src) image.src = item.src;
       } else {
         image.style.display = 'none';
         frame.style.display = 'block';
-        frame.src = item.src;
+        if (frame.src !== item.src) frame.src = item.src;
       }
     }
 

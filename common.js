@@ -39,6 +39,14 @@ window.ClinicCommon = (function(){
       +'</div></div>';
   }
 
+  // 直前と同一内容なら innerHTML を書き換えない。
+  // 不要な再描画を防ぎ、aria-live の読み上げも実際に変化があったときだけにする。
+  function setContent(el, html){
+    if(el.__lastHtml === html) return;
+    el.__lastHtml = html;
+    el.innerHTML = html;
+  }
+
   function startPolling(render){
     function load(){
       fetch(DATA_URL+'?t='+Date.now())
@@ -59,6 +67,7 @@ window.ClinicCommon = (function(){
     jstParts: jstParts,
     fmtUpdated: fmtUpdated,
     hoursHtml: hoursHtml,
+    setContent: setContent,
     startPolling: startPolling
   };
 })();

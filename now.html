@@ -95,9 +95,10 @@
 <script src="common.js"></script>
 <script>
 (function(){
-  var toMin     = ClinicCommon.toMin;
-  var jstParts  = ClinicCommon.jstParts;
-  var hoursHtml = ClinicCommon.hoursHtml;
+  var toMin      = ClinicCommon.toMin;
+  var jstParts   = ClinicCommon.jstParts;
+  var hoursHtml  = ClinicCommon.hoursHtml;
+  var setContent = ClinicCommon.setContent;
 
   function getSession(){
     var p = jstParts();
@@ -140,7 +141,7 @@
         +'<div class="status-badge off">情報を取得できませんでした</div>'
         +'<div class="state-big">しばらくしてから<br>再度ご確認ください</div>'
         +'</div>';
-      el.innerHTML = h + hoursHtml(s);
+      setContent(el, h + hoursHtml(s));
       return;
     }
 
@@ -151,7 +152,7 @@
         +'<div class="state-big">本日は休診日です</div>'
         +'<div class="state-resume-note">またのご来院をお待ちしております</div>'
         +'</div>';
-      el.innerHTML = h + hoursHtml(s);
+      setContent(el, h + hoursHtml(s));
       return;
     }
 
@@ -264,7 +265,7 @@
         h = '<div class="hero"><div class="status-badge off">受付時間外です</div></div>';
     }
 
-    el.innerHTML = h + hoursHtml(s);
+    setContent(el, h + hoursHtml(s));
   }
 
   ClinicCommon.startPolling(render);
