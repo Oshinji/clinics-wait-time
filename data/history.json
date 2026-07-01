@@ -1,2846 +1,6 @@
 {
   "records": [
     {
-      "date": "2026-05-13",
-      "checkin": "08:29",
-      "duration_min": 12
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "08:30",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "08:38",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "09:05",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "09:11",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "09:15",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "09:31",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "09:23",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "09:43",
-      "duration_min": 27
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "09:53",
-      "duration_min": 17
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "09:54",
-      "duration_min": 23
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "08:42",
-      "duration_min": 107
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "10:05",
-      "duration_min": 21
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "10:20",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "09:04",
-      "duration_min": 91
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "10:28",
-      "duration_min": 17
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "10:30",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "10:47",
-      "duration_min": 16
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "10:53",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "10:54",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "10:59",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "11:01",
-      "duration_min": 17
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "11:04",
-      "duration_min": 19
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "11:24",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "11:15",
-      "duration_min": 67
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "11:30",
-      "duration_min": 56
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "11:31",
-      "duration_min": 69
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "14:27",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "14:35",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "14:56",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "15:00",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "15:04",
-      "duration_min": 34
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "15:06",
-      "duration_min": 28
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "15:29",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "15:30",
-      "duration_min": 17
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "15:31",
-      "duration_min": 16
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "15:32",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "15:49",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "16:00",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "16:02",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "16:07",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "16:26",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "16:29",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "16:30",
-      "duration_min": 0
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "16:51",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "16:55",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "15:59",
-      "duration_min": 81
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "17:16",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "17:17",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "17:35",
-      "duration_min": 13
-    },
-    {
-      "date": "2026-05-13",
-      "checkin": "17:37",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "08:26",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "08:27",
-      "duration_min": 17
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "08:31",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "08:34",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "09:13",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "09:15",
-      "duration_min": 14
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "09:17",
-      "duration_min": 14
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "09:33",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "09:42",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "09:47",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "10:09",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "10:24",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "10:28",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "10:31",
-      "duration_min": 21
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "10:42",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "10:56",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "10:54",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "11:01",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "10:33",
-      "duration_min": 45
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "11:08",
-      "duration_min": 13
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "11:09",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "11:14",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "14:27",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "14:31",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "14:47",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "14:51",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "15:05",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "14:37",
-      "duration_min": 44
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "15:15",
-      "duration_min": 13
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "15:48",
-      "duration_min": 14
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "15:53",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "16:01",
-      "duration_min": 14
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "16:19",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "16:35",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "17:04",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "17:09",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "14:50",
-      "duration_min": 150
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "17:16",
-      "duration_min": 14
-    },
-    {
-      "date": "2026-05-15",
-      "checkin": "17:52",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "08:27",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "08:53",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "08:32",
-      "duration_min": 26
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "08:30",
-      "duration_min": 19
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "08:37",
-      "duration_min": 18
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "08:41",
-      "duration_min": 18
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "08:45",
-      "duration_min": 19
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "09:08",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "09:17",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "09:19",
-      "duration_min": 19
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "09:25",
-      "duration_min": 13
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "09:21",
-      "duration_min": 19
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "09:23",
-      "duration_min": 32
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "09:32",
-      "duration_min": 24
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "09:36",
-      "duration_min": 20
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "09:46",
-      "duration_min": 23
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "10:01",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "10:17",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "10:10",
-      "duration_min": 19
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "10:28",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "10:15",
-      "duration_min": 44
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "10:45",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "10:52",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "11:01",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "10:50",
-      "duration_min": 19
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "11:21",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "11:22",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "11:18",
-      "duration_min": 81
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "14:27",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "14:30",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "14:34",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "14:35",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "14:36",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "14:47",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "14:48",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "15:17",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "15:22",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "15:35",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "15:24",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "15:37",
-      "duration_min": 20
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "15:48",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "15:53",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-16",
-      "checkin": "16:31",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "08:28",
-      "duration_min": 13
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "08:26",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "08:38",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "08:43",
-      "duration_min": 40
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "09:07",
-      "duration_min": 12
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "09:22",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "08:57",
-      "duration_min": 50
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "09:32",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "10:03",
-      "duration_min": 0
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "10:06",
-      "duration_min": 16
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "10:16",
-      "duration_min": 18
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "10:38",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "10:55",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "11:12",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "11:25",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "11:30",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "11:19",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "14:28",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "14:31",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "14:30",
-      "duration_min": 18
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "14:48",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "14:59",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "14:47",
-      "duration_min": 28
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "15:12",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "15:14",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "15:24",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "15:25",
-      "duration_min": 16
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "15:45",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "15:55",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "16:10",
-      "duration_min": 13
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "16:28",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "16:31",
-      "duration_min": 17
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "16:37",
-      "duration_min": 13
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "16:53",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "16:56",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "17:10",
-      "duration_min": 22
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "17:35",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "16:08",
-      "duration_min": 92
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "17:18",
-      "duration_min": 18
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "17:22",
-      "duration_min": 14
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "17:24",
-      "duration_min": 12
-    },
-    {
-      "date": "2026-05-18",
-      "checkin": "17:23",
-      "duration_min": 19
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "09:18",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "09:20",
-      "duration_min": 22
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "09:26",
-      "duration_min": 17
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "09:31",
-      "duration_min": 14
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "10:00",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "10:04",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "10:56",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "11:03",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "11:05",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "11:17",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "11:24",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "11:06",
-      "duration_min": 23
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "11:31",
-      "duration_min": 35
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "14:32",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "14:43",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "14:36",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "14:48",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "15:03",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "15:22",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "15:31",
-      "duration_min": 12
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "15:39",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "15:47",
-      "duration_min": 12
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "15:48",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "15:49",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "16:00",
-      "duration_min": 19
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "16:04",
-      "duration_min": 12
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "16:24",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "16:29",
-      "duration_min": 19
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "16:43",
-      "duration_min": 26
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "16:45",
-      "duration_min": 24
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "17:03",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "17:11",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "17:19",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "17:29",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-19",
-      "checkin": "17:55",
-      "duration_min": 20
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "08:33",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "08:42",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "08:43",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "09:14",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "09:18",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "09:20",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "09:26",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "09:28",
-      "duration_min": 31
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "10:08",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "10:15",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "09:53",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "10:31",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "10:30",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "10:33",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "10:40",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "10:53",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "10:48",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "10:56",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "11:06",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "11:10",
-      "duration_min": 20
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "11:12",
-      "duration_min": 32
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "09:07",
-      "duration_min": 147
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "09:36",
-      "duration_min": 128
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "11:13",
-      "duration_min": 32
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "11:21",
-      "duration_min": 24
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "10:20",
-      "duration_min": 148
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "10:44",
-      "duration_min": 121
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "14:42",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "14:47",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "14:50",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "14:53",
-      "duration_min": 13
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "15:02",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "15:03",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "14:35",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "15:28",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "15:32",
-      "duration_min": 16
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "15:35",
-      "duration_min": 13
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "15:54",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "16:37",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "16:39",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "17:03",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "17:11",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "16:03",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "16:34",
-      "duration_min": 79
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "17:25",
-      "duration_min": 17
-    },
-    {
-      "date": "2026-05-20",
-      "checkin": "17:17",
-      "duration_min": 76
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "08:44",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "08:35",
-      "duration_min": 14
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "09:01",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "09:06",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "09:19",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "09:36",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "09:37",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "09:50",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "09:53",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "10:06",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "10:09",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "10:24",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "10:26",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "10:36",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "10:49",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "10:47",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "10:52",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "10:56",
-      "duration_min": 19
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "11:03",
-      "duration_min": 13
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "09:49",
-      "duration_min": 112
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "11:16",
-      "duration_min": 25
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "14:26",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "14:28",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "14:35",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "14:37",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "14:44",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "14:48",
-      "duration_min": 13
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "14:52",
-      "duration_min": 26
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "15:00",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "15:13",
-      "duration_min": 22
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "15:32",
-      "duration_min": 20
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "15:37",
-      "duration_min": 31
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "15:47",
-      "duration_min": 21
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "15:52",
-      "duration_min": 16
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "15:49",
-      "duration_min": 41
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "16:01",
-      "duration_min": 27
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "16:23",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "16:06",
-      "duration_min": 39
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "16:33",
-      "duration_min": 12
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "16:36",
-      "duration_min": 25
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "16:43",
-      "duration_min": 19
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "16:57",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "16:54",
-      "duration_min": 25
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "16:13",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "17:07",
-      "duration_min": 27
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "17:23",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "17:11",
-      "duration_min": 24
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "17:21",
-      "duration_min": 23
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "17:27",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-22",
-      "checkin": "17:33",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "08:27",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "08:30",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "08:31",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "09:12",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "09:32",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "09:42",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "09:30",
-      "duration_min": 29
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "10:03",
-      "duration_min": 14
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "10:09",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "10:20",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "10:10",
-      "duration_min": 31
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "10:28",
-      "duration_min": 18
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "10:32",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "11:00",
-      "duration_min": 12
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "10:54",
-      "duration_min": 17
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "10:53",
-      "duration_min": 17
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "11:10",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "11:14",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "11:18",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "11:26",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "11:27",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "11:29",
-      "duration_min": 16
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "11:31",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "10:44",
-      "duration_min": 116
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "14:29",
-      "duration_min": 13
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "14:32",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "14:42",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "14:44",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "14:57",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "15:06",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "14:55",
-      "duration_min": 12
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "15:04",
-      "duration_min": 12
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "15:21",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "16:01",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "16:14",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "16:16",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "16:17",
-      "duration_min": 14
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "16:24",
-      "duration_min": 13
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "15:01",
-      "duration_min": 97
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "15:08",
-      "duration_min": 118
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "15:31",
-      "duration_min": 99
-    },
-    {
-      "date": "2026-05-23",
-      "checkin": "15:52",
-      "duration_min": 124
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "08:38",
-      "duration_min": 14
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "08:34",
-      "duration_min": 21
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "08:54",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "08:55",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "09:05",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "09:08",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "09:16",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "09:17",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "09:27",
-      "duration_min": 12
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "09:25",
-      "duration_min": 22
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "09:29",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "09:40",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "09:41",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "10:04",
-      "duration_min": 12
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "10:10",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "10:21",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "10:16",
-      "duration_min": 16
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "10:35",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "10:49",
-      "duration_min": 14
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "09:53",
-      "duration_min": 70
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "10:55",
-      "duration_min": 19
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "11:09",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "11:15",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "11:22",
-      "duration_min": 17
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "14:27",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "14:32",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "14:34",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "14:40",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "14:35",
-      "duration_min": 19
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "14:52",
-      "duration_min": 19
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "15:04",
-      "duration_min": 13
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "14:38",
-      "duration_min": 43
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "15:15",
-      "duration_min": 14
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "15:25",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "15:24",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "15:34",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "15:32",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "15:38",
-      "duration_min": 17
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "15:40",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "15:42",
-      "duration_min": 21
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "15:52",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "15:54",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "16:17",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "16:21",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "14:48",
-      "duration_min": 102
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "16:39",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-25",
-      "checkin": "16:35",
-      "duration_min": 112
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "08:27",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "08:34",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "08:42",
-      "duration_min": 21
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "09:15",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "09:17",
-      "duration_min": 14
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "09:50",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "09:53",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "10:05",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "10:10",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "10:22",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "10:44",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "10:42",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "11:00",
-      "duration_min": 12
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "11:03",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "11:08",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "11:09",
-      "duration_min": 19
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "11:11",
-      "duration_min": 17
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "11:22",
-      "duration_min": 20
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "14:34",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "14:54",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "14:55",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "14:57",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "15:14",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "15:29",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "15:33",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "15:50",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "15:52",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "16:11",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "16:20",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "16:26",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "16:54",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "16:59",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-05-26",
-      "checkin": "17:05",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "08:42",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "09:01",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "09:07",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "09:12",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "09:16",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "09:22",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "09:36",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "09:56",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "10:08",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "10:07",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "10:12",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "10:31",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "10:36",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "10:39",
-      "duration_min": 19
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "10:53",
-      "duration_min": 13
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "09:51",
-      "duration_min": 91
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "11:10",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "11:11",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "11:21",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "14:26",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "14:27",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "14:40",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "14:45",
-      "duration_min": 36
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "15:01",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "15:14",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "15:15",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "15:34",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "15:35",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "14:57",
-      "duration_min": 77
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "15:59",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "16:05",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "16:33",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "16:36",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "16:40",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "16:50",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "16:54",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "16:55",
-      "duration_min": 20
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "17:00",
-      "duration_min": 20
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "17:10",
-      "duration_min": 19
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "17:09",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "17:12",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "16:26",
-      "duration_min": 77
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "17:30",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "17:31",
-      "duration_min": 13
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "17:32",
-      "duration_min": 12
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "17:33",
-      "duration_min": 29
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "17:35",
-      "duration_min": 19
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "17:36",
-      "duration_min": 25
-    },
-    {
-      "date": "2026-05-27",
-      "checkin": "17:06",
-      "duration_min": 84
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "08:28",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "08:53",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "09:03",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "09:09",
-      "duration_min": 18
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "09:20",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "09:24",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "09:04",
-      "duration_min": 37
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "09:52",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "10:02",
-      "duration_min": 14
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "10:08",
-      "duration_min": 13
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "10:12",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "09:49",
-      "duration_min": 27
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "10:22",
-      "duration_min": 22
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "10:29",
-      "duration_min": 28
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "10:46",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "11:06",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "10:48",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "10:56",
-      "duration_min": 17
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "11:00",
-      "duration_min": 14
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "11:02",
-      "duration_min": 26
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "11:03",
-      "duration_min": 26
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "11:05",
-      "duration_min": 30
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "11:16",
-      "duration_min": 20
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "11:23",
-      "duration_min": 69
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "14:27",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "14:28",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "14:35",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "14:37",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "14:39",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "14:50",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "14:55",
-      "duration_min": 13
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "15:16",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "15:21",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "15:23",
-      "duration_min": 12
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "15:26",
-      "duration_min": 17
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "15:31",
-      "duration_min": 20
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "15:06",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "15:33",
-      "duration_min": 20
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "15:41",
-      "duration_min": 25
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "16:07",
-      "duration_min": 12
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "16:02",
-      "duration_min": 18
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "16:09",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "16:39",
-      "duration_min": 14
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "16:55",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "16:56",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "16:57",
-      "duration_min": 10
-    },
-    {
-      "date": "2026-05-29",
-      "checkin": "17:14",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "08:28",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "08:29",
-      "duration_min": 0
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "08:30",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "08:32",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "08:50",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "08:51",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "08:31",
-      "duration_min": 41
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "09:09",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "09:23",
-      "duration_min": 8
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "09:13",
-      "duration_min": 17
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "09:15",
-      "duration_min": 15
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "09:25",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "09:43",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "09:50",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "09:54",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "10:00",
-      "duration_min": 26
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "10:11",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "10:29",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "09:11",
-      "duration_min": 78
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "10:12",
-      "duration_min": 37
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "10:13",
-      "duration_min": 36
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "10:21",
-      "duration_min": 29
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "09:41",
-      "duration_min": 71
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "10:23",
-      "duration_min": 41
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "10:27",
-      "duration_min": 37
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "10:20",
-      "duration_min": 63
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "11:19",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "11:25",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "11:12",
-      "duration_min": 67
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "11:31",
-      "duration_min": 53
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "14:32",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "14:27",
-      "duration_min": 30
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "14:36",
-      "duration_min": 11
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "15:07",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "15:39",
-      "duration_min": 6
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "15:53",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "15:59",
-      "duration_min": 1
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "15:34",
-      "duration_min": 27
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "15:57",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "15:58",
-      "duration_min": 18
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "15:42",
-      "duration_min": 45
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "16:05",
-      "duration_min": 12
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "16:25",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-05-30",
-      "checkin": "16:28",
-      "duration_min": 5
-    },
-    {
       "date": "2026-06-01",
       "checkin": "08:34",
       "duration_min": 14
@@ -4569,9 +1729,3409 @@
       "date": "2026-06-12",
       "checkin": "11:17",
       "duration_min": 42
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "14:28",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "14:29",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "14:27",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "14:39",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "14:49",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "14:45",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "14:34",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "14:48",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "15:05",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "15:42",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "15:48",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "16:13",
+      "duration_min": 15
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "16:16",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "16:34",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "16:36",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "16:39",
+      "duration_min": 15
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "16:47",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "16:51",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "16:50",
+      "duration_min": 16
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "16:56",
+      "duration_min": 13
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "16:58",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "17:13",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "17:18",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "16:10",
+      "duration_min": 90
+    },
+    {
+      "date": "2026-06-12",
+      "checkin": "16:41",
+      "duration_min": 101
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "08:29",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "08:45",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "09:00",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "09:30",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "09:38",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "09:43",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "09:55",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "10:11",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "10:12",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "10:18",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "10:21",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "10:27",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "09:04",
+      "duration_min": 102
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "10:42",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "10:44",
+      "duration_min": 20
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "10:48",
+      "duration_min": 21
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "10:58",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "11:00",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "11:29",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "10:57",
+      "duration_min": 90
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "14:31",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "14:32",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "14:39",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "14:52",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "15:03",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "15:10",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "15:15",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "15:34",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "15:37",
+      "duration_min": 24
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "15:45",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "15:54",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "15:58",
+      "duration_min": 20
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "16:03",
+      "duration_min": 15
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "15:20",
+      "duration_min": 57
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "16:14",
+      "duration_min": 22
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "16:15",
+      "duration_min": 32
+    },
+    {
+      "date": "2026-06-13",
+      "checkin": "16:28",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "08:30",
+      "duration_min": 20
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "08:36",
+      "duration_min": 24
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "08:50",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "08:52",
+      "duration_min": 22
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "08:53",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "08:58",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "09:00",
+      "duration_min": 17
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "09:03",
+      "duration_min": 23
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "07:52",
+      "duration_min": 0
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "08:04",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "09:28",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "09:37",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "09:41",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "09:43",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "10:03",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "10:04",
+      "duration_min": 16
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "10:05",
+      "duration_min": 24
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "10:06",
+      "duration_min": 23
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "10:41",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "11:14",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "11:19",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "09:31",
+      "duration_min": 117
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "09:57",
+      "duration_min": 100
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "14:31",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "14:50",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "14:58",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "14:53",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "15:16",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "15:18",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "15:26",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "15:32",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "15:17",
+      "duration_min": 36
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "15:56",
+      "duration_min": 0
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "15:54",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "16:07",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "16:23",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "16:06",
+      "duration_min": 26
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "16:26",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "16:29",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "16:32",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "16:53",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "16:55",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "17:01",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "17:03",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "17:11",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "17:13",
+      "duration_min": 29
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "17:20",
+      "duration_min": 25
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "17:31",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-15",
+      "checkin": "17:33",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "08:27",
+      "duration_min": 13
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "08:38",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "08:48",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "08:50",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "09:03",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "08:52",
+      "duration_min": 27
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "09:09",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "08:35",
+      "duration_min": 43
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "09:22",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "09:45",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "09:50",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "09:52",
+      "duration_min": 22
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "10:07",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "10:26",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "10:39",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "10:36",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "10:49",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "10:51",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "10:56",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "10:58",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "10:59",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "11:04",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "11:02",
+      "duration_min": 28
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "11:26",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "14:29",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "14:30",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "14:39",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "14:57",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "15:09",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "15:10",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "15:14",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "15:01",
+      "duration_min": 24
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "15:16",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "15:22",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "15:37",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "15:02",
+      "duration_min": 38
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "15:57",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "16:02",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "16:13",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "16:21",
+      "duration_min": 13
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "16:27",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "16:37",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "16:30",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "16:48",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "17:07",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "15:54",
+      "duration_min": 68
+    },
+    {
+      "date": "2026-06-16",
+      "checkin": "17:15",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "08:26",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "08:25",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "08:37",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "08:55",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "08:58",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "09:04",
+      "duration_min": 21
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "09:09",
+      "duration_min": 15
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "08:47",
+      "duration_min": 33
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "09:16",
+      "duration_min": 20
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "09:19",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "09:24",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "09:36",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "09:44",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "09:55",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "10:10",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "10:13",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "10:14",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "09:48",
+      "duration_min": 42
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "10:45",
+      "duration_min": 0
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "10:48",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "10:57",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "11:00",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "11:01",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "11:09",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "11:12",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "11:19",
+      "duration_min": 16
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "10:26",
+      "duration_min": 17
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "14:26",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "14:27",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "14:30",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "14:38",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "14:45",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "15:05",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "15:08",
+      "duration_min": 29
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "15:26",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "15:39",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "15:45",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "15:58",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "16:00",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "16:04",
+      "duration_min": 17
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "16:08",
+      "duration_min": 13
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "16:17",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "16:30",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "16:40",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "16:47",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "16:52",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "16:53",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "17:04",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "17:09",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "17:16",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "17:26",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "17:30",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "17:31",
+      "duration_min": 21
+    },
+    {
+      "date": "2026-06-17",
+      "checkin": "17:34",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "08:26",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "08:29",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "08:31",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "08:46",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "08:32",
+      "duration_min": 35
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "08:57",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "09:12",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "09:15",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "09:25",
+      "duration_min": 21
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "09:39",
+      "duration_min": 25
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "09:49",
+      "duration_min": 15
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "09:56",
+      "duration_min": 17
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "10:24",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "10:21",
+      "duration_min": 22
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "10:29",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "09:24",
+      "duration_min": 88
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "10:33",
+      "duration_min": 13
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "10:37",
+      "duration_min": 22
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "10:30",
+      "duration_min": 32
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "10:39",
+      "duration_min": 23
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "10:44",
+      "duration_min": 31
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "11:05",
+      "duration_min": 23
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "09:34",
+      "duration_min": 118
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "10:53",
+      "duration_min": 35
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "11:08",
+      "duration_min": 21
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "11:09",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "11:25",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "09:50",
+      "duration_min": 157
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "14:26",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "14:40",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "14:42",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "14:55",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "14:57",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "14:58",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "15:04",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "15:28",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "15:29",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "15:36",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "16:00",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "16:06",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "16:09",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "15:02",
+      "duration_min": 74
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "16:14",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "16:37",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "16:46",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "17:04",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "17:13",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "17:12",
+      "duration_min": 16
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "16:32",
+      "duration_min": 68
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "17:20",
+      "duration_min": 15
+    },
+    {
+      "date": "2026-06-19",
+      "checkin": "16:57",
+      "duration_min": 111
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "08:27",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "08:30",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "08:31",
+      "duration_min": 17
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "08:35",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "08:48",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "08:52",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "08:59",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "09:02",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "09:24",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "09:25",
+      "duration_min": 15
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "09:29",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "09:32",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "09:41",
+      "duration_min": 13
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "09:46",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "09:57",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "10:04",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "10:10",
+      "duration_min": 15
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "10:13",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "10:16",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "10:18",
+      "duration_min": 23
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "10:22",
+      "duration_min": 20
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "10:24",
+      "duration_min": 18
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "10:39",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "10:46",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "10:52",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "11:12",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "11:07",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "11:16",
+      "duration_min": 13
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "11:17",
+      "duration_min": 27
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "11:27",
+      "duration_min": 17
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "11:13",
+      "duration_min": 53
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "14:27",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "14:29",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "14:30",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "14:31",
+      "duration_min": 23
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "14:32",
+      "duration_min": 28
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "15:00",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "15:07",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "14:28",
+      "duration_min": 43
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "14:35",
+      "duration_min": 39
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "15:20",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "15:41",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "15:43",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "15:51",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "16:22",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "16:26",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "15:05",
+      "duration_min": 114
+    },
+    {
+      "date": "2026-06-20",
+      "checkin": "15:18",
+      "duration_min": 124
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "08:33",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "08:46",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "08:49",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "08:29",
+      "duration_min": 30
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "09:20",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "08:34",
+      "duration_min": 61
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "09:32",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "09:35",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "09:38",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "09:39",
+      "duration_min": 18
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "09:43",
+      "duration_min": 23
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "09:49",
+      "duration_min": 21
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "09:51",
+      "duration_min": 31
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "10:24",
+      "duration_min": 17
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "10:25",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "10:46",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "10:51",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "11:17",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "11:18",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "11:19",
+      "duration_min": 20
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "11:13",
+      "duration_min": 39
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "14:27",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "14:33",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "14:40",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "14:48",
+      "duration_min": 16
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "14:52",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "14:53",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "15:05",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "15:09",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "15:52",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "15:57",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "16:00",
+      "duration_min": 18
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "16:02",
+      "duration_min": 13
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "15:11",
+      "duration_min": 71
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "16:29",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "16:32",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "16:35",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "16:41",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "16:47",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "16:50",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "16:59",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "15:48",
+      "duration_min": 74
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "15:50",
+      "duration_min": 90
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "16:52",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "17:10",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "17:08",
+      "duration_min": 28
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "17:13",
+      "duration_min": 24
+    },
+    {
+      "date": "2026-06-22",
+      "checkin": "17:14",
+      "duration_min": 28
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "08:29",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "08:51",
+      "duration_min": 17
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "09:21",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "09:23",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "09:25",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "09:41",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "09:42",
+      "duration_min": 17
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "09:49",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "10:08",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "10:21",
+      "duration_min": 18
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "09:27",
+      "duration_min": 69
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "10:27",
+      "duration_min": 13
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "10:28",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "10:32",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "10:48",
+      "duration_min": 17
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "10:51",
+      "duration_min": 18
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "10:52",
+      "duration_min": 18
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "10:46",
+      "duration_min": 23
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "10:54",
+      "duration_min": 29
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "11:03",
+      "duration_min": 39
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "11:07",
+      "duration_min": 41
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "11:19",
+      "duration_min": 38
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "14:29",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "14:54",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "14:57",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "15:07",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "15:18",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "15:25",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "15:34",
+      "duration_min": 24
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "15:39",
+      "duration_min": 30
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "15:49",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "15:52",
+      "duration_min": 17
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "16:01",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "16:11",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "16:18",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "16:54",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-23",
+      "checkin": "17:26",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "08:28",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "08:26",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "08:37",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "08:43",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "08:51",
+      "duration_min": 0
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "08:52",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "08:45",
+      "duration_min": 24
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "09:15",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "09:29",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "09:36",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "09:34",
+      "duration_min": 18
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "10:10",
+      "duration_min": 21
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "09:59",
+      "duration_min": 45
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "10:26",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "10:32",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "10:21",
+      "duration_min": 24
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "10:29",
+      "duration_min": 31
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "10:42",
+      "duration_min": 18
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "10:43",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "10:58",
+      "duration_min": 21
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "11:01",
+      "duration_min": 18
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "11:12",
+      "duration_min": 16
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "11:13",
+      "duration_min": 33
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "11:24",
+      "duration_min": 22
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "11:32",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "11:07",
+      "duration_min": 99
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "14:27",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "14:29",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "14:30",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "14:32",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "14:39",
+      "duration_min": 18
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "14:33",
+      "duration_min": 21
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "14:34",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "14:36",
+      "duration_min": 32
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "14:49",
+      "duration_min": 20
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "15:01",
+      "duration_min": 25
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "15:11",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "15:03",
+      "duration_min": 21
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "15:05",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "15:22",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "15:12",
+      "duration_min": 23
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "15:33",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "15:35",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "15:36",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "15:54",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "15:56",
+      "duration_min": 28
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "16:12",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "16:22",
+      "duration_min": 21
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "16:13",
+      "duration_min": 31
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "16:24",
+      "duration_min": 20
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "16:30",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "14:43",
+      "duration_min": 143
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "16:55",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "16:57",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "17:02",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "17:03",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "15:47",
+      "duration_min": 103
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "17:16",
+      "duration_min": 21
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "17:26",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "17:30",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "14:55",
+      "duration_min": 160
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "17:28",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "17:29",
+      "duration_min": 21
+    },
+    {
+      "date": "2026-06-24",
+      "checkin": "16:03",
+      "duration_min": 95
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "08:29",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "08:27",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "08:55",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "09:13",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "09:24",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "09:35",
+      "duration_min": 18
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "09:44",
+      "duration_min": 17
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "10:08",
+      "duration_min": 15
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "10:11",
+      "duration_min": 17
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "10:19",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "10:30",
+      "duration_min": 23
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "10:51",
+      "duration_min": 15
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "10:53",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "09:31",
+      "duration_min": 113
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "10:57",
+      "duration_min": 26
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "11:00",
+      "duration_min": 23
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "11:10",
+      "duration_min": 32
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "11:25",
+      "duration_min": 32
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "11:29",
+      "duration_min": 38
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "14:29",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "14:45",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "14:46",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "14:54",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "15:03",
+      "duration_min": 25
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "15:20",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "15:28",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "15:07",
+      "duration_min": 31
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "15:48",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "15:52",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "15:49",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "16:10",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "16:21",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "16:22",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "17:13",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "17:16",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "17:18",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "17:20",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-26",
+      "checkin": "15:21",
+      "duration_min": 159
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "08:28",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "08:41",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "08:43",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "08:34",
+      "duration_min": 29
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "08:44",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "09:03",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "09:11",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "09:18",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "09:39",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "09:45",
+      "duration_min": 0
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "09:59",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "10:15",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "10:14",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "10:18",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "09:36",
+      "duration_min": 78
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "11:01",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "11:06",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "11:04",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "11:13",
+      "duration_min": 21
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "11:16",
+      "duration_min": 17
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "11:15",
+      "duration_min": 27
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "11:25",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "14:27",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "14:30",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "15:20",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "15:23",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "15:26",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "15:24",
+      "duration_min": 24
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "15:39",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "15:52",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "15:53",
+      "duration_min": 13
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "16:06",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-27",
+      "checkin": "16:10",
+      "duration_min": 13
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "08:27",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "08:29",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "08:33",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "08:39",
+      "duration_min": 21
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "08:52",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "09:13",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "09:27",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "08:49",
+      "duration_min": 50
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "08:45",
+      "duration_min": 67
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "08:47",
+      "duration_min": 68
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "09:44",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "09:45",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "09:55",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "10:24",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "09:32",
+      "duration_min": 64
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "10:37",
+      "duration_min": 13
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "10:51",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "10:53",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "11:02",
+      "duration_min": 16
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "11:09",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "10:38",
+      "duration_min": 66
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "11:27",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "11:25",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "14:27",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "14:33",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "14:36",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "14:46",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "14:56",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "15:13",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "15:27",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "15:41",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "15:28",
+      "duration_min": 27
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "15:42",
+      "duration_min": 16
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "15:46",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "15:53",
+      "duration_min": 22
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "16:22",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "16:28",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "16:42",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "16:46",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "16:48",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "16:53",
+      "duration_min": 16
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "16:57",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "16:59",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "10:44",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "16:02",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "16:09",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "16:19",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "16:38",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "17:02",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "17:14",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "17:18",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-29",
+      "checkin": "17:30",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "08:29",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "08:30",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "09:01",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "09:04",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "08:27",
+      "duration_min": 60
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "08:56",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "09:19",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "09:36",
+      "duration_min": 0
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "09:54",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "09:56",
+      "duration_min": 20
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "09:57",
+      "duration_min": 19
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "10:16",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "09:58",
+      "duration_min": 34
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "10:00",
+      "duration_min": 48
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "10:33",
+      "duration_min": 15
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "10:54",
+      "duration_min": 16
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "10:51",
+      "duration_min": 31
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "11:13",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "11:29",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "10:41",
+      "duration_min": 76
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "14:25",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "14:27",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "14:26",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "14:28",
+      "duration_min": 20
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "14:29",
+      "duration_min": 23
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "14:33",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "14:50",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "14:59",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "15:45",
+      "duration_min": 13
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "15:48",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "15:50",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "15:52",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "14:32",
+      "duration_min": 90
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "15:53",
+      "duration_min": 15
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "16:05",
+      "duration_min": 13
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "16:25",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "16:11",
+      "duration_min": 38
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "15:17",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "16:30",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "16:49",
+      "duration_min": 1
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "16:55",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "17:07",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "17:23",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-06-30",
+      "checkin": "16:22",
+      "duration_min": 87
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "08:29",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "08:47",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "09:00",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "09:24",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "09:30",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "09:32",
+      "duration_min": 7
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "09:20",
+      "duration_min": 27
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "09:46",
+      "duration_min": 13
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "09:55",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "10:03",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "10:05",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "10:09",
+      "duration_min": 17
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "08:45",
+      "duration_min": 107
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "10:42",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "10:54",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "10:56",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "11:02",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "11:08",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "11:10",
+      "duration_min": 15
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "11:11",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "09:45",
+      "duration_min": 163
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "14:26",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "14:27",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "14:30",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "14:32",
+      "duration_min": 2
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "14:43",
+      "duration_min": 4
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "14:49",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "14:50",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "14:52",
+      "duration_min": 15
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "14:56",
+      "duration_min": 17
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "14:57",
+      "duration_min": 24
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "14:58",
+      "duration_min": 30
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "15:01",
+      "duration_min": 28
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "15:19",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "15:23",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "15:39",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "15:25",
+      "duration_min": 9
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "15:44",
+      "duration_min": 17
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "15:54",
+      "duration_min": 27
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "16:24",
+      "duration_min": 5
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "16:29",
+      "duration_min": 3
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "16:34",
+      "duration_min": 6
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "16:46",
+      "duration_min": 8
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "16:47",
+      "duration_min": 16
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "16:45",
+      "duration_min": 10
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "16:54",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "16:55",
+      "duration_min": 11
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "16:56",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "16:58",
+      "duration_min": 13
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "17:15",
+      "duration_min": 21
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "17:19",
+      "duration_min": 23
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "17:27",
+      "duration_min": 16
+    },
+    {
+      "date": "2026-07-01",
+      "checkin": "15:38",
+      "duration_min": 155
     }
   ],
-  "pt_ratio": 0.8239,
-  "record_count": 914,
-  "updated_at": "2026-06-12T12:56:09.284211+09:00"
+  "pt_ratio": 0.8031,
+  "record_count": 1026,
+  "updated_at": "2026-07-01T18:56:13.578984+09:00"
 }
