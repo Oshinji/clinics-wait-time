@@ -1,96 +1,6 @@
 {
   "records": [
     {
-      "date": "2026-06-03",
-      "checkin": "08:43",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-06-03",
-      "checkin": "09:45",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-06-03",
-      "checkin": "09:50",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-06-03",
-      "checkin": "09:10",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-06-03",
-      "checkin": "09:27",
-      "duration_min": 4
-    },
-    {
-      "date": "2026-06-03",
-      "checkin": "10:04",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-06-03",
-      "checkin": "10:36",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-06-03",
-      "checkin": "10:35",
-      "duration_min": 56
-    },
-    {
-      "date": "2026-06-03",
-      "checkin": "14:28",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-06-03",
-      "checkin": "14:55",
-      "duration_min": 7
-    },
-    {
-      "date": "2026-06-03",
-      "checkin": "15:25",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-06-03",
-      "checkin": "15:29",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-06-03",
-      "checkin": "15:45",
-      "duration_min": 9
-    },
-    {
-      "date": "2026-06-03",
-      "checkin": "16:05",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-06-03",
-      "checkin": "16:49",
-      "duration_min": 2
-    },
-    {
-      "date": "2026-06-03",
-      "checkin": "16:52",
-      "duration_min": 5
-    },
-    {
-      "date": "2026-06-03",
-      "checkin": "17:09",
-      "duration_min": 3
-    },
-    {
-      "date": "2026-06-03",
-      "checkin": "17:22",
-      "duration_min": 8
-    },
-    {
       "date": "2026-06-05",
       "checkin": "08:30",
       "duration_min": 2
@@ -5026,7 +4936,7 @@
       "duration_min": 21
     }
   ],
-  "pt_ratio": 0.7861,
-  "record_count": 1005,
-  "updated_at": "2026-07-03T18:56:23.996252+09:00"
+  "pt_ratio": 0.7832,
+  "record_count": 987,
+  "updated_at": "2026-07-04T08:31:53.223201+09:00"
 }
