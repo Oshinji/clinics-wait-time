@@ -5159,9 +5159,19 @@
       "date": "2026-07-06",
       "checkin": "14:51",
       "duration_min": 8
+    },
+    {
+      "date": "2026-07-06",
+      "checkin": "15:06",
+      "duration_min": 14
+    },
+    {
+      "date": "2026-07-06",
+      "checkin": "15:08",
+      "duration_min": 8
     }
   ],
-  "pt_ratio": 0.7703,
-  "record_count": 1032,
-  "updated_at": "2026-07-06T15:21:47.033008+09:00"
+  "pt_ratio": 0.7708,
+  "record_count": 1034,
+  "updated_at": "2026-07-06T15:26:27.787015+09:00"
 }
