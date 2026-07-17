@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>患者呼び出し 操作パネル</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif; }
+    html, body { width: 100%; height: 100%; background: #f0f2f5; }
+    #app { max-width: 480px; margin: 0 auto; padding: 16px; }
+
+    .room-badge {
+      text-align: center; font-size: 20px; font-weight: bold;
+      color: #fff; background: #2b6cb0; border-radius: 8px;
+      padding: 8px; margin-bottom: 12px;
+    }
+
+    #numberDisplay {
+      width: 100%; font-size: 56px; text-align: center;
+      background: #fff; border: 2px solid #cbd5e0; border-radius: 8px;
+      padding: 12px; margin-bottom: 12px; min-height: 92px;
+      letter-spacing: 4px; font-weight: bold; color: #1a202c;
+    }
+    #numberDisplay .placeholder { color: #cbd5e0; font-size: 24px; letter-spacing: 0; }
+
+    .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+    .numpad button {
+      font-size: 32px; padding: 18px 0; border: none; border-radius: 8px;
+      background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.15); cursor: pointer;
+      font-weight: bold; color: #2d3748;
+    }
+    .numpad button:active { background: #e2e8f0; }
+    .numpad .fn { font-size: 20px; color: #718096; }
+
+    .actions { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 16px; }
+    .actions button {
+      font-size: 26px; padding: 20px 0; border: none; border-radius: 8px;
+      cursor: pointer; font-weight: bold; color: #fff;
+    }
+    #btnCall    { background: #38a169; }
+    #btnRecall  { background: #dd6b20; font-size: 20px; padding: 14px 0; }
+    #btnCancel  { background: #a0aec0; font-size: 20px; padding: 14px 0; }
+    .actions button:disabled { opacity: .45; cursor: default; }
+    .actions button:active:not(:disabled) { filter: brightness(.9); }
+
+    .history { background: #fff; border-radius: 8px; padding: 12px; }
+    .history h2 { font-size: 14px; color: #718096; margin-bottom: 8px; }
+    .history ul { list-style: none; }
+    .history li { font-size: 18px; padding: 6px 0; border-bottom: 1px solid #edf2f7; color: #2d3748; }
+    .history li:last-child { border-bottom: none; }
+    .history li .time { color: #a0aec0; font-size: 14px; margin-right: 8px; }
+
+    #status { text-align: center; font-size: 13px; color: #a0aec0; margin-top: 10px; }
+
+    /* ログイン画面 */
+    #login {
+      position: fixed; inset: 0; background: #f0f2f5;
+      display: flex; align-items: center; justify-content: center; z-index: 10;
+    }
+    #login .box { background: #fff; border-radius: 12px; padding: 28px; width: 320px; box-shadow: 0 4px 12px rgba(0,0,0,.1); }
+    #login h1 { font-size: 18px; margin-bottom: 16px; text-align: center; color: #2d3748; }
+    #login input {
+      width: 100%; font-size: 16px; padding: 12px; margin-bottom: 10px;
+      border: 1px solid #cbd5e0; border-radius: 8px;
+    }
+    #login button {
+      width: 100%; font-size: 18px; padding: 12px; border: none; border-radius: 8px;
+      background: #2b6cb0; color: #fff; font-weight: bold; cursor: pointer;
+    }
+    #loginError { color: #e53e3e; font-size: 13px; margin-bottom: 8px; min-height: 18px; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div id="login" class="hidden">
+    <div class="box">
+      <h1>呼び出しシステム ログイン</h1>
+      <div id="loginError"></div>
+      <input id="email" type="email" placeholder="メールアドレス" autocomplete="username">
+      <input id="password" type="password" placeholder="パスワード" autocomplete="current-password">
+      <button id="btnLogin">ログイン</button>
+    </div>
+  </div>
+
+  <div id="app" class="hidden">
+    <div class="room-badge" id="roomBadge">第◯診察室</div>
+
+    <div id="numberDisplay"><span class="placeholder">診察券番号を入力</span></div>
+
+    <div class="numpad">
+      <button data-n="7">7</button><button data-n="8">8</button><button data-n="9">9</button>
+      <button data-n="4">4</button><button data-n="5">5</button><button data-n="6">6</button>
+      <button data-n="1">1</button><button data-n="2">2</button><button data-n="3">3</button>
+      <button class="fn" id="btnClear">クリア</button><button data-n="0">0</button><button class="fn" id="btnBack">⌫</button>
+    </div>
+
+    <div class="actions">
+      <button id="btnCall">呼び出し</button>
+      <button id="btnRecall" disabled>再呼び出し</button>
+      <button id="btnCancel" disabled>表示を取り消す</button>
+    </div>
+
+    <div class="history">
+      <h2>この診察室の呼出履歴（新しい順）</h2>
+      <ul id="historyList"></ul>
+    </div>
+
+    <div id="status"></div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script>
+    firebase.initializeApp(window.FIREBASE_CONFIG);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    // 診察室番号は URL の ?room=1 で指定（省略時は1）
+    const ROOM = parseInt(new URLSearchParams(location.search).get('room') || '1', 10);
+    document.getElementById('roomBadge').textContent = '第' + ROOM + '診察室';
+    document.title = '患者呼び出し（第' + ROOM + '診察室）';
+
+    const loginEl = document.getElementById('login');
+    const appEl = document.getElementById('app');
+    const display = document.getElementById('numberDisplay');
+    const btnCall = document.getElementById('btnCall');
+    const btnRecall = document.getElementById('btnRecall');
+    const btnCancel = document.getElementById('btnCancel');
+    const statusEl = document.getElementById('status');
+
+    let inputNumber = '';
+    let lastCalled = null;   // この端末で最後に呼び出した番号
+
+    // ---------- ログイン ----------
+    auth.onAuthStateChanged(function(user) {
+      if (user) {
+        loginEl.classList.add('hidden');
+        appEl.classList.remove('hidden');
+        watchHistory();
+      } else {
+        appEl.classList.add('hidden');
+        loginEl.classList.remove('hidden');
+      }
+    });
+
+    document.getElementById('btnLogin').addEventListener('click', function() {
+      const email = document.getElementById('email').value.trim();
+      const pass = document.getElementById('password').value;
+      document.getElementById('loginError').textContent = '';
+      auth.signInWithEmailAndPassword(email, pass).catch(function(e) {
+        document.getElementById('loginError').textContent = 'ログインできませんでした：' + (e.code || e.message);
+      });
+    });
+
+    // ---------- 番号入力 ----------
+    function renderDisplay() {
+      display.innerHTML = inputNumber
+        ? inputNumber
+        : '<span class="placeholder">診察券番号を入力</span>';
+    }
+    document.querySelectorAll('.numpad button[data-n]').forEach(function(b) {
+      b.addEventListener('click', function() {
+        if (inputNumber.length < 6) inputNumber += b.dataset.n;
+        renderDisplay();
+      });
+    });
+    document.getElementById('btnClear').addEventListener('click', function() { inputNumber = ''; renderDisplay(); });
+    document.getElementById('btnBack').addEventListener('click', function() { inputNumber = inputNumber.slice(0, -1); renderDisplay(); });
+
+    // ---------- 呼び出し ----------
+    function sendCall(number) {
+      const data = {
+        number: number,
+        room: ROOM,
+        action: 'call',
+        ts: firebase.database.ServerValue.TIMESTAMP,
+      };
+      return db.ref('call/current').set(data).then(function() {
+        return db.ref('call/log').push(data);
+      }).then(function() {
+        lastCalled = number;
+        btnRecall.disabled = false;
+        btnCancel.disabled = false;
+        statusEl.textContent = number + '番を呼び出しました（' + new Date().toLocaleTimeString('ja-JP') + '）';
+      }).catch(function(e) {
+        statusEl.textContent = '送信エラー：' + (e.code || e.message);
+      });
+    }
+
+    btnCall.addEventListener('click', function() {
+      if (!inputNumber) return;
+      // 先頭の0を除去した表示用番号
+      const num = String(parseInt(inputNumber, 10));
+      sendCall(num);
+      inputNumber = '';
+      renderDisplay();
+    });
+
+    btnRecall.addEventListener('click', function() {
+      if (lastCalled) sendCall(lastCalled);
+    });
+
+    btnCancel.addEventListener('click', function() {
+      db.ref('call/current').set({
+        action: 'cancel',
+        room: ROOM,
+        ts: firebase.database.ServerValue.TIMESTAMP,
+      }).then(function() {
+        statusEl.textContent = '表示を取り消しました';
+      });
+    });
+
+    // ---------- 履歴（この診察室の直近8件） ----------
+    function watchHistory() {
+      db.ref('call/log').limitToLast(30).on('value', function(snap) {
+        const list = [];
+        snap.forEach(function(c) {
+          const v = c.val();
+          if (v && v.room === ROOM && v.action === 'call') list.push(v);
+        });
+        list.reverse();
+        const ul = document.getElementById('historyList');
+        ul.innerHTML = '';
+        list.slice(0, 8).forEach(function(v) {
+          const li = document.createElement('li');
+          const t = v.ts ? new Date(v.ts).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }) : '';
+          li.innerHTML = '<span class="time">' + t + '</span>' + v.number + '番';
+          ul.appendChild(li);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
