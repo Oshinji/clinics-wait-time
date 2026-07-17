@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>呼び出しテストモニター</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #1a202c; }
+
+    /* 待機画面 */
+    #idle {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: #718096; text-align: center;
+    }
+    #idle .title { font-size: 4vw; margin-bottom: 2vh; }
+    #idle .desc { font-size: 2vw; line-height: 1.8; }
+    #idle .status { font-size: 2vw; margin-top: 4vh; color: #48bb78; }
+
+    /* 呼び出しオーバーレイ（rotate.htmlと同じ表示） */
+    #callOverlay {
+      position: absolute; inset: 0;
+      background: #0a2540; z-index: 100;
+      display: none;
+      flex-direction: column; align-items: center; justify-content: center;
+      color: #fff; text-align: center;
+    }
+    #callOverlay.active { display: flex; }
+    #callOverlay .label { font-size: 6vw; margin-bottom: 2vh; letter-spacing: .1em; }
+    #callOverlay .number { font-size: 22vw; font-weight: bold; line-height: 1.1; color: #ffe066; }
+    #callOverlay .room { font-size: 7vw; margin-top: 2vh; }
+    #callOverlay .note { font-size: 3.5vw; margin-top: 4vh; color: #a8c5e0; }
+
+    #soundGate {
+      position: absolute; right: 12px; bottom: 12px; z-index: 200;
+      font-size: 16px; padding: 10px 18px; border: none; border-radius: 8px;
+      background: rgba(255, 255, 255, .85); color: #333; cursor: pointer;
+      display: none;
+    }
+    #soundGate.visible { display: block; }
+  </style>
+</head>
+<body>
+  <div id="idle">
+    <div class="title">🧪 呼び出しテストモニター</div>
+    <div class="desc">
+      このページはテスト専用です。運用中のモニターには影響しません。<br>
+      call.html?test=1 から呼び出しを送ると、ここに本番と同じ表示が出ます。<br>
+      （テストモードの呼び出しは本番モニターには表示されません）
+    </div>
+    <div class="status" id="connStatus">接続中…</div>
+  </div>
+
+  <div id="callOverlay">
+    <div class="label">診察券番号</div>
+    <div class="number" id="callNumber">--</div>
+    <div class="room" id="callRoom"></div>
+    <div class="note">診察室へお入りください</div>
+  </div>
+  <button id="soundGate">🔇 タッチして音声を有効にする</button>
+
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script>
+    const CALL_DISPLAY_SECONDS = 30;
+    const CALL_MAX_AGE_MS = 2 * 60 * 1000;
+
+    firebase.initializeApp(window.FIREBASE_CONFIG);
+    const cdb = firebase.database();
+
+    const overlay = document.getElementById('callOverlay');
+    const callNumberEl = document.getElementById('callNumber');
+    const callRoomEl = document.getElementById('callRoom');
+    const soundGate = document.getElementById('soundGate');
+    const connStatus = document.getElementById('connStatus');
+
+    let hideTimer = null;
+    let audioCtx = null;
+    let soundEnabled = false;
+
+    soundGate.classList.add('visible');
+    soundGate.addEventListener('click', function() {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const u = new SpeechSynthesisUtterance('');
+      speechSynthesis.speak(u);
+      soundEnabled = true;
+      soundGate.classList.remove('visible');
+    });
+
+    function playChime() {
+      if (!audioCtx) return;
+      const notes = [[659.25, 0, .45], [523.25, .45, .7]];
+      notes.forEach(function(n) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = n[0];
+        const t0 = audioCtx.currentTime + n[1];
+        gain.gain.setValueAtTime(.5, t0);
+        gain.gain.exponentialRampToValueAtTime(.001, t0 + n[2]);
+        osc.connect(gain).connect(audioCtx.destination);
+        osc.start(t0);
+        osc.stop(t0 + n[2]);
+      });
+    }
+
+    function speakCall(number, room) {
+      if (!soundEnabled) return;
+      const text = '診察券番号、' + number + '番のかた、第' + room + '診察室へ、お入りください。';
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'ja-JP';
+      u.rate = 0.9;
+      speechSynthesis.speak(u);
+      const u2 = new SpeechSynthesisUtterance(text);
+      u2.lang = 'ja-JP';
+      u2.rate = 0.9;
+      speechSynthesis.speak(u2);
+    }
+
+    function showCall(number, room) {
+      callNumberEl.textContent = number;
+      callRoomEl.textContent = '第' + room + '診察室';
+      overlay.classList.add('active');
+      playChime();
+      setTimeout(function() { speakCall(number, room); }, 900);
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(hideCall, CALL_DISPLAY_SECONDS * 1000);
+    }
+
+    function hideCall() {
+      overlay.classList.remove('active');
+      clearTimeout(hideTimer);
+    }
+
+    // テスト専用パス call/test を監視（本番の call/current には触れない）
+    let lastTs = 0;
+    cdb.ref('call/test').on('value', function(snap) {
+      connStatus.textContent = '✅ 接続OK（呼び出し待機中）';
+      const v = snap.val();
+      if (!v || !v.ts) return;
+      if (v.ts === lastTs) return;
+      const age = Date.now() - v.ts;
+      if (age > CALL_MAX_AGE_MS) return;
+      lastTs = v.ts;
+      if (v.action === 'call' && v.number) {
+        showCall(v.number, v.room || 1);
+      } else if (v.action === 'cancel') {
+        hideCall();
+      }
+    }, function(err) {
+      connStatus.textContent = '⚠️ 接続エラー：' + err.message;
+      connStatus.style.color = '#fc8181';
+    });
+  </script>
+</body>
+</html>

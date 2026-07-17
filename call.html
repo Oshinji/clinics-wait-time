@@ -118,9 +118,14 @@
     const db = firebase.database();
 
     // 診察室番号は URL の ?room=1 で指定（省略時は1）
-    const ROOM = parseInt(new URLSearchParams(location.search).get('room') || '1', 10);
-    document.getElementById('roomBadge').textContent = '第' + ROOM + '診察室';
-    document.title = '患者呼び出し（第' + ROOM + '診察室）';
+    // ?test=1 を付けるとテストモード：本番モニターには出ず、call-test.html だけに表示される
+    const params = new URLSearchParams(location.search);
+    const ROOM = parseInt(params.get('room') || '1', 10);
+    const IS_TEST = params.get('test') === '1';
+    const CALL_PATH = IS_TEST ? 'call/test' : 'call/current';
+    document.getElementById('roomBadge').textContent = '第' + ROOM + '診察室' + (IS_TEST ? '【テストモード】' : '');
+    if (IS_TEST) document.getElementById('roomBadge').style.background = '#c53030';
+    document.title = (IS_TEST ? '【テスト】' : '') + '患者呼び出し（第' + ROOM + '診察室）';
 
     const loginEl = document.getElementById('login');
     const appEl = document.getElementById('app');
@@ -177,8 +182,9 @@
         action: 'call',
         ts: firebase.database.ServerValue.TIMESTAMP,
       };
-      return db.ref('call/current').set(data).then(function() {
-        return db.ref('call/log').push(data);
+      return db.ref(CALL_PATH).set(data).then(function() {
+        // テストモードでは履歴に残さない
+        return IS_TEST ? null : db.ref('call/log').push(data);
       }).then(function() {
         lastCalled = number;
         btnRecall.disabled = false;
@@ -203,7 +209,7 @@
     });
 
     btnCancel.addEventListener('click', function() {
-      db.ref('call/current').set({
+      db.ref(CALL_PATH).set({
         action: 'cancel',
         room: ROOM,
         ts: firebase.database.ServerValue.TIMESTAMP,
