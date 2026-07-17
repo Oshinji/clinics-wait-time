@@ -11,13 +11,12 @@
   "estimated_minutes": 36,
   "current_slot": "17:00",
   "current_slots": [
-    "17:00",
-    "17:30"
+    "17:00"
   ],
   "walkin_in_exam": false,
   "last_predicted_slot": "17:30",
   "walkin_protected": false,
-  "updated_at": "2026-07-17T17:56:17.294121+09:00",
+  "updated_at": "2026-07-17T18:02:12.349010+09:00",
   "is_open": false,
   "is_holiday": false,
   "error": null
