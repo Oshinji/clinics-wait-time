@@ -17,19 +17,48 @@
     #idle .desc { font-size: 2vw; line-height: 1.8; }
     #idle .status { font-size: 2vw; margin-top: 4vh; color: #48bb78; }
 
-    /* 呼び出しオーバーレイ（rotate.htmlと同じ表示） */
+    /* 呼び出しオーバーレイ（32〜40型・横型モニター向けレイアウト）
+       診察室1＝画面左へ ❮❮❮ ／ 診察室2＝画面右へ ❯❯❯（モニターは診察室1と2の間の壁に設置） */
+    :root {
+      --room1-bright: #68d391;  /* 診察室1: 緑 */
+      --room1-deep:   #2f855a;
+      --room2-bright: #f6ad55;  /* 診察室2: オレンジ */
+      --room2-deep:   #c05621;
+    }
     #callOverlay {
       position: absolute; inset: 0;
       background: #0a2540; z-index: 100;
       display: none;
-      flex-direction: column; align-items: center; justify-content: center;
+      align-items: center; justify-content: center;
       color: #fff; text-align: center;
     }
     #callOverlay.active { display: flex; }
-    #callOverlay .label { font-size: 6vw; margin-bottom: 2vh; letter-spacing: .1em; }
-    #callOverlay .number { font-size: 22vw; font-weight: bold; line-height: 1.1; color: #ffe066; }
-    #callOverlay .room { font-size: 7vw; margin-top: 2vh; }
-    #callOverlay .note { font-size: 3.5vw; margin-top: 4vh; color: #a8c5e0; }
+
+    .arrow-zone {
+      width: 20vw; display: flex; align-items: center; justify-content: center;
+      gap: 1.5vw; visibility: hidden;
+    }
+    .arrow-zone span { font-size: 22vh; font-weight: bold; line-height: 1; }
+    #callOverlay.room1 #arrowLeft  { visibility: visible; }
+    #callOverlay.room2 #arrowRight { visibility: visible; }
+    #callOverlay.room1 .arrow-zone span { color: var(--room1-bright); }
+    #callOverlay.room2 .arrow-zone span { color: var(--room2-bright); }
+    @keyframes marchL { 0%,100% { transform: translateX(0); opacity: .35; } 50% { transform: translateX(-1.2vw); opacity: 1; } }
+    @keyframes marchR { 0%,100% { transform: translateX(0); opacity: .35; } 50% { transform: translateX(1.2vw); opacity: 1; } }
+    #arrowLeft  span { animation: marchL 1.2s ease-in-out infinite; }
+    #arrowRight span { animation: marchR 1.2s ease-in-out infinite; }
+    .arrow-zone span:nth-child(2) { animation-delay: .15s; }
+    .arrow-zone span:nth-child(3) { animation-delay: .3s; }
+
+    .call-main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .call-main .label { font-size: 7vh; letter-spacing: .3em; color: #a8c5e0; }
+    .call-main .number { font-size: 32vh; font-weight: bold; line-height: 1.1; color: #ffe066; }
+    .room-line { display: flex; align-items: center; gap: 1.2vw; margin-top: 2vh; }
+    /* 横幅からはみ出して折り返さないよう、縦横両方を考慮したサイズにする */
+    .room-pill { font-size: min(8vh, 3.4vw); font-weight: bold; padding: 1vh 2vw; border-radius: 3vh; color: #fff; background: #2b6cb0; white-space: nowrap; }
+    #callOverlay.room1 .room-pill { background: var(--room1-deep); }
+    #callOverlay.room2 .room-pill { background: var(--room2-deep); }
+    .room-suffix { font-size: min(7vh, 3vw); font-weight: bold; white-space: nowrap; }
 
     #soundGate {
       position: absolute; right: 12px; bottom: 12px; z-index: 200;
@@ -52,10 +81,13 @@
   </div>
 
   <div id="callOverlay">
-    <div class="label">診察券番号</div>
-    <div class="number" id="callNumber">--</div>
-    <div class="room" id="callRoom"></div>
-    <div class="note">診察室へお入りください</div>
+    <div class="arrow-zone" id="arrowLeft"><span>❮</span><span>❮</span><span>❮</span></div>
+    <div class="call-main">
+      <div class="label">整理番号</div>
+      <div class="number" id="callNumber">--</div>
+      <div class="room-line"><span class="room-pill" id="callRoom"></span><span class="room-suffix">へお入りください</span></div>
+    </div>
+    <div class="arrow-zone" id="arrowRight"><span>❯</span><span>❯</span><span>❯</span></div>
   </div>
   <button id="soundGate">🔇 タッチして音声を有効にする</button>
 
@@ -107,7 +139,8 @@
 
     function speakCall(number, room) {
       if (!soundEnabled) return;
-      const text = '診察券番号、' + number + '番のかた、第' + room + '診察室へ、お入りください。';
+      // 「お入りください」は音声合成が「おいりください」と誤読するため、ひらがなで指定する
+      const text = '整理番号、' + number + '番のかた、第' + room + '診察室へ、おはいりください。';
       speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
       u.lang = 'ja-JP';
@@ -122,6 +155,10 @@
     function showCall(number, room) {
       callNumberEl.textContent = number;
       callRoomEl.textContent = '第' + room + '診察室';
+      // 診察室1→左向き矢印、診察室2→右向き矢印（それ以外は矢印なし）
+      overlay.classList.remove('room1', 'room2');
+      if (room === 1) overlay.classList.add('room1');
+      else if (room === 2) overlay.classList.add('room2');
       overlay.classList.add('active');
       playChime();
       setTimeout(function() { speakCall(number, room); }, 900);

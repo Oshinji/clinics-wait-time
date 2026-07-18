@@ -85,7 +85,7 @@
   <div id="app" class="hidden">
     <div class="room-badge" id="roomBadge">第◯診察室</div>
 
-    <div id="numberDisplay"><span class="placeholder">診察券番号を入力</span></div>
+    <div id="numberDisplay"><span class="placeholder">整理番号を入力</span></div>
 
     <div class="numpad">
       <button data-n="7">7</button><button data-n="8">8</button><button data-n="9">9</button>
@@ -124,6 +124,9 @@
     const IS_TEST = params.get('test') === '1';
     const CALL_PATH = IS_TEST ? 'call/test' : 'call/current';
     document.getElementById('roomBadge').textContent = '第' + ROOM + '診察室' + (IS_TEST ? '【テストモード】' : '');
+    // モニター表示と同じ色分け（診察室1=緑 / 診察室2=オレンジ）。テストモードは赤で明示
+    if (ROOM === 1) document.getElementById('roomBadge').style.background = '#2f855a';
+    else if (ROOM === 2) document.getElementById('roomBadge').style.background = '#c05621';
     if (IS_TEST) document.getElementById('roomBadge').style.background = '#c53030';
     document.title = (IS_TEST ? '【テスト】' : '') + '患者呼び出し（第' + ROOM + '診察室）';
 
@@ -163,7 +166,7 @@
     function renderDisplay() {
       display.innerHTML = inputNumber
         ? inputNumber
-        : '<span class="placeholder">診察券番号を入力</span>';
+        : '<span class="placeholder">整理番号を入力</span>';
     }
     document.querySelectorAll('.numpad button[data-n]').forEach(function(b) {
       b.addEventListener('click', function() {
