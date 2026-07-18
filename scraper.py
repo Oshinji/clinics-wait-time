@@ -41,6 +41,7 @@ MINUTES_SHINSIN        = int(os.getenv("MINUTES_SHINSIN",        "10"))  # 予�
 MINUTES_SHINSIN_WALKIN = int(os.getenv("MINUTES_SHINSIN_WALKIN", "10"))  # 直来初診の医師占有時間（予約初診と同じ10分）
 MINUTES_IN_EXAM_REMAIN = int(os.getenv("MINUTES_IN_EXAM_REMAIN", "4"))   # 診察中患者の残り時間見積もり（再診枠6分より長くならないよう4分に設定）
 ATTENDANCE_RATE        = float(os.getenv("ATTENDANCE_RATE",      "0.9")) # 未受付予約の出席率（キャンセル/遅刻/no-show を考慮、実測キャンセル率 約10%）
+LAST_PREDICTED_SLOT_TTL_MIN = int(os.getenv("LAST_PREDICTED_SLOT_TTL_MIN", "20"))  # last_predicted_slot の有効期限（分）。呼ばれてからこの分数を超えたら無効化し、古い枠が表示され続けるのを防ぐ
 # ────────────────────────────────────────────────────────────────
 # 受付時間
 #   月火水金・土　午前  8:30〜11:30
@@ -751,6 +752,12 @@ async def scrape() -> dict:
                         walkin_shoshin_minutes  = prev_shoshin_min
                         walkin_protected        = True
 
+            # last_predicted_slot に有効期限を適用（呼出から LAST_PREDICTED_SLOT_TTL_MIN 分超で無効化）
+            prev_for_slot = _load_previous_status()
+            last_predicted_slot, last_predicted_slot_since = _apply_last_predicted_expiry(
+                last_predicted_slot, prev_for_slot
+            )
+
             # 完了患者データで履歴を更新 → pt_ratio を学習（再診直来のみ）
             update_history(completed_records)
 
@@ -783,6 +790,7 @@ async def scrape() -> dict:
                 "current_slots":     current_slots,
                 "walkin_in_exam":    walkin_in_exam,
                 "last_predicted_slot": last_predicted_slot,
+                "last_predicted_slot_since": last_predicted_slot_since,
                 "walkin_protected":  walkin_protected,
                 "updated_at":        datetime.now(JST).isoformat(),
                 "is_open":           is_open(),
@@ -823,6 +831,7 @@ def _empty_status_data(error: str | None = None,
         "current_slots":     [],
         "walkin_in_exam":    False,
         "last_predicted_slot": None,
+        "last_predicted_slot_since": None,
         "walkin_protected":  False,
         "updated_at":        datetime.now(JST).isoformat(),
         "is_open":           is_open_val,
@@ -869,6 +878,49 @@ def _prev_is_recent(prev: dict, max_age_sec: int = 3600) -> bool:
         return age_sec < max_age_sec
     except Exception:
         return False
+
+
+def _apply_last_predicted_expiry(candidate_slot: str | None, prev: dict | None) -> tuple:
+    """
+    last_predicted_slot に有効期限（LAST_PREDICTED_SLOT_TTL_MIN 分）を適用する。
+
+    背景: last_predicted_slot は「直近に呼ばれた予約枠」の高水位マークで、一度セットされると
+    下がらない仕様のため、会計処理の先行など何らかの理由で実際より先の枠時刻を誤って
+    拾ってしまうと、その枠がずっと（呼出後何十分経っても）表示され続けてしまう問題があった。
+    そのため「初めてこの値になってからの経過時間」を別途 last_predicted_slot_since として
+    追跡し、TTL を超えたら None にして表示側を安全な代替表示（切り替え中 等）へ逃がす。
+
+    - 前回と同じ枠時刻 → 前回の since を引き継ぎ、経過時間で期限切れ判定
+    - 前回と異なる枠時刻（新しく呼ばれた） → since を現在時刻にリセット
+    - 期限切れ → (None, None) を返す
+    戻り値: (last_predicted_slot, last_predicted_slot_since)
+    """
+    if candidate_slot is None:
+        return None, None
+
+    now_dt  = datetime.now(JST)
+    now_iso = now_dt.isoformat()
+
+    prev_slot  = prev.get("last_predicted_slot") if prev else None
+    prev_since = prev.get("last_predicted_slot_since") if prev else None
+
+    if prev_slot == candidate_slot and prev_since:
+        since = prev_since
+    else:
+        since = now_iso
+
+    try:
+        since_dt = datetime.fromisoformat(since)
+        age_min  = (now_dt - since_dt).total_seconds() / 60
+    except Exception:
+        age_min = 0
+
+    if age_min > LAST_PREDICTED_SLOT_TTL_MIN:
+        print(f"⚠️ last_predicted_slot({candidate_slot}) は呼出から{age_min:.0f}分経過 "
+              f"→ 期限切れ（{LAST_PREDICTED_SLOT_TTL_MIN}分超）→ 無効化")
+        return None, None
+
+    return candidate_slot, since
 
 
 # ─── エントリポイント ──────────────────────────────────────────────
