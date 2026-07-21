@@ -7,7 +7,15 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif; }
     html, body { width: 100%; height: 100%; background: #f0f2f5; }
-    #app { max-width: 480px; margin: 0 auto; padding: 16px; }
+
+    /* 番号入力(左)＋呼出履歴(右)の2カラム。履歴をスクロールなしで見せるのが目的 */
+    #app { max-width: 920px; margin: 0 auto; padding: 16px; display: grid; grid-template-columns: 340px 1fr; gap: 16px; align-items: start; }
+    .left-col { min-width: 0; }
+    .right-col { min-width: 0; }
+
+    @media (max-width: 700px) {
+      #app { grid-template-columns: 1fr; max-width: 480px; }
+    }
 
     .room-badge {
       text-align: center; font-size: 20px; font-weight: bold;
@@ -43,12 +51,14 @@
     .actions button:disabled { opacity: .45; cursor: default; }
     .actions button:active:not(:disabled) { filter: brightness(.9); }
 
-    .history { background: #fff; border-radius: 8px; padding: 12px; }
-    .history h2 { font-size: 14px; color: #718096; margin-bottom: 8px; }
-    .history ul { list-style: none; }
-    .history li { font-size: 18px; padding: 6px 0; border-bottom: 1px solid #edf2f7; color: #2d3748; }
-    .history li:last-child { border-bottom: none; }
+    .history { background: #fff; border-radius: 8px; padding: 16px; }
+    .history h2 { font-size: 15px; color: #718096; margin-bottom: 10px; }
+    .history ul { list-style: none; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 16px; }
+    .history li { font-size: 20px; padding: 8px 0; border-bottom: 1px solid #edf2f7; color: #2d3748; }
     .history li .time { color: #a0aec0; font-size: 14px; margin-right: 8px; }
+    @media (max-width: 700px) {
+      .history ul { grid-template-columns: 1fr; }
+    }
 
     #status { text-align: center; font-size: 13px; color: #a0aec0; margin-top: 10px; }
 
@@ -83,29 +93,33 @@
   </div>
 
   <div id="app" class="hidden">
-    <div class="room-badge" id="roomBadge">第◯診察室</div>
+    <div class="left-col">
+      <div class="room-badge" id="roomBadge">第◯診察室</div>
 
-    <div id="numberDisplay"><span class="placeholder">整理番号を入力</span></div>
+      <div id="numberDisplay"><span class="placeholder">整理番号を入力</span></div>
 
-    <div class="numpad">
-      <button data-n="7">7</button><button data-n="8">8</button><button data-n="9">9</button>
-      <button data-n="4">4</button><button data-n="5">5</button><button data-n="6">6</button>
-      <button data-n="1">1</button><button data-n="2">2</button><button data-n="3">3</button>
-      <button class="fn" id="btnClear">クリア</button><button data-n="0">0</button><button class="fn" id="btnBack">⌫</button>
+      <div class="numpad">
+        <button data-n="7">7</button><button data-n="8">8</button><button data-n="9">9</button>
+        <button data-n="4">4</button><button data-n="5">5</button><button data-n="6">6</button>
+        <button data-n="1">1</button><button data-n="2">2</button><button data-n="3">3</button>
+        <button class="fn" id="btnClear">クリア</button><button data-n="0">0</button><button class="fn" id="btnBack">⌫</button>
+      </div>
+
+      <div class="actions">
+        <button id="btnCall">呼び出し</button>
+        <button id="btnRecall" disabled>再呼び出し</button>
+        <button id="btnCancel" disabled>表示を取り消す</button>
+      </div>
+
+      <div id="status"></div>
     </div>
 
-    <div class="actions">
-      <button id="btnCall">呼び出し</button>
-      <button id="btnRecall" disabled>再呼び出し</button>
-      <button id="btnCancel" disabled>表示を取り消す</button>
+    <div class="right-col">
+      <div class="history">
+        <h2>この診察室の呼出履歴（新しい順）</h2>
+        <ul id="historyList"></ul>
+      </div>
     </div>
-
-    <div class="history">
-      <h2>この診察室の呼出履歴（新しい順）</h2>
-      <ul id="historyList"></ul>
-    </div>
-
-    <div id="status"></div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -232,7 +246,7 @@
         list.reverse();
         const ul = document.getElementById('historyList');
         ul.innerHTML = '';
-        list.slice(0, 8).forEach(function(v) {
+        list.slice(0, 16).forEach(function(v) {
           const li = document.createElement('li');
           const t = v.ts ? new Date(v.ts).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }) : '';
           li.innerHTML = '<span class="time">' + t + '</span>' + v.number + '番';
