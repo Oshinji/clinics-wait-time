@@ -8,13 +8,15 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif; }
     html, body { width: 100%; height: 100%; background: #f0f2f5; }
 
-    /* 番号入力(左)＋呼出履歴(右)の2カラム。履歴をスクロールなしで見せるのが目的 */
-    #app { max-width: 920px; margin: 0 auto; padding: 16px; display: grid; grid-template-columns: 340px 1fr; gap: 16px; align-items: start; }
-    .left-col { min-width: 0; }
-    .right-col { min-width: 0; }
+    /* 番号入力(左・従来と同サイズ/中央配置)＋呼出履歴(右・小さめ)の2カラム */
+    #app { margin: 0 auto; padding: 16px; display: flex; justify-content: center; align-items: flex-start; gap: 20px; }
+    .left-col { width: 480px; flex-shrink: 0; padding: 16px; }
+    .right-col { width: 240px; flex-shrink: 0; }
 
-    @media (max-width: 700px) {
-      #app { grid-template-columns: 1fr; max-width: 480px; }
+    @media (max-width: 760px) {
+      #app { flex-direction: column; align-items: center; padding: 16px 0; }
+      .left-col { width: 100%; max-width: 480px; }
+      .right-col { width: 100%; max-width: 480px; }
     }
 
     .room-badge {
@@ -51,14 +53,12 @@
     .actions button:disabled { opacity: .45; cursor: default; }
     .actions button:active:not(:disabled) { filter: brightness(.9); }
 
-    .history { background: #fff; border-radius: 8px; padding: 16px; }
-    .history h2 { font-size: 15px; color: #718096; margin-bottom: 10px; }
-    .history ul { list-style: none; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 16px; }
-    .history li { font-size: 20px; padding: 8px 0; border-bottom: 1px solid #edf2f7; color: #2d3748; }
-    .history li .time { color: #a0aec0; font-size: 14px; margin-right: 8px; }
-    @media (max-width: 700px) {
-      .history ul { grid-template-columns: 1fr; }
-    }
+    .history { background: #fff; border-radius: 8px; padding: 12px; }
+    .history h2 { font-size: 12px; color: #718096; margin-bottom: 8px; }
+    .history ul { list-style: none; }
+    .history li { font-size: 15px; padding: 5px 0; border-bottom: 1px solid #edf2f7; color: #2d3748; }
+    .history li:last-child { border-bottom: none; }
+    .history li .time { color: #a0aec0; font-size: 12px; margin-right: 6px; }
 
     #status { text-align: center; font-size: 13px; color: #a0aec0; margin-top: 10px; }
 
@@ -246,7 +246,7 @@
         list.reverse();
         const ul = document.getElementById('historyList');
         ul.innerHTML = '';
-        list.slice(0, 16).forEach(function(v) {
+        list.slice(0, 8).forEach(function(v) {
           const li = document.createElement('li');
           const t = v.ts ? new Date(v.ts).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }) : '';
           li.innerHTML = '<span class="time">' + t + '</span>' + v.number + '番';
