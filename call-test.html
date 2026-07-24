@@ -18,7 +18,7 @@
     #idle .status { font-size: 2vw; margin-top: 4vh; color: #48bb78; }
 
     /* 呼び出しオーバーレイ（32〜40型・横型モニター向けレイアウト）
-       診察室1＝画面左へ ❮❮❮ ／ 診察室2＝画面右へ ❯❯❯（モニターは診察室1と2の間の壁に設置） */
+       設置場所変更により診察室1・2とも画面右へ ❯❯❯ で統一 */
     :root {
       --room1-bright: #68d391;  /* 診察室1: 緑 */
       --room1-deep:   #2f855a;
@@ -36,17 +36,12 @@
 
     .arrow-zone {
       width: 20vw; display: flex; align-items: center; justify-content: center;
-      gap: 1.5vw; visibility: hidden;
+      gap: 1.5vw;
     }
-    .arrow-zone span { font-size: 22vh; font-weight: bold; line-height: 1; }
-    #callOverlay.room1 #arrowLeft  { visibility: visible; }
-    #callOverlay.room2 #arrowRight { visibility: visible; }
+    .arrow-zone span { font-size: 22vh; font-weight: bold; line-height: 1; animation: marchR 1.2s ease-in-out infinite; }
     #callOverlay.room1 .arrow-zone span { color: var(--room1-bright); }
     #callOverlay.room2 .arrow-zone span { color: var(--room2-bright); }
-    @keyframes marchL { 0%,100% { transform: translateX(0); opacity: .35; } 50% { transform: translateX(-1.2vw); opacity: 1; } }
     @keyframes marchR { 0%,100% { transform: translateX(0); opacity: .35; } 50% { transform: translateX(1.2vw); opacity: 1; } }
-    #arrowLeft  span { animation: marchL 1.2s ease-in-out infinite; }
-    #arrowRight span { animation: marchR 1.2s ease-in-out infinite; }
     .arrow-zone span:nth-child(2) { animation-delay: .15s; }
     .arrow-zone span:nth-child(3) { animation-delay: .3s; }
 
@@ -81,13 +76,12 @@
   </div>
 
   <div id="callOverlay">
-    <div class="arrow-zone" id="arrowLeft"><span>❮</span><span>❮</span><span>❮</span></div>
     <div class="call-main">
       <div class="label">整理番号</div>
       <div class="number" id="callNumber">--</div>
       <div class="room-line"><span class="room-pill" id="callRoom"></span><span class="room-suffix">へお入りください</span></div>
     </div>
-    <div class="arrow-zone" id="arrowRight"><span>❯</span><span>❯</span><span>❯</span></div>
+    <div class="arrow-zone"><span>❯</span><span>❯</span><span>❯</span></div>
   </div>
   <button id="soundGate">🔇 タッチして音声を有効にする</button>
 
@@ -155,7 +149,7 @@
     function showCall(number, room) {
       callNumberEl.textContent = number;
       callRoomEl.textContent = '第' + room + '診察室';
-      // 診察室1→左向き矢印、診察室2→右向き矢印（それ以外は矢印なし）
+      // 矢印は診察室1・2とも右向きで共通。room1/room2クラスは色分けのみに使用
       overlay.classList.remove('room1', 'room2');
       if (room === 1) overlay.classList.add('room1');
       else if (room === 2) overlay.classList.add('room2');
