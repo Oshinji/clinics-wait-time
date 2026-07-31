@@ -158,6 +158,42 @@
       speechSynthesis.speak(u);
     }
 
+    // ---------- 音声ファイル再生 ----------
+    // GoogleTV等のブラウザには日本語TTSエンジンがなく Web Speech API が無音になるため、
+    // edge-tts で事前生成した音声ファイル(audio/)を WebAudio で連結再生する方式を主とし、
+    // ファイルが無い場合のみ TTS にフォールバックする
+    const AUDIO_BASE = 'audio/';
+    const audioBuffers = {};
+    let activeSources = [];
+
+    function loadBuffer(key, file) {
+      if (audioBuffers[key]) return Promise.resolve(audioBuffers[key]);
+      return fetch(AUDIO_BASE + file).then(function(r) {
+        if (!r.ok) throw new Error(file + ': ' + r.status);
+        return r.arrayBuffer();
+      }).then(function(ab) {
+        return new Promise(function(res, rej) { audioCtx.decodeAudioData(ab, res, rej); });
+      }).then(function(buf) { audioBuffers[key] = buf; return buf; });
+    }
+
+    function stopAudio() {
+      activeSources.forEach(function(s) { try { s.stop(); } catch (e) {} });
+      activeSources = [];
+    }
+
+    function playSequence(bufs, startAt) {
+      let t = startAt;
+      bufs.forEach(function(b) {
+        const s = audioCtx.createBufferSource();
+        s.buffer = b;
+        s.connect(audioCtx.destination);
+        s.start(t);
+        activeSources.push(s);
+        t += b.duration + 0.1;
+      });
+      return t;
+    }
+
     function enableSound() {
       if (soundEnabled) return;
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -166,10 +202,19 @@
       soundGate.classList.remove('visible');
       clearInterval(focusWatchdog);
       dbg('有効化: AudioContext=' + audioCtx.state);
-      // 動作確認を兼ねて実際に音を鳴らす。
-      // チャイムだけ聞こえて音声が聞こえない場合は、端末の音声合成(TTS)側の問題と切り分けられる
+      // 動作確認を兼ねてチャイム＋確認音声を実際に鳴らす
       playChime();
-      speak('音声の準備ができました');
+      loadBuffer('ready', 'ready.mp3').then(function(b) {
+        playSequence([b], audioCtx.currentTime + 0.9);
+        dbg('確認音声: ファイル再生');
+      }).catch(function() {
+        dbg('⚠️ ready.mp3取得失敗 → TTSへ');
+        speak('音声の準備ができました');
+      });
+      // 呼び出しで毎回使うパーツを先読みしておく
+      loadBuffer('prefix', 'prefix.mp3').catch(function(){});
+      loadBuffer('room1', 'room1.mp3').catch(function(){});
+      loadBuffer('room2', 'room2.mp3').catch(function(){});
     }
 
     soundGate.classList.add('visible');
@@ -214,12 +259,27 @@
     }
 
     function speakCall(number, room) {
-      if (!soundEnabled || !window.speechSynthesis) return;
-      // 「お入りください」は音声合成が「おいりください」と誤読するため、ひらがなで指定する
-      const text = '整理番号、' + number + '番のかた、第' + room + '診察室へ、おはいりください。';
-      speechSynthesis.cancel();
-      speak(text);
-      speak(text);
+      if (!soundEnabled) return;
+      const roomKey = (room === 2) ? 'room2' : 'room1';
+      Promise.all([
+        loadBuffer('prefix', 'prefix.mp3'),
+        loadBuffer('num' + number, 'num/' + number + '.mp3'),
+        loadBuffer(roomKey, roomKey + '.mp3'),
+      ]).then(function(bufs) {
+        stopAudio();
+        const end1 = playSequence(bufs, audioCtx.currentTime + 0.05);
+        playSequence(bufs, end1 + 0.7);   // 2回読み上げ
+        dbg('音声ファイル再生: ' + number + '番 / ' + roomKey);
+      }).catch(function(e) {
+        // 音声ファイルが無い番号(301以上)などはTTSへ(TTS非搭載端末では無音になる)
+        dbg('⚠️ 音声ファイル不可 → TTSへ: ' + e.message);
+        if (!window.speechSynthesis) return;
+        // 「お入りください」は音声合成が「おいりください」と誤読するため、ひらがなで指定する
+        const text = '整理番号、' + number + '番のかた、第' + room + '診察室へ、おはいりください。';
+        speechSynthesis.cancel();
+        speak(text);
+        speak(text);
+      });
     }
 
     function showCall(number, room) {
@@ -239,6 +299,9 @@
     function hideCall() {
       overlay.classList.remove('active');
       clearTimeout(hideTimer);
+      // 取消時は読み上げ途中でも止める
+      stopAudio();
+      if (window.speechSynthesis) speechSynthesis.cancel();
     }
 
     let lastTs = 0;
