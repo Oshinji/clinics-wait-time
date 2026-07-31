@@ -7,13 +7,15 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif; }
     html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
 
-    /* 基本映像: now.html（ご予約の方の診察状況）を常時表示 */
+    /* 基本映像: 呼び出しがないときの通常表示 */
     #base {
       position: absolute; inset: 0;
       width: 100%; height: 100%; border: none;
     }
 
-    /* 呼び出しオーバーレイ（32〜40型・横型モニター向けレイアウト） */
+    /* 呼び出しオーバーレイ（32〜43型・横型モニター向けレイアウト）
+       32型でもはみ出さないよう、文字サイズは vh(縦) と vw(横) の小さい方を採用し、
+       全体を安全マージン内に収める */
     :root {
       --room1-bright: #68d391;  /* 診察室1: 緑 */
       --room1-deep:   #2f855a;
@@ -26,18 +28,51 @@
       display: none;
       align-items: center; justify-content: center;
       color: #fff; text-align: center;
+      /* TVは機種によって画面端が数%切れる(オーバースキャン)ため広めに安全マージンを取る */
+      padding: 6vh 6vw;
+      overflow: hidden;
     }
     #callOverlay.active { display: flex; }
 
-    .call-main { display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .call-main .label { font-size: 7vh; letter-spacing: .3em; color: #a8c5e0; }
-    .call-main .number { font-size: 32vh; font-weight: bold; line-height: 1.1; color: #ffe066; }
-    .room-line { display: flex; align-items: center; gap: 1.2vw; margin-top: 2vh; }
-    /* 横幅からはみ出して折り返さないよう、縦横両方を考慮したサイズにする */
-    .room-pill { font-size: min(8vh, 3.4vw); font-weight: bold; padding: 1vh 2vw; border-radius: 3vh; color: #fff; background: #2b6cb0; white-space: nowrap; }
+    .call-main {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      max-width: 100%; max-height: 100%;
+    }
+    .call-main .label {
+      font-size: min(6vh, 4vw); letter-spacing: .3em; color: #a8c5e0;
+      margin-bottom: .5vh;
+    }
+    /* 3桁でも横に収まるよう vw も考慮。1〜2桁時は .short でさらに大きく見せる */
+    .call-main .number {
+      font-size: min(30vh, 22vw); font-weight: bold; line-height: 1.05; color: #ffe066;
+      white-space: nowrap;
+    }
+    .call-main .number.short { font-size: min(34vh, 30vw); }
+
+    .room-line {
+      display: flex; align-items: center; gap: 1.5vw; margin-top: 1.5vh;
+      max-width: 100%;
+    }
+    /* 診察室名は視認性重視で大きく・太く。数字部分はさらに一回り大きくする */
+    .room-pill {
+      font-size: min(11vh, 6.4vw); font-weight: 900;
+      padding: .8vh 2.4vw; border-radius: 2.5vh;
+      color: #fff; background: #2b6cb0; white-space: nowrap;
+      line-height: 1.25;
+      box-shadow: 0 0 0 .5vh rgba(255,255,255,.22);
+    }
+    .room-pill .rn {
+      font-size: 1.45em; font-weight: 900;
+      margin: 0 .06em; letter-spacing: .01em;
+    }
     #callOverlay.room1 .room-pill { background: var(--room1-deep); }
     #callOverlay.room2 .room-pill { background: var(--room2-deep); }
-    .room-suffix { font-size: min(7vh, 3vw); font-weight: bold; white-space: nowrap; }
+    .room-suffix { font-size: min(7vh, 4vw); font-weight: bold; white-space: nowrap; }
+
+    /* 縦長寄りの画面では診察室行を2段にして横はみ出しを防ぐ */
+    @media (max-aspect-ratio: 5/4) {
+      .room-line { flex-direction: column; gap: .8vh; }
+    }
 
     #soundGate {
       position: absolute; right: 12px; bottom: 12px; z-index: 200;
@@ -72,7 +107,7 @@
   </style>
 </head>
 <body>
-  <iframe id="base" src="now.html" tabindex="-1"></iframe>
+  <iframe id="base" src="rotate.html" tabindex="-1"></iframe>
 
   <div id="callOverlay">
     <div class="call-main">
@@ -93,9 +128,16 @@
     const CALL_DISPLAY_SECONDS = 30;
     const CALL_MAX_AGE_MS = 2 * 60 * 1000;
 
+    const params = new URLSearchParams(location.search);
     // ?test=1 を付けると call/test を監視（本番運用前の実機確認用。call.html?test=1 とセットで使う）
-    const IS_TEST = new URLSearchParams(location.search).get('test') === '1';
+    const IS_TEST = params.get('test') === '1';
     const CALL_PATH = IS_TEST ? 'call/test' : 'call/current';
+
+    // 呼び出し以外のときに流す基本映像。既定は rotate.html（待ち時間＋お知らせ画像の輪番）。
+    // ?base=now で now.html（ご予約の方の診察状況）だけの表示に切り替えられる
+    const BASE_SRC = { now: 'now.html', index: 'index.html', split: 'split.html', rotate: 'rotate.html' };
+    const baseKey = params.get('base');
+    if (baseKey && BASE_SRC[baseKey]) document.getElementById('base').src = BASE_SRC[baseKey];
     document.title = (IS_TEST ? '【テスト】' : '') + '呼び出しモニター';
     if (IS_TEST) document.getElementById('testBadge').classList.add('visible');
 
@@ -284,7 +326,10 @@
 
     function showCall(number, room) {
       callNumberEl.textContent = number;
-      callRoomEl.textContent = '第' + room + '診察室';
+      // 桁数が少ないときは数字をさらに大きく表示する
+      callNumberEl.classList.toggle('short', String(number).length <= 2);
+      // 診察室の「1」「2」を一回り大きくして見分けやすくする
+      callRoomEl.innerHTML = '第<span class="rn">' + room + '</span>診察室';
       // room1/room2クラスは診察室名バッジの色分けに使用
       overlay.classList.remove('room1', 'room2');
       if (room === 1) overlay.classList.add('room1');
