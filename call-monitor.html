@@ -112,14 +112,64 @@
     let audioCtx = null;
     let soundEnabled = false;
 
+    // ---------- 診断表示 (?debug=1 で画面下部に状態を表示) ----------
+    const IS_DEBUG = new URLSearchParams(location.search).get('debug') === '1';
+    let dbgEl = null, dbgLines = [];
+    function dbg(msg) {
+      if (!IS_DEBUG) return;
+      if (!dbgEl) {
+        dbgEl = document.createElement('div');
+        dbgEl.style.cssText = 'position:absolute;left:50%;transform:translateX(-50%);bottom:8px;z-index:300;'
+          + 'font-size:14px;font-family:monospace;background:rgba(0,0,0,.75);color:#9ae6b4;'
+          + 'padding:6px 12px;border-radius:6px;text-align:left;white-space:pre;max-width:90vw;overflow:hidden;';
+        document.body.appendChild(dbgEl);
+      }
+      dbgLines.push(new Date().toLocaleTimeString('ja-JP') + ' ' + msg);
+      if (dbgLines.length > 6) dbgLines.shift();
+      dbgEl.textContent = dbgLines.join('\n');
+    }
+
+    // ---------- 音声合成まわり ----------
+    // Chromeは音声リストの読み込みが非同期で、リスト確定前の発話が無音になる端末があるため
+    // 日本語音声を明示的に選んで指定する
+    let jaVoice = null;
+    function pickVoice() {
+      if (!window.speechSynthesis) return;
+      const vs = speechSynthesis.getVoices();
+      jaVoice = vs.find(function(v){ return v.lang && v.lang.toLowerCase().indexOf('ja') === 0; }) || null;
+      dbg('音声リスト: 全' + vs.length + '件 / 日本語: ' + (jaVoice ? jaVoice.name : 'なし'));
+    }
+    if (window.speechSynthesis) {
+      pickVoice();
+      speechSynthesis.onvoiceschanged = pickVoice;
+    } else {
+      dbg('⚠️ このブラウザは音声合成(speechSynthesis)非対応');
+    }
+
+    function speak(text) {
+      if (!window.speechSynthesis) return;
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'ja-JP';
+      if (jaVoice) u.voice = jaVoice;
+      u.rate = 0.9;
+      u.volume = 1;
+      u.onstart = function() { dbg('発話開始: ' + text.slice(0, 12) + '…'); };
+      u.onerror = function(e) { dbg('⚠️ 発話エラー: ' + (e.error || '不明')); };
+      speechSynthesis.speak(u);
+    }
+
     function enableSound() {
       if (soundEnabled) return;
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const u = new SpeechSynthesisUtterance('');
-      speechSynthesis.speak(u);
+      if (audioCtx.state === 'suspended') audioCtx.resume();
       soundEnabled = true;
       soundGate.classList.remove('visible');
       clearInterval(focusWatchdog);
+      dbg('有効化: AudioContext=' + audioCtx.state);
+      // 動作確認を兼ねて実際に音を鳴らす。
+      // チャイムだけ聞こえて音声が聞こえない場合は、端末の音声合成(TTS)側の問題と切り分けられる
+      playChime();
+      speak('音声の準備ができました');
     }
 
     soundGate.classList.add('visible');
@@ -164,18 +214,12 @@
     }
 
     function speakCall(number, room) {
-      if (!soundEnabled) return;
+      if (!soundEnabled || !window.speechSynthesis) return;
       // 「お入りください」は音声合成が「おいりください」と誤読するため、ひらがなで指定する
       const text = '整理番号、' + number + '番のかた、第' + room + '診察室へ、おはいりください。';
       speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'ja-JP';
-      u.rate = 0.9;
-      speechSynthesis.speak(u);
-      const u2 = new SpeechSynthesisUtterance(text);
-      u2.lang = 'ja-JP';
-      u2.rate = 0.9;
-      speechSynthesis.speak(u2);
+      speak(text);
+      speak(text);
     }
 
     function showCall(number, room) {

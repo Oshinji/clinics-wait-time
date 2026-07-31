@@ -97,14 +97,40 @@
     let audioCtx = null;
     let soundEnabled = false;
 
+    // Chromeは音声リストの読み込みが非同期で、リスト確定前の発話が無音になる端末があるため
+    // 日本語音声を明示的に選んで指定する
+    let jaVoice = null;
+    function pickVoice() {
+      if (!window.speechSynthesis) return;
+      const vs = speechSynthesis.getVoices();
+      jaVoice = vs.find(function(v){ return v.lang && v.lang.toLowerCase().indexOf('ja') === 0; }) || null;
+    }
+    if (window.speechSynthesis) {
+      pickVoice();
+      speechSynthesis.onvoiceschanged = pickVoice;
+    }
+
+    function speak(text) {
+      if (!window.speechSynthesis) return;
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'ja-JP';
+      if (jaVoice) u.voice = jaVoice;
+      u.rate = 0.9;
+      u.volume = 1;
+      speechSynthesis.speak(u);
+    }
+
     function enableSound() {
       if (soundEnabled) return;
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const u = new SpeechSynthesisUtterance('');
-      speechSynthesis.speak(u);
+      if (audioCtx.state === 'suspended') audioCtx.resume();
       soundEnabled = true;
       soundGate.classList.remove('visible');
       clearInterval(focusWatchdog);
+      // 動作確認を兼ねて実際に音を鳴らす。
+      // チャイムだけ聞こえて音声が聞こえない場合は、端末の音声合成(TTS)側の問題と切り分けられる
+      playChime();
+      speak('音声の準備ができました');
     }
 
     soundGate.classList.add('visible');
@@ -148,18 +174,12 @@
     }
 
     function speakCall(number, room) {
-      if (!soundEnabled) return;
+      if (!soundEnabled || !window.speechSynthesis) return;
       // 「お入りください」は音声合成が「おいりください」と誤読するため、ひらがなで指定する
       const text = '整理番号、' + number + '番のかた、第' + room + '診察室へ、おはいりください。';
       speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'ja-JP';
-      u.rate = 0.9;
-      speechSynthesis.speak(u);
-      const u2 = new SpeechSynthesisUtterance(text);
-      u2.lang = 'ja-JP';
-      u2.rate = 0.9;
-      speechSynthesis.speak(u2);
+      speak(text);
+      speak(text);
     }
 
     function showCall(number, room) {
