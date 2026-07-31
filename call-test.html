@@ -50,6 +50,11 @@
       display: none;
     }
     #soundGate.visible { display: block; }
+    /* GoogleTV等リモコンのD-padでフォーカスが分かるように強調表示する */
+    #soundGate:focus {
+      outline: 4px solid #4299e1; outline-offset: 2px;
+      background: #fff;
+    }
   </style>
 </head>
 <body>
@@ -70,7 +75,7 @@
       <div class="room-line"><span class="room-pill" id="callRoom"></span><span class="room-suffix">へお入りください</span></div>
     </div>
   </div>
-  <button id="soundGate">🔇 タッチして音声を有効にする</button>
+  <button id="soundGate" tabindex="0" autofocus>🔇 タッチ／決定ボタンで音声を有効にする</button>
 
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
@@ -92,14 +97,38 @@
     let audioCtx = null;
     let soundEnabled = false;
 
-    soundGate.classList.add('visible');
-    soundGate.addEventListener('click', function() {
+    function enableSound() {
+      if (soundEnabled) return;
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const u = new SpeechSynthesisUtterance('');
       speechSynthesis.speak(u);
       soundEnabled = true;
       soundGate.classList.remove('visible');
+      clearInterval(focusWatchdog);
+    }
+
+    soundGate.classList.add('visible');
+    soundGate.addEventListener('click', enableSound);
+    // GoogleTV等のリモコンは「決定(OK)」ボタン押下時にEnter/Spaceのkeydownとして
+    // 届く場合があり、ブラウザによってはボタンのネイティブclick変換が効かないことがあるため
+    // 保険としてkeydownでも同じ処理を発火させる
+    soundGate.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ' || e.keyCode === 13 || e.keyCode === 32) {
+        e.preventDefault();
+        enableSound();
+      }
     });
+
+    // リモコン操作はフォーカスが当たっている要素にしか反応しないため、
+    // ページ内で唯一操作が必要なこのボタンに確実にフォーカスを当てておく
+    function focusSoundGate() {
+      if (!soundEnabled && soundGate.classList.contains('visible')) soundGate.focus();
+    }
+    focusSoundGate();
+    setTimeout(focusSoundGate, 300);
+    window.addEventListener('focus', focusSoundGate);
+    // 音声有効化が済むまで、何らかの理由でフォーカスが外れても定期的に戻す
+    const focusWatchdog = setInterval(focusSoundGate, 2000);
 
     function playChime() {
       if (!audioCtx) return;
