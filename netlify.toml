@@ -1,8 +1,17 @@
 [build]
   command   = ""
   publish   = "."
-  # 待ち時間データ(data/)の更新だけではデプロイを行わない。
-  # スクレイパーは data/ を頻繁にコミットするが、サイト本体は静的なため
-  # 再デプロイの必要がない。data/ 以外に差分が無ければ exit 0 でスキップされる。
-  # （コミットメッセージの [skip ci] に加えた二重の保険）
-  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':(exclude)data'"
+
+  # Netlify が公開しているのはインスタから来る患者向けの待ち時間ページ
+  # （index.html + common.css + common.js）だけ。
+  # 院内モニター用のページ(call*.html / now.html / rotate.html / audio/ など)や
+  # スクレイパー(scraper.py / data/)は GitHub Pages 側で運用しており、
+  # それらが変わっても Netlify を再デプロイする必要はない。
+  #
+  # Production deploy は 1 回あたり 15 クレジット消費し、無料枠は月300クレジット
+  # （＝月20回まで）。実際に 7月は18回のデプロイのうち17回が院内モニター用の
+  # 変更によるもので、無料枠をほぼ使い切っていた。
+  #
+  # そのため公開ページに関わるファイルに差分があるときだけビルドする。
+  # 差分なし → exit 0 でデプロイをスキップ / 差分あり → exit 1 でデプロイ実行。
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- index.html common.css common.js"
