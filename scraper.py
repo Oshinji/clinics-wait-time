@@ -867,6 +867,17 @@ def _load_previous_status() -> dict | None:
         return None
 
 
+def _same_ignoring_timestamp(a: dict, b: dict) -> bool:
+    """updated_at 以外の内容が同一かどうか。
+
+    updated_at は毎回変わるため、これを含めて比較すると「中身が同じなのに
+    ファイルだけ更新される」状態になり、実行のたびに git コミット＝デプロイが
+    発生してしまう（診療時間外も含め1日288回）。それを防ぐための比較。
+    """
+    return {k: v for k, v in a.items() if k != "updated_at"} == \
+           {k: v for k, v in b.items() if k != "updated_at"}
+
+
 def _prev_is_recent(prev: dict, max_age_sec: int = 3600) -> bool:
     """前回値の鮮度チェック（デフォルト1時間）"""
     prev_at = prev.get("updated_at")
@@ -939,6 +950,15 @@ def main():
             print("本日は休診日です（holidays.json）→ スクレイピングをスキップ")
         else:
             print("診察窓外（受付終了後30分超過）のため、スクレイピングをスキップします")
+
+        # 診察窓外は「休診/受付終了」の同じ内容を書き続けることになる。
+        # updated_at だけの差分でも git コミット＝デプロイが発生するため、
+        # 内容に変化がなければ書き込まない（夜間・休診日の無駄なデプロイを防止）。
+        # 診察窓内は更新時刻の鮮度が重要なので、この抑制は行わない。
+        prev = _load_previous_status()
+        if prev is not None and _same_ignoring_timestamp(prev, data):
+            print("状態に変化なし → status.json の書き込みをスキップ（無駄なデプロイを防止）")
+            return
     else:
         data = asyncio.run(scrape())
 

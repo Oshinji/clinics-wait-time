@@ -32,9 +32,37 @@ jobs:
           cache-dependency-path: requirements-scraper.txt
 
       - name: 依存パッケージをインストール
+        run: pip install -r requirements-scraper.txt
+
+      # Chromium のインストールは1分以上かかるうえ、実際にスクレイピングするのは
+      # 診察窓内（平日 8:30-13:00 / 14:30-19:00）だけ。
+      # 外部cron(cron-job.org)が24時間叩いてくるため、窓外ではここを丸ごと省略する。
+      # 判定は scraper.py の is_exam_window() と同一ロジック。
+      - name: 診察時間内かを判定
+        id: window
         run: |
-          pip install -r requirements-scraper.txt
-          playwright install chromium --with-deps
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from datetime import datetime, time as dt_time, timezone, timedelta
+          JST = timezone(timedelta(hours=9))
+          now = datetime.now(JST)
+          try:
+              closed = set(json.load(open("data/holidays.json", encoding="utf-8")).get("closed", []))
+          except Exception:
+              closed = set()
+          wd, t = now.weekday(), now.time()
+          in_window = (
+              now.strftime("%Y-%m-%d") not in closed
+              and wd not in (3, 6)
+              and ((dt_time(8, 30) <= t < dt_time(13, 0))
+                   or (dt_time(14, 30) <= t < dt_time(19, 0)))
+          )
+          print(f"open={'true' if in_window else 'false'}")
+          PY
+
+      - name: Chromium をインストール（診察時間内のみ）
+        if: steps.window.outputs.open == 'true'
+        run: playwright install chromium --with-deps
 
       - name: スクレイパーを実行
         env:
