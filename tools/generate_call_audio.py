@@ -26,6 +26,25 @@ NUM_MAX = 300   # 整理番号の上限。増やす場合はこの値を変え�
 BASE = Path(__file__).resolve().parent.parent / "audio"
 CONCURRENCY = 8
 
+# edge-tts は数字の下一桁が「8」の場合、本来の「じゅうはち」ではなく促音化した
+# 「じゅっぱち」のように誤読することがあるため、該当する番号だけひらがな読みを
+# 明示して正しい発音を強制する。新たに同様の誤読が見つかった場合はここに追加する。
+NUM_READING_OVERRIDES = {
+    18: "じゅうはち",
+    28: "にじゅうはち",
+    38: "さんじゅうはち",
+    48: "よんじゅうはち",
+    58: "ごじゅうはち",
+    68: "ろくじゅうはち",
+    78: "ななじゅうはち",
+    88: "はちじゅうはち",
+    98: "きゅうじゅうはち",
+}
+
+
+def reading_for(n: int) -> str:
+    return NUM_READING_OVERRIDES.get(n, str(n))
+
 
 async def gen(text: str, path: Path, sem: asyncio.Semaphore):
     if path.exists():
@@ -46,7 +65,7 @@ async def main():
         gen("第1診察室へ、おはいりください。", BASE / "room1.mp3", sem),
         gen("第2診察室へ、おはいりください。", BASE / "room2.mp3", sem),
     ]
-    tasks += [gen(f"{n}番のかた、", BASE / "num" / f"{n}.mp3", sem) for n in range(1, NUM_MAX + 1)]
+    tasks += [gen(f"{reading_for(n)}番のかた、", BASE / "num" / f"{n}.mp3", sem) for n in range(1, NUM_MAX + 1)]
     await asyncio.gather(*tasks)
     print(f"完了: {sum(1 for _ in BASE.rglob('*.mp3'))} ファイル")
 
