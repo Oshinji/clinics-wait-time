@@ -4849,9 +4849,14 @@
       "date": "2026-08-08",
       "checkin": "09:33",
       "duration_min": 3
+    },
+    {
+      "date": "2026-08-08",
+      "checkin": "09:51",
+      "duration_min": 3
     }
   ],
-  "pt_ratio": 0.7928,
-  "record_count": 970,
-  "updated_at": "2026-08-08T10:01:57.259658+09:00"
+  "pt_ratio": 0.793,
+  "record_count": 971,
+  "updated_at": "2026-08-08T10:06:12.532722+09:00"
 }
