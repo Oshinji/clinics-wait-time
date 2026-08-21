@@ -6,60 +6,93 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
-    #frame, #image {
+    #frame, #image, #video {
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
     }
     #frame { border: none; }
     #image { object-fit: contain; display: none; }
+    #video { object-fit: contain; display: none; background: #000; }
   </style>
 </head>
 <body>
   <iframe id="frame"></iframe>
   <img id="image" alt="">
+  <video id="video" muted playsinline></video>
 
   <script>
     // =============================================
     // ここを編集してローテーション内容を設定します
-    // type: 'url'  → HTMLページ（iframeで表示）
-    // type: 'image'→ 画像ファイル（全画面で表示）
-    // seconds      → この項目を表示する秒数
+    // type: 'url'   → HTMLページ（iframeで表示）。seconds で表示秒数を指定
+    // type: 'image' → 画像ファイル（全画面で表示）。seconds で表示秒数を指定
+    // type: 'video' → 動画ファイル（全画面・ミュートで自動再生）。
+    //                  再生終了(ended)まで自動で表示し続けるため seconds 指定は不要
     // =============================================
     const items = [
       { type: 'url',   src: 'https://oshinji.github.io/clinics-wait-time/split.html',       seconds: 15 },
-      { type: 'image', src: 'https://oshinji.github.io/clinics-wait-time/uketsuke-jikan-henkou.png', seconds: 5 },
+      { type: 'video', src: 'https://oshinji.github.io/clinics-wait-time/melumo.mp4' },
     ];
     // =============================================
 
     const frame = document.getElementById('frame');
     const image = document.getElementById('image');
+    const video = document.getElementById('video');
     let current = 0;
+    let cycleId = 0;   // show() の呼び出しごとに増やし、古いコールバックが誤って次へ進めるのを防ぐ
+    let timer = null;
+
+    function hideAll() {
+      frame.style.display = 'none';
+      image.style.display = 'none';
+      video.style.display = 'none';
+      video.pause();
+    }
 
     function show(index) {
       const item = items[index];
-      // src は同じ値でも再代入すると再読み込みが走るため、変わったときだけ代入する。
-      // iframe は display:none 中も生きており、中のページが自前で5分ごとに更新する。
+      cycleId++;
+      const myCycle = cycleId;
+      clearTimeout(timer);
+      hideAll();
+
       if (item.type === 'image') {
-        frame.style.display = 'none';
         image.style.display = 'block';
+        // src は同じ値でも再代入すると再読み込みが走るため、変わったときだけ代入する。
         if (image.src !== item.src) image.src = item.src;
+        timer = setTimeout(next, item.seconds * 1000);
+
+      } else if (item.type === 'video') {
+        video.style.display = 'block';
+        if (video.src !== item.src) video.src = item.src;
+        video.currentTime = 0;
+        video.play().catch(function(){});
+        // 再生失敗時に画面が止まったままにならないよう保険のタイムアウトを設定
+        // （動画の長さが判明したら再生時間+2秒に更新、判明しなければ60秒で強制的に次へ）
+        timer = setTimeout(function(){ if (myCycle === cycleId) next(); }, 60000);
+        video.onloadedmetadata = function() {
+          if (myCycle !== cycleId || !isFinite(video.duration)) return;
+          clearTimeout(timer);
+          timer = setTimeout(function(){ if (myCycle === cycleId) next(); }, (video.duration + 2) * 1000);
+        };
+        video.onended = function() {
+          if (myCycle === cycleId) next();
+        };
+
       } else {
-        image.style.display = 'none';
         frame.style.display = 'block';
+        // iframe は display:none 中も生きており、中のページが自前で5分ごとに更新する。
         if (frame.src !== item.src) frame.src = item.src;
+        timer = setTimeout(next, item.seconds * 1000);
       }
     }
 
     function next() {
       current = (current + 1) % items.length;
       show(current);
-      clearTimeout(timer);
-      timer = setTimeout(next, items[current].seconds * 1000);
     }
 
     show(current);
-    var timer = setTimeout(next, items[current].seconds * 1000);
   </script>
 </body>
 </html>
