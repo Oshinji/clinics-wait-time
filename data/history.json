@@ -3974,9 +3974,24 @@
       "date": "2026-09-04",
       "checkin": "09:34",
       "duration_min": 7
+    },
+    {
+      "date": "2026-09-04",
+      "checkin": "08:50",
+      "duration_min": 54
+    },
+    {
+      "date": "2026-09-04",
+      "checkin": "09:41",
+      "duration_min": 12
+    },
+    {
+      "date": "2026-09-04",
+      "checkin": "09:45",
+      "duration_min": 7
     }
   ],
-  "pt_ratio": 0.8314,
-  "record_count": 795,
-  "updated_at": "2026-09-04T09:56:04.937976+09:00"
+  "pt_ratio": 0.8308,
+  "record_count": 798,
+  "updated_at": "2026-09-04T10:01:31.224864+09:00"
 }
