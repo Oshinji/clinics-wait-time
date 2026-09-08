@@ -11,14 +11,15 @@
   "estimated_minutes": 48,
   "current_slot": "16:30",
   "current_slots": [
-    "16:30"
+    "16:30",
+    "16:40"
   ],
   "walkin_in_exam": true,
-  "last_predicted_slot": "16:30",
-  "last_predicted_slot_since": "2026-09-08T16:51:25.371412+09:00",
+  "last_predicted_slot": "16:40",
+  "last_predicted_slot_since": "2026-09-08T17:01:55.315878+09:00",
   "walkin_protected": false,
-  "updated_at": "2026-09-08T16:56:09.524458+09:00",
-  "is_open": true,
+  "updated_at": "2026-09-08T17:01:55.320715+09:00",
+  "is_open": false,
   "is_holiday": false,
   "error": null
 }
