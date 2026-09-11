@@ -4499,9 +4499,14 @@
       "date": "2026-09-11",
       "checkin": "16:31",
       "duration_min": 79
+    },
+    {
+      "date": "2026-09-11",
+      "checkin": "16:45",
+      "duration_min": 91
     }
   ],
-  "pt_ratio": 0.8267,
-  "record_count": 900,
-  "updated_at": "2026-09-11T18:16:32.342603+09:00"
+  "pt_ratio": 0.8257,
+  "record_count": 901,
+  "updated_at": "2026-09-11T18:21:28.144067+09:00"
 }
