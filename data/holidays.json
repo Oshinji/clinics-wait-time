@@ -1,5 +1,9 @@
 {
   "_comment": "臨時休診日リスト（YYYY-MM-DD）。木・日は元から休診のため記載不要。祝日でも開院する場合はこのリストから外す。",
+  "_comment_special_hours": "臨時の受付時間変更（YYYY-MM-DD: {am_end, pm}）。am_end で午前の受付終了時刻を上書き。pm を false にするとその日は午後の受付なし（省略時はfalse扱い）。",
+  "special_hours": {
+    "2026-10-07": { "am_end": "13:00", "pm": false }
+  },
   "closed": [
     "2026-05-04",
     "2026-05-05",

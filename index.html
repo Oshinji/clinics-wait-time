@@ -130,9 +130,20 @@
   var hoursHtml  = ClinicCommon.hoursHtml;
   var setContent = ClinicCommon.setContent;
 
-  function getSession(){
+  // data.special_hours_today がある日（holidays.jsonの臨時受付時間）は
+  // 午前のみ・時刻上書きの単一セッションとして扱い、午後の状態には遷移しない。
+  function getSession(data){
     var p = jstParts();
     var w = p.w, n = p.h * 60 + p.m;
+    var special = data && data.special_hours_today;
+    if(special){
+      var amEnd    = toMin(special.am_end);
+      var ctx = { special: true, amEndStr: special.am_end };
+      if(w===0||w===4)         return {t:'hol', ctx:ctx};
+      if(n<toMin('08:30'))     return {t:'pre', ctx:ctx};
+      if(n<amEnd)              return {t:'open', half:'am', ctx:ctx};
+      return {t:'aft', ctx:ctx};
+    }
     var pmEnd    = (w===6) ? toMin('16:00') : toMin('17:00');
     var pmEndStr = (w===6) ? '16:00' : '17:00';
     var ctx = { pmEndStr: pmEndStr };
@@ -145,7 +156,7 @@
   }
 
   function render(data){
-    var s  = getSession();
+    var s  = getSession(data);
     var el = document.getElementById('content');
     var h  = '';
 
@@ -199,7 +210,9 @@
         h = '<div class="hero">'
           +'<div class="status-badge off">受付終了</div>'
           +'<div class="state-big">本日の受付は<br>終了しました</div>'
-          +'<div class="state-resume-note">またのご来院をお待ちしております</div>'
+          +(s.ctx && s.ctx.special
+            ? '<div class="state-resume-note">本日は臨時受付時間のため午後の受付はございません</div>'
+            : '<div class="state-resume-note">またのご来院をお待ちしております</div>')
           +'</div>';
         break;
 

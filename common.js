@@ -29,6 +29,16 @@ window.ClinicCommon = (function(){
   }
 
   function hoursHtml(s){
+    // 臨時受付時間（holidays.json の special_hours）が設定されている日は専用表示にする
+    if(s.ctx && s.ctx.special){
+      var amCs = (s.t==='open' || s.t==='ext') ? ' is-current' : '';
+      return '<div class="hours">'
+        +'<div class="hours-title">本日の受付時間（臨時）</div>'
+        +'<div class="hours-rows">'
+        +'<div class="hours-row'+amCs+'"><span class="hours-period">午前</span><span class="hours-time">8:30–'+s.ctx.amEndStr+'</span></div>'
+        +'<div class="hours-row"><span class="hours-period">午後</span><span class="hours-time">休診</span></div>'
+        +'</div></div>';
+    }
     var amC = (s.t==='open' && s.half==='am') ? ' is-current' : '';
     var pmC = (s.t==='open' && s.half==='pm') ? ' is-current' : '';
     return '<div class="hours">'

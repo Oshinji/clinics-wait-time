@@ -100,9 +100,22 @@
   var hoursHtml  = ClinicCommon.hoursHtml;
   var setContent = ClinicCommon.setContent;
 
-  function getSession(){
+  // data.special_hours_today がある日（holidays.jsonの臨時受付時間）は
+  // 午前のみ・時刻上書きの単一セッションとして扱い、lun/pmの状態には遷移しない。
+  function getSession(data){
     var p = jstParts();
     var w = p.w, n = p.h * 60 + p.m;
+    var special = data && data.special_hours_today;
+    if(special){
+      var amEnd  = toMin(special.am_end);
+      var extEnd = amEnd + 90;   // 通常のAM延長枠(90分)と同じ考え方
+      var ctx = { special: true, amEndStr: special.am_end };
+      if(w===0||w===4)         return {t:'hol', ctx:ctx};
+      if(n<toMin('08:30'))     return {t:'pre', ctx:ctx};
+      if(n<amEnd)              return {t:'open', half:'am', ctx:ctx};
+      if(n<extEnd)             return {t:'ext',  half:'am', ctx:ctx};
+      return {t:'aft', ctx:ctx};
+    }
     var pmEnd    = (w===6) ? toMin('16:30') : toMin('17:30');
     var pmEndStr = (w===6) ? '16:30' : '17:30';
     var ctx = { pmEndStr: pmEndStr };
@@ -125,6 +138,10 @@
     if(s.t !== 'open' && s.t !== 'ext') return false;
     var p = jstParts();
     var nMin = p.h * 60 + p.m;
+    if(s.ctx && s.ctx.special){
+      var amEndMin = toMin(s.ctx.amEndStr);
+      return (nMin >= amEndMin - NEAR_END_MIN) && (nMin < amEndMin + 90);
+    }
     var pmEndMin = (p.w === 6) ? toMin('16:30') : toMin('17:30');
     var amOK = (nMin >= toMin('11:30') - NEAR_END_MIN) && (nMin < toMin('13:00'));
     var pmOK = (nMin >= pmEndMin - NEAR_END_MIN)         && (nMin < toMin('19:00'));
@@ -132,7 +149,7 @@
   }
 
   function render(data){
-    var s  = getSession();
+    var s  = getSession(data);
     var el = document.getElementById('content');
     var h  = '';
 
@@ -187,7 +204,9 @@
         h = '<div class="hero">'
           +'<div class="status-badge off">診察終了</div>'
           +'<div class="state-big">本日の診察は<br>終了しました</div>'
-          +'<div class="state-resume-note">またのご来院をお待ちしております</div>'
+          +(s.ctx && s.ctx.special
+            ? '<div class="state-resume-note">本日は臨時受付時間のため午後の診察はございません</div>'
+            : '<div class="state-resume-note">またのご来院をお待ちしております</div>')
           +'</div>';
         break;
 
@@ -220,7 +239,9 @@
           var m = toMin(slotStr);
           var p = jstParts();
           var nowMin = p.h * 60 + p.m;
-          var inSession = s.half === 'am' ? m < toMin('13:00') : m >= toMin('14:00');
+          // 臨時受付時間の日は am_end を上限に使う（通常日は固定の13:00）
+          var amUpperBound = (s.ctx && s.ctx.special) ? toMin(s.ctx.amEndStr) : toMin('13:00');
+          var inSession = s.half === 'am' ? m < amUpperBound : m >= toMin('14:00');
           return inSession && m <= nowMin + 60;
         }
 

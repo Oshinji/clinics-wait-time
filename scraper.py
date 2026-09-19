@@ -75,6 +75,37 @@ def is_special_closed(now: datetime | None = None) -> bool:
     return today in _load_holidays()
 
 
+def _load_special_hours() -> dict:
+    """
+    data/holidays.json の special_hours から、日付ごとの臨時受付時間を読み込む。
+    形式: {"YYYY-MM-DD": {"am_end": "13:00", "pm": false}}
+      am_end: 午前の受付終了時刻を上書き（省略時は通常の11:30のまま）
+      pm    : false ならその日は午後の受付なし（省略時はfalse扱い）
+    失敗時は空dict（=通常の受付時間のまま）。
+    """
+    if not HOLIDAYS_FILE.exists():
+        return {}
+    try:
+        data = json.loads(HOLIDAYS_FILE.read_text(encoding="utf-8"))
+        return data.get("special_hours", {}) or {}
+    except Exception as e:
+        print(f"⚠️ holidays.json(special_hours) 読込失敗: {e}")
+        return {}
+
+
+def get_special_hours_today(now: datetime | None = None) -> dict | None:
+    """本日が special_hours に該当すればその設定dictを、該当なしはNoneを返す。"""
+    if now is None:
+        now = datetime.now(JST)
+    today = now.strftime("%Y-%m-%d")
+    return _load_special_hours().get(today)
+
+
+def _parse_hm(s: str) -> dt_time:
+    h, m = s.split(":")
+    return dt_time(int(h), int(m))
+
+
 def is_open() -> bool:
     now = datetime.now(JST)
     if is_special_closed(now):
@@ -82,6 +113,15 @@ def is_open() -> bool:
     wd  = now.weekday()   # 0=月 … 3=木(休) … 5=土 … 6=日(休)
     t   = now.time()
     if wd in (3, 6):
+        return False
+    special = get_special_hours_today(now)
+    if special:
+        am_end = _parse_hm(special["am_end"]) if special.get("am_end") else AM_END
+        if AM_START <= t < am_end:
+            return True
+        if special.get("pm", False) is not False:
+            pm_end = PM_END_SAT if wd == 5 else PM_END
+            return PM_START <= t < pm_end
         return False
     pm_end = PM_END_SAT if wd == 5 else PM_END
     return (AM_START <= t < AM_END) or (PM_START <= t < pm_end)
@@ -91,7 +131,7 @@ def is_exam_window() -> bool:
     """
     診察中の患者が残っている可能性がある時間帯（受付時間 + 終了後30分）。
     scraper.main() はこの範囲で実行される。is_open() は受付時間のみ True。
-    holidays.json で指定された休診日も False を返す。
+    holidays.json で指定された休診日・臨時受付時間も反映する。
     """
     now = datetime.now(JST)
     if is_special_closed(now):
@@ -99,6 +139,18 @@ def is_exam_window() -> bool:
     wd  = now.weekday()
     t   = now.time()
     if wd in (3, 6):
+        return False
+    special = get_special_hours_today(now)
+    if special:
+        am_end = _parse_hm(special["am_end"]) if special.get("am_end") else AM_END
+        am_end_min = am_end.hour * 60 + am_end.minute
+        t_min = t.hour * 60 + t.minute
+        am_start_min = AM_START.hour * 60 + AM_START.minute
+        # 通常のAM窓と同様、受付終了後1.5時間は診察中患者の残存を考慮して窓を開けておく
+        if am_start_min <= t_min < am_end_min + 90:
+            return True
+        if special.get("pm", False) is not False and PM_START <= t < dt_time(19, 0):
+            return True
         return False
     # 午前 8:30〜13:00（受付11:30 + 延長1.5時間）
     if AM_START <= t < dt_time(13, 0):
@@ -112,11 +164,21 @@ def is_exam_window() -> bool:
 def get_current_session_end_min() -> int:
     """
     現在のセッション（午前/午後）の受付終了時刻を「0時からの分数」で返す。
-    受付時間外の場合は None 相当として -1 を返す。
+    受付時間外の場合は None 相当として -1 を返す。臨時受付時間があればそれを優先する。
     """
     now = datetime.now(JST)
     wd  = now.weekday()
     t   = now.time()
+    special = get_special_hours_today(now)
+    if special:
+        am_end = _parse_hm(special["am_end"]) if special.get("am_end") else AM_END
+        if AM_START <= t < am_end:
+            return am_end.hour * 60 + am_end.minute
+        if special.get("pm", False) is not False:
+            pm_end = PM_END_SAT if wd == 5 else PM_END
+            if PM_START <= t < pm_end:
+                return pm_end.hour * 60 + pm_end.minute
+        return -1
     if AM_START <= t < AM_END:
         return AM_END.hour * 60 + AM_END.minute  # 11:30 → 690
     pm_end = PM_END_SAT if wd == 5 else PM_END
@@ -795,6 +857,7 @@ async def scrape() -> dict:
                 "updated_at":        datetime.now(JST).isoformat(),
                 "is_open":           is_open(),
                 "is_holiday":        is_special_closed(),
+                "special_hours_today": get_special_hours_today(),
                 "error":             None,
             }
 
@@ -836,6 +899,7 @@ def _empty_status_data(error: str | None = None,
         "updated_at":        datetime.now(JST).isoformat(),
         "is_open":           is_open_val,
         "is_holiday":        is_holiday_val,
+        "special_hours_today": get_special_hours_today(),
         "error":             error,
     }
 

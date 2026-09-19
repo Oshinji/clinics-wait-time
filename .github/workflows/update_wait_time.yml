@@ -47,16 +47,33 @@ jobs:
           JST = timezone(timedelta(hours=9))
           now = datetime.now(JST)
           try:
-              closed = set(json.load(open("data/holidays.json", encoding="utf-8")).get("closed", []))
+              holidays = json.load(open("data/holidays.json", encoding="utf-8"))
           except Exception:
-              closed = set()
+              holidays = {}
+          closed = set(holidays.get("closed", []))
+          special = holidays.get("special_hours", {}).get(now.strftime("%Y-%m-%d"))
           wd, t = now.weekday(), now.time()
-          in_window = (
-              now.strftime("%Y-%m-%d") not in closed
-              and wd not in (3, 6)
-              and ((dt_time(8, 30) <= t < dt_time(13, 0))
-                   or (dt_time(14, 30) <= t < dt_time(19, 0)))
-          )
+
+          def hm(s):
+              h, m = s.split(":")
+              return dt_time(int(h), int(m))
+
+          if special:
+              # 臨時受付時間: am_end で午前終了を上書き（+90分は残存診察のバッファ）、
+              # pm が false でなければ通常のPM窓(14:30-19:00)も対象にする
+              am_end = hm(special["am_end"]) if special.get("am_end") else dt_time(11, 30)
+              am_end_min = am_end.hour * 60 + am_end.minute
+              t_min = t.hour * 60 + t.minute
+              in_am = 8 * 60 + 30 <= t_min < am_end_min + 90
+              in_pm = special.get("pm", False) is not False and (dt_time(14, 30) <= t < dt_time(19, 0))
+              in_window = (now.strftime("%Y-%m-%d") not in closed) and wd not in (3, 6) and (in_am or in_pm)
+          else:
+              in_window = (
+                  now.strftime("%Y-%m-%d") not in closed
+                  and wd not in (3, 6)
+                  and ((dt_time(8, 30) <= t < dt_time(13, 0))
+                       or (dt_time(14, 30) <= t < dt_time(19, 0)))
+              )
           print(f"open={'true' if in_window else 'false'}")
           PY
 
