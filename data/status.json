@@ -15,9 +15,9 @@
   "last_predicted_slot": null,
   "last_predicted_slot_since": null,
   "walkin_protected": false,
-  "updated_at": "2026-09-19T18:41:26.504843+09:00",
+  "updated_at": "2026-09-21T00:01:12.235541+09:00",
   "is_open": false,
-  "is_holiday": false,
+  "is_holiday": true,
   "special_hours_today": null,
   "error": null
 }
