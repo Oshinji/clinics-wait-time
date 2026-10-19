@@ -772,10 +772,20 @@ def _load_client_certificates():
 
 async def scrape() -> dict:
     async with async_playwright() as p:
+        # 専用PC用: CLINICS_BROWSER_CHANNEL=chrome でインストール済みChrome（Windows証明書ストア）を使う
+        # CLINICS_HEADLESS=0 で画面表示あり。未設定なら従来どおり（Actions用）
+        launch_kwargs = {}
+        channel = os.getenv("CLINICS_BROWSER_CHANNEL", "").strip()
+        if channel:
+            launch_kwargs["channel"] = channel
+        headless = os.getenv("CLINICS_HEADLESS", "1").strip() != "0"
         browser = await p.chromium.launch(
-            headless=True,
-            args=["--no-sandbox", "--disable-dev-shm-usage"]
+            headless=headless,
+            args=["--no-sandbox", "--disable-dev-shm-usage"],
+            **launch_kwargs,
         )
+        if channel or not headless:
+            print(f"ブラウザ: channel={channel or 'chromium'} headless={headless}")
 
         storage = str(SESSION_FILE) if SESSION_FILE.exists() else None
         ctx_kwargs = {}

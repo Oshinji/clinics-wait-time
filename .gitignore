@@ -9,6 +9,7 @@ session.json
 
 # デバッグ用スクリーンショット
 debug_*.png
+scraper_run.log*
 
 # OS
 .DS_Store
