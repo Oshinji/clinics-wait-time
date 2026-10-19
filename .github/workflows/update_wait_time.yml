@@ -85,6 +85,8 @@ jobs:
         env:
           CLINICS_EMAIL:    ${{ secrets.CLINICS_EMAIL }}
           CLINICS_PASSWORD: ${{ secrets.CLINICS_PASSWORD }}
+          CLINICS_CERT_B64:      ${{ secrets.CLINICS_CERT_B64 }}
+          CLINICS_CERT_PASSWORD: ${{ secrets.CLINICS_CERT_PASSWORD }}
           MINUTES_PER_PATIENT: ${{ vars.MINUTES_PER_PATIENT || '15' }}
           TZ: Asia/Tokyo
         run: python scraper.py
