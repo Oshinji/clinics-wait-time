@@ -319,7 +319,7 @@ async def wait_for_page(page, context):
             await save_debug_screenshot(page, "debug_after_login.png")
             if await page.query_selector('text=クライアント証明書が必要です'):
                 raise RuntimeError("CLINICSがクライアント証明書を要求しています"
-                                   "（CLINICS_CERT_B64 / CLINICS_CERT_PASSWORD が未設定または無効）")
+                                   "（専用PCの証明書の期限切れ・未選択を確認）")
             raise RuntimeError("ログイン後もテーブルが表示されません")
 
 
@@ -749,37 +749,16 @@ def compute_estimated(walkin_resin_count: int, walkin_shoshin_count: int,
 
 # ─── スクレイピング本体 ────────────────────────────────────────────
 
-def _load_client_certificates():
-    """
-    環境変数 CLINICS_CERT_B64（pfxファイルのBase64）/ CLINICS_CERT_PASSWORD から
-    CLINICS用のクライアント証明書設定を作る。未設定なら None（従来どおり証明書なし）。
-    """
-    b64 = os.getenv("CLINICS_CERT_B64", "").strip()
-    if not b64:
-        return None
-    import base64
-    try:
-        pfx = base64.b64decode(b64)
-    except Exception as e:
-        print(f"⚠️ CLINICS_CERT_B64 のデコードに失敗: {e}")
-        return None
-    cert = {"origin": "https://karte.medley.life", "pfx": pfx}
-    passphrase = os.getenv("CLINICS_CERT_PASSWORD", "")
-    if passphrase:
-        cert["passphrase"] = passphrase
-    return [cert]
-
-
 async def scrape() -> dict:
     async with async_playwright() as p:
         # 専用PC用: CLINICS_BROWSER_CHANNEL=chrome でインストール済みChrome（Windows証明書ストア）を使う
-        # CLINICS_HEADLESS=0 で画面表示あり。未設定なら従来どおり（Actions用）
+        # CLINICS_HEADLESS=0 で画面表示あり。未設定なら Playwright 同梱の Chromium
         launch_kwargs = {}
         channel = os.getenv("CLINICS_BROWSER_CHANNEL", "").strip()
         if channel:
             launch_kwargs["channel"] = channel
         headless = os.getenv("CLINICS_HEADLESS", "1").strip() != "0"
-        # --no-sandbox 等はLinuxコンテナ(Actions)用。WindowsのChromeでは安全機能を無効化するだけなので付けない
+        # --no-sandbox 等はLinuxで同梱Chromiumを使う場合用。WindowsのChromeでは安全機能を無効化するだけなので付けない
         if not channel:
             launch_kwargs["args"] = ["--no-sandbox", "--disable-dev-shm-usage"]
         browser = await p.chromium.launch(
@@ -790,11 +769,6 @@ async def scrape() -> dict:
             print(f"ブラウザ: channel={channel or 'chromium'} headless={headless}")
 
         storage = str(SESSION_FILE) if SESSION_FILE.exists() else None
-        ctx_kwargs = {}
-        client_certs = _load_client_certificates()
-        if client_certs:
-            ctx_kwargs["client_certificates"] = client_certs
-            print("クライアント証明書を使用してアクセスします")
         context = await browser.new_context(
             storage_state=storage,
             user_agent=(
@@ -803,7 +777,6 @@ async def scrape() -> dict:
                 "Chrome/124.0.0.0 Safari/537.36"
             ),
             viewport={"width": 1280, "height": 900},
-            **ctx_kwargs,
         )
         page = await context.new_page()
 
