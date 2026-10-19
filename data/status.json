@@ -15,9 +15,9 @@
   "last_predicted_slot": null,
   "last_predicted_slot_since": null,
   "walkin_protected": false,
-  "updated_at": "2026-10-19T14:42:04.750930+09:00",
+  "updated_at": "2026-10-19T14:45:42.003630+09:00",
   "is_open": true,
   "is_holiday": false,
   "special_hours_today": null,
-  "error": "CLINICSがクライアント証明書を要求しています（CLINICS_CERT_B64 / CLINICS_CERT_PASSWORD が未設定または無効）"
+  "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://karte.medley.life/d\", waiting until \"domcontentloaded\"\n"
 }
