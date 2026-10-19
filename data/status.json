@@ -15,9 +15,9 @@
   "last_predicted_slot": null,
   "last_predicted_slot_since": null,
   "walkin_protected": false,
-  "updated_at": "2026-10-19T13:01:27.641969+09:00",
-  "is_open": false,
+  "updated_at": "2026-10-19T14:32:07.622287+09:00",
+  "is_open": true,
   "is_holiday": false,
   "special_hours_today": null,
-  "error": null
+  "error": "CLINICSがクライアント証明書を要求しています（CLINICS_CERT_B64 / CLINICS_CERT_PASSWORD が未設定または無効）"
 }
