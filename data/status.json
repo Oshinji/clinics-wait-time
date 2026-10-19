@@ -15,8 +15,8 @@
   "last_predicted_slot": null,
   "last_predicted_slot_since": null,
   "walkin_protected": false,
-  "updated_at": "2026-10-19T11:26:46.059663+09:00",
-  "is_open": true,
+  "updated_at": "2026-10-19T11:32:02.085013+09:00",
+  "is_open": false,
   "is_holiday": false,
   "special_hours_today": null,
   "error": "ログイン後もテーブルが表示されません"
