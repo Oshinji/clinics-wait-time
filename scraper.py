@@ -779,9 +779,11 @@ async def scrape() -> dict:
         if channel:
             launch_kwargs["channel"] = channel
         headless = os.getenv("CLINICS_HEADLESS", "1").strip() != "0"
+        # --no-sandbox 等はLinuxコンテナ(Actions)用。WindowsのChromeでは安全機能を無効化するだけなので付けない
+        if not channel:
+            launch_kwargs["args"] = ["--no-sandbox", "--disable-dev-shm-usage"]
         browser = await p.chromium.launch(
             headless=headless,
-            args=["--no-sandbox", "--disable-dev-shm-usage"],
             **launch_kwargs,
         )
         if channel or not headless:
