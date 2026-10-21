@@ -14,10 +14,10 @@
     "11:05"
   ],
   "walkin_in_exam": true,
-  "last_predicted_slot": null,
-  "last_predicted_slot_since": null,
+  "last_predicted_slot": "11:10",
+  "last_predicted_slot_since": "2026-10-21T12:25:15.763310+09:00",
   "walkin_protected": false,
-  "updated_at": "2026-10-21T12:20:16.158283+09:00",
+  "updated_at": "2026-10-21T12:25:15.779678+09:00",
   "is_open": false,
   "is_holiday": false,
   "special_hours_today": null,
