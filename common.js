@@ -44,7 +44,7 @@ window.ClinicCommon = (function(){
     return '<div class="hours">'
       +'<div class="hours-title">受付時間</div>'
       +'<div class="hours-rows">'
-      +'<div class="hours-row'+amC+'"><span class="hours-period">午前</span><span class="hours-time">8:30–11:30</span></div>'
+      +'<div class="hours-row'+amC+'"><span class="hours-period">午前</span><span class="hours-time">8:30–'+(s.ctx.amEndStr||'11:30')+'</span></div>'
       +'<div class="hours-row'+pmC+'"><span class="hours-period">午後</span><span class="hours-time">14:30–'+s.ctx.pmEndStr+'</span></div>'
       +'</div></div>';
   }

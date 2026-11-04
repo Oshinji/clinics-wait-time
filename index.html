@@ -92,6 +92,13 @@
   .hero-unit.over { font-size: 28px; }
   .no-wait-big { font-size: 29px; }
 }
+
+/* HPに埋め込むとき（?embed=1）だけの調整 */
+html.embed body { display: block; min-height: 0; padding: 8px; background: transparent; }
+html.embed .card { margin: 0 auto; min-height: 0; }
+/* 旧URL（Netlify）で見ている方への移転案内 */
+.move-notice { padding: 14px 20px; background: #fef3e2; color: #7a4a10; font-size: 14px; line-height: 1.6; }
+.move-notice a { display: block; margin-top: 6px; font-weight: 700; color: #b83a3a; word-break: break-all; }
 </style>
 </head>
 <body>
@@ -146,10 +153,10 @@
     }
     var pmEnd    = (w===6) ? toMin('16:00') : toMin('17:00');
     var pmEndStr = (w===6) ? '16:00' : '17:00';
-    var ctx = { pmEndStr: pmEndStr };
+    var ctx = { pmEndStr: pmEndStr, amEndStr: '11:00' };
     if(w===0||w===4)         return {t:'hol', ctx:ctx};
     if(n<toMin('08:30'))     return {t:'pre', ctx:ctx};
-    if(n<toMin('11:30'))     return {t:'open', half:'am', ctx:ctx};
+    if(n<toMin('11:00'))     return {t:'open', half:'am', ctx:ctx};
     if(n<toMin('14:30'))     return {t:'lun', ctx:ctx};
     if(n<pmEnd)              return {t:'open', half:'pm', ctx:ctx};
     return {t:'aft', ctx:ctx};
@@ -199,7 +206,7 @@
         break;
 
       case 'lun':
-        // 11:30〜14:30: 受付時間外。「本日終了」と誤読されないよう「午前の」を明示。
+        // 11:00〜14:30: 受付時間外。「本日終了」と誤読されないよう「午前の」を明示。
         h = '<div class="hero">'
           +'<div class="status-badge busy">午前の受付終了</div>'
           +'<div class="state-big">午前の受付は<br>終了いたしました</div>'
@@ -261,6 +268,32 @@
   }
 
   ClinicCommon.startPolling(render);
+})();
+</script>
+<script>
+(function(){
+  var card = document.querySelector('.card');
+  // 旧URL（Netlify）で開いたときだけ移転案内を出す
+  if(location.hostname === 'migawa-seikei.netlify.app'){
+    var box = document.createElement('div');
+    box.className = 'move-notice';
+    box.innerHTML = 'このページは2026年11月末で終了します。お手数ですが、下記ページへのブックマーク変更をお願いいたします。'
+      + '<a href="https://migawa-seikei.com/wait/">https://migawa-seikei.com/wait/</a>';
+    card.insertBefore(box, card.firstChild);
+  }
+  // HPに埋め込むときは、表示に合わせて高さをHP側へ伝える
+  if(/[?&]embed=1/.test(location.search)){
+    document.documentElement.className += ' embed';
+    var send = function(){
+      if(window.parent !== window){
+        window.parent.postMessage({ mgwWaitHeight: card.offsetHeight + 16 }, 'https://migawa-seikei.com');
+      }
+    };
+    new MutationObserver(send).observe(document.getElementById('content'), { childList: true, subtree: true });
+    window.addEventListener('resize', send);
+    window.addEventListener('load', send);
+    send();
+  }
 })();
 </script>
 </body>
