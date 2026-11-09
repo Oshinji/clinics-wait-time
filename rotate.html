@@ -30,13 +30,10 @@
     // type: 'video' → 動画ファイル（全画面・ミュートで自動再生）。
     //                  再生終了(ended)まで自動で表示し続けるため seconds 指定は不要
     // =============================================
-    // 待ち時間（主役）を画像の間に挟み、どのタイミングで見ても30秒前後で待ち時間が出るようにする。
-    // LINE画像はQRを読み取る時間が要るので長め、メルモ画像は文字が少ないので短め。
     const items = [
       { type: 'url',   src: 'https://oshinji.github.io/clinics-wait-time/split.html',       seconds: 15 },
-      { type: 'image', src: 'https://oshinji.github.io/clinics-wait-time/signage-line.png',  seconds: 15 },
-      { type: 'url',   src: 'https://oshinji.github.io/clinics-wait-time/split.html',       seconds: 15 },
-      { type: 'image', src: 'https://oshinji.github.io/clinics-wait-time/signage-melmo.png', seconds: 12 },
+      { type: 'image', src: 'https://oshinji.github.io/clinics-wait-time/signage-line.png',  seconds: 10 },
+      { type: 'image', src: 'https://oshinji.github.io/clinics-wait-time/signage-melmo.png', seconds: 10 },
     ];
     // =============================================
 
