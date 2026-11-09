@@ -251,7 +251,10 @@ html.embed .card { margin: 0 auto; min-height: 0; }
         // is_open=false のままになることがあるため、
         // その場合は「情報取得中」表示にして "受付時間外" や
         // "お待ちなし" の誤表示を避ける（混雑状況不明と分かるように）。
-        if(!data || !data.is_open){
+        // データの更新が20分以上止まっているときも、古い待ち時間を出さずに同じ表示にする。
+        var updatedMs = data && data.updated_at ? new Date(data.updated_at).getTime() : NaN;
+        var isStale = isNaN(updatedMs) || (new Date().getTime() - updatedMs > 20 * 60 * 1000);
+        if(!data || !data.is_open || isStale){
           h = '<div class="hero">'
             +'<div class="status-badge busy">受付中</div>'
             +'<div class="state-big">最新の待ち時間を<br>取得しています</div>'
