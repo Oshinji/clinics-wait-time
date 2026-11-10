@@ -394,6 +394,7 @@ async def scan_all_pages(page) -> tuple:
     # 診察中でも検査だけ済んで医師の診察が残っている人が多いため、
     # 診察中の人は全員数え、診察待ちと同じ所要時間で待ち時間に加える
     exam_appt_count     = 0  # 予約 診察中（リハ除く）の人数
+    appt_doctor_count   = 0  # 予約 診察待ちのうち医師診察あり（リハビリのみを除く）。待ち人数の表示用で計算には使わない
     exam_appt_minutes   = 0  # 上記の合計枠時間（分）
     exam_walkin_resin   = 0  # 直来 診察中 のうち再診（pt_ratio で実効時間を計算）
     exam_walkin_shoshin = 0  # 直来 診察中 のうち初診
@@ -482,6 +483,8 @@ async def scan_all_pages(page) -> tuple:
                         slot = slot_minutes_for(menu_text)
                         appt_count   += 1
                         appt_minutes += slot
+                        if slot > 0:
+                            appt_doctor_count += 1
                         print(f"  → 予約 診察待ち 発見 [{menu_text.strip()[:10]}] "
                               f"{slot}分枠 (p{page_num})")
 
@@ -581,6 +584,7 @@ async def scan_all_pages(page) -> tuple:
         "appt_minutes":   exam_appt_minutes,
         "walkin_resin":   exam_walkin_resin,
         "walkin_shoshin": exam_walkin_shoshin,
+        "appt_wait_doctor": appt_doctor_count,  # 表示用（待ち時間の計算には使わない）
     }
     in_exam_count = exam_appt_count + exam_walkin_resin + exam_walkin_shoshin
 
@@ -886,6 +890,7 @@ async def scrape() -> dict:
                 "walkin_shoshin_minutes": walkin_shoshin_minutes,
                 "appt_count":        appt_count,
                 "appt_minutes":      appt_minutes,
+                "appt_doctor_count": in_exam.get("appt_wait_doctor", 0),
                 "appt_upcoming_count":   upcoming_count,
                 "appt_upcoming_minutes": upcoming_minutes,
                 "in_exam_remain":    in_exam_remain,
@@ -929,6 +934,7 @@ def _empty_status_data(error: str | None = None,
         "walkin_shoshin_minutes": 0,
         "appt_count":        0,
         "appt_minutes":      0,
+        "appt_doctor_count": 0,
         "appt_upcoming_count":   0,
         "appt_upcoming_minutes": 0,
         "in_exam_remain":    0,
