@@ -8,21 +8,20 @@
   "appt_doctor_count": 6,
   "appt_upcoming_count": 0,
   "appt_upcoming_minutes": 0,
-  "in_exam_remain": 65,
-  "in_exam_count": 8,
-  "estimated_minutes": 110,
+  "in_exam_remain": 59,
+  "in_exam_count": 7,
+  "estimated_minutes": 104,
   "current_slot": "10:00",
   "current_slots": [
     "10:00",
-    "10:30",
-    "10:35"
+    "10:30"
   ],
   "walkin_in_exam": true,
   "last_predicted_slot": "10:35",
   "last_predicted_slot_since": "2026-11-14T11:25:18.788780+09:00",
   "walkin_protected": false,
-  "updated_at": "2026-11-14T11:25:18.805698+09:00",
-  "is_open": true,
+  "updated_at": "2026-11-14T11:30:16.153509+09:00",
+  "is_open": false,
   "is_holiday": false,
   "special_hours_today": null,
   "error": null
