@@ -14,6 +14,19 @@ if ((Test-Path $log) -and (Get-Item $log).Length -gt 1MB) {
 function Log($msg) { $msg | Out-File $log -Append -Encoding utf8 }
 function Run-Git { git @args 2>&1 | ForEach-Object { "$_" } | Out-File $log -Append -Encoding utf8; return $LASTEXITCODE }
 
+# 二重実行の防止: 前回の開始から4分未満なら何もしない。
+# PCが止まっていた日の翌朝は、タスクスケジューラが取りこぼし分を別系統で起動し、
+# 定刻の系統と1分差で2回ずつ動いてしまうため（CLINICSへの二重ログインを避ける）。
+$stamp = Join-Path $env:LOCALAPPDATA "clinics-scraper-last-run.txt"
+if (Test-Path $stamp) {
+  $elapsed = ((Get-Date) - (Get-Item $stamp).LastWriteTime).TotalSeconds
+  if ($elapsed -ge 0 -and $elapsed -lt 240) {
+    Log "skip $(Get-Date -Format s): 前回の開始から $([int]$elapsed) 秒（二重実行防止）"
+    exit 0
+  }
+}
+Set-Content -Path $stamp -Value (Get-Date -Format s) -Encoding ascii
+
 Log "=== $(Get-Date -Format s) ==="
 
 if ((Run-Git pull --rebase --autostash origin main) -ne 0) {
