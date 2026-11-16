@@ -139,7 +139,7 @@ html.embed .card { margin: 0 auto; min-height: 0; }
 
   // 午後は予約の方のみ・当日受付なしの日（YYYY-MM-DD）。
   // 待ち時間データが届かなくても案内できるよう status.json を介さずここで持つ。
-  var PM_APPT_ONLY_DATES = ['2026-11-11'];
+  var PM_APPT_ONLY_DATES = [];
   function isPmApptOnlyToday(){
     var today = new Date(new Date().getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
     return PM_APPT_ONLY_DATES.indexOf(today) !== -1;
