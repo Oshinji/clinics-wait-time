@@ -4539,9 +4539,24 @@
       "date": "2026-11-24",
       "checkin": "09:31",
       "duration_min": 12
+    },
+    {
+      "date": "2026-11-24",
+      "checkin": "08:36",
+      "duration_min": 89
+    },
+    {
+      "date": "2026-11-24",
+      "checkin": "09:39",
+      "duration_min": 20
+    },
+    {
+      "date": "2026-11-24",
+      "checkin": "09:40",
+      "duration_min": 11
     }
   ],
-  "pt_ratio": 0.815,
-  "record_count": 908,
-  "updated_at": "2026-11-24T10:06:15.088309+09:00"
+  "pt_ratio": 0.8134,
+  "record_count": 911,
+  "updated_at": "2026-11-24T10:11:15.063269+09:00"
 }
