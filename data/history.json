@@ -4694,9 +4694,14 @@
       "date": "2026-11-27",
       "checkin": "14:26",
       "duration_min": 5
+    },
+    {
+      "date": "2026-11-27",
+      "checkin": "14:28",
+      "duration_min": 4
     }
   ],
-  "pt_ratio": 0.8072,
-  "record_count": 939,
-  "updated_at": "2026-11-27T14:42:35.732715+09:00"
+  "pt_ratio": 0.8074,
+  "record_count": 940,
+  "updated_at": "2026-11-27T14:47:34.530528+09:00"
 }
